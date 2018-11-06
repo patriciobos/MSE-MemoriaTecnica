@@ -5,31 +5,34 @@
 %----------------------------------------------------------------------------------------
 %	SECTION 1
 %----------------------------------------------------------------------------------------
-La idea de esta sección es presentar el tema de modo que cualquier persona que no conoce el tema pueda entender de qué se trata y por qué es importante realizar este trabajo y cuál es su impacto.
-\section{Estilo y convenciones}
-\label{sec:ejemplo}
-
-\subsection{Uso de mayúscula inicial para los título de secciones}
-
-Si en el texto se hace alusión a diferentes partes del trabajo referirse a ellas como capítulo, sección o subsección según corresponda. Por ejemplo: ``En el capítulo \ref{Chapter1} se explica tal cosa'', o ``En la sección \ref{sec:ejemplo} se presenta lo que sea'', o ``En la subsección \ref{subsec:ejemplo} se discute otra cosa''.
-
-Entre párrafos sucesivos dejar un espacio, como el que se observa entre este párrafo y el anterior. Pero las oraciones de un mismo párrafo van en forma consecutiva, como se observa acá. Luego, cuando se quiere poner una lista tabulada se hace así:
-
-\begin{itemize}
-	\item Este es el primer elemento de la lista.
-	\item Este es el segundo elemento de la lista.
-\end{itemize}
-
-Notar el uso de las mayúsculas y el punto al final de cada elemento.
-
-Si se desea poner una lista numerada el formato es este:
+\section{Requerimientos}
+\label{sec:requerimientos}
 
 \begin{enumerate}
-	\item Este es el primer elemento de la lista.
-	\item Este es el segundo elemento de la lista.
+  \item Requerimientos de documentación:
+   \begin{enumerate}
+     \item Se debe generar un Memoria Técnica con la documentación de ingeniería detallada.
+	   \item Se debe generar un documento de casos de prueba.
+	 \end{enumerate}
+	\item Requerimientos funcionales del sistema:
+	\begin{enumerate}
+		\item El sistema debe adquirir datos de un array de sensores de temperatura a intervalos regulares con un período de adquisición seleccionable.
+		\item El sistema debe adquirir datos de un anemómetro a intervalos regulares con un período de adquisición seleccionable.
+		\item El sistema debe almacenar los datos de temperatura y velocidad de viento adquiridas junto con una marca de tiempo identificatoria en un medio físico no volátil.
+		\item El sistema debe poder operar con dos perfiles de consumo de energía, uno maximizando el desempeño y otro minimizando el consumo de energía.
+		\item El sistema debe contar con una interfaz serie tipo HMI cableada que permita interactuar y realizar operaciones de configuración y mantenimiento.
+	\end{enumerate}
+	\item Requerimientos de verificación:
+	\begin{enumerate}
+		\item Se debe generar una matriz de trazabilidad entre la Memoria Técnica y los requerimientos.
+		\item Se debe generar una matriz de trazabilidad entre las pruebas de integración y los requerimientos.
+	\end{enumerate}
+	\item Requerimientos de validación:
+	\begin{enumerate}
+	  \item Se debe generar una matriz de trazabilidad entre el documento de casos de prueba y los requerimientos.
+  \end{enumerate}
 \end{enumerate}
 
-Notar el uso de las mayúsculas y el punto al final de cada elemento.
 
 \subsection{Este es el título de una subsección}
 \label{subsec:ejemplo}

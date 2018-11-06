@@ -86,18 +86,18 @@ headsepline, % Uncomment to get a line under the header
 %	INFORMACIÓN DE LA MEMORIA
 %----------------------------------------------------------------------------------------
 
-\thesistitle{Título del trabajo} % El títulos de la memoria, se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \ttitle
-\supervisor{Nombre del Director} % El nombre del director, se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \supname
-\degree{Especialista en Sistemas Embebidos } % Nombre del grado, se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \degreename
-\author{Nombre del Autor} % Tu nombre, se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \authorname
-\juradoUNO{Nombre del jurado 1 (pertenencia)} % Nombre y pertenencia del un jurado se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \jur1name
-\juradoDOS{Nombre del jurado 2 (pertenencia)} % Nombre y pertenencia del un jurado se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \jur2name
-\juradoTRES{Nombre del jurado 3 (pertenencia)} % Nombre y pertenencia del un jurado se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \jur3name
-\fechaINICIO{enero de 2016}
-\fechaFINAL{diciembre de 2016}
+\thesistitle{Sistema de control para estación autónoma de monitoreo de ruido ambiente submarino} % El títulos de la memoria, se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \ttitle
+\supervisor{Dr. Ing. Ariel Lutenberg} % El nombre del director, se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \supname
+\degree{Magíster en Sistemas Embebidos } % Nombre del grado, se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \degreename
+\author{Patricio Bos} % Tu nombre, se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \authorname
+\juradoUNO{Dr. Ing Pablo Gómez (FIUBA)} % Nombre y pertenencia del un jurado se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \jur1name
+\juradoDOS{Ing. Juan Manuel Cruz (FIUBA, UTN-FRBA)} % Nombre y pertenencia del un jurado se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \jur2name
+\juradoTRES{Mg. Lic. Igor Prario (FIUBA)} % Nombre y pertenencia del un jurado se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \jur3name
+\fechaINICIO{enero de 2017}
+\fechaFINAL{diciembre de 2018}
 
-\subject{Memoria del Trabajo Final de la Carrera de Especialización en Sistemas Embebidos de la UBA} % Your subject area, this is not currently used anywhere in the template, print it elsewhere with \subjectname
-\keywords{CESE, Sistemas Embebidos, CIAA} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
+\subject{Memoria del Trabajo Final de la Maestría en Sistemas Embebidos de la UBA} % Your subject area, this is not currently used anywhere in the template, print it elsewhere with \subjectname
+\keywords{MSE, Sistemas Embebidos, CIAA} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
 \university{Universidad de Buenos Aires} % Your university's name and URL, this is used in the title page and abstract, print it elsewhere with \univname
 \faculty{{Facultad de Ingeniería}} % Your faculty's name and URL, this is used in the title page and abstract, print it elsewhere with \facname
 \department{Departamento de Electrónica} % Your department's name and URL, this is used in the title page and abstract, print it elsewhere with \deptname
@@ -120,6 +120,10 @@ headsepline, % Uncomment to get a line under the header
 \renewcommand{\listtablename}{Índice de Tablas}
 \renewcommand{\tablename}{Tabla} 
 
+\renewcommand{\labelenumi}{\arabic{enumi}.} 
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
+
+
 \addtolength{\footnotesep}{2mm} % Espacio adicional en los footnotes
 
 \begin{document}
@@ -137,7 +141,7 @@ headsepline, % Uncomment to get a line under the header
 
 {\scshape\LARGE UNIVERSIDAD DE BUENOS AIRES\par}\vspace{0.1cm} % University name
 {\scshape\LARGE FACULTAD DE INGENIERÍA\par}\vspace{0.1cm} % Faculty name
-{\scshape\LARGE Carrera de Especialización en Sistemas Embebidos\par}\vspace{1cm} % Thesis type
+{\scshape\LARGE Maestría en Sistemas Embebidos\par}\vspace{1cm} % Thesis type
 
 \includegraphics[width=.3\textwidth]{./Figures/logoFIUBA.png}
 \vspace{1cm}
@@ -179,10 +183,9 @@ Jurados:\\
 %The Thesis Abstract is written here (and usually kept to just this page). The page is kept centered vertically so can expand into the blank space above the title too\ldots
 \centering
 
-Acá va el resumen del trabajo. Debe ser lo más breve posible. No más de dos o tres párrafos, de unas cuatro o cinco oraciones cada uno. Leyendo esto debe quedar muy claro en qué consiste el trabajo realizado, por qué el trabajo es importante, por qué el trabajo muestra que el estudiante aplicó correctamente lo aprendido en la Carrera y qué información va a encontrar el lector en esta Memoria.
+La presente memoria describe el diseño e implementación de un sistema embebido para el control de una estación de monitoreo de ruido ambiente submarino. El sistema integra y almacena información de distintos sensores y provee una interfaz para la configuración de la estación. A su vez, permite operar con distintos perfiles de consumo de energía. El conocimiento del nivel de ruido submarino es importante para distintas disciplinas dentro de la oceanografía acústica, estudios de impacto ambiental y diversas aplicaciones que utilicen sistemas SONAR dentro del ámbito científico, civil y militar, entre otras.
 
-No usar en este resumen ninguna referencia bibliográfica del tipo [1], ni tampoco notas a pie de página ni siglas que no estén aclaradas como parte de este texto, ni tipografía en negritas, subrayada o cursiva. Dicho de otra forma, el texto en este resumen debe ser escrito de forma tal que si se recorta el mismo y se lo pega en un archivo .txt entonces este conserve su formato y sea perfectamente entendible sin ningún agregado adicional, es decir, quede autocontenido.
-
+Este documento incluye la información de trazabilidad de requerimientos.  Se detalla la arquitectura multicore utilizada, junto con los mecanismos de comunicación y sincronización implementados. Asimismo, se describen las técnicas de ingeniería de software aplicadas y el modelo de ramas adoptado para el desarrollo con control de versiones. Finalmente, se incluye la documentación de testing y los resultados obtenidos.					
 \end{abstract}
 
 %----------------------------------------------------------------------------------------
@@ -204,7 +207,7 @@ No vale poner anti-agradecimientos (este trabajo fue posible a pesar de...)
 %----------------------------------------------------------------------------------------
 %	LISTA DE CONTENIDOS/FIGURAS/TABLAS
 %----------------------------------------------------------------------------------------
-\renewcommand{\listtablename}{Índice de Tablas}
+%\renewcommand{\listtablename}{Índice de Tablas}
 
 \tableofcontents % Prints the main table of contents
 
@@ -217,7 +220,7 @@ No vale poner anti-agradecimientos (este trabajo fue posible a pesar de...)
 %	CONTENIDO DE LA MEMORIA  - DEDICATORIA
 %----------------------------------------------------------------------------------------
 
-\dedicatory{\textbf{Dedicado a... [OPCIONAL]}}  % escribir acá si se desea una dedicatoria
+%\dedicatory{\textbf{Dedicado con cariño a Carla, Dante y le bebé sin los cuales este trabajo se hubiera terminado 2 años antes. }}  
 
 %----------------------------------------------------------------------------------------
 %	CONTENIDO DE LA MEMORIA  - CAPÍTULOS
