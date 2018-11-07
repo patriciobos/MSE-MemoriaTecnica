@@ -52,8 +52,9 @@ El objetivo de este proyecto consiste en diseñar e implementar un sistema embeb
 Se presenta un diagrama en bloques del sistema en la figura \ref{fig:diagramaBloques}.
 
 \begin{figure}[h]
+  \centering
 	\includegraphics[width=\textwidth]{./Figures/Diagrama_en_Bloques.pdf}
-	\caption{Diagrama en bloques del sistema. Se diferencian por color los distintos sub-módulos funcionales y se indica mediante línea de puntos los componentes incluidos en el alcance.}
+	\caption[Diagrama en bloques del sistema.]{Diagrama en bloques del sistema. Se diferencian por color los subsistemas funcionales: Energía, Unidad central de procesamiento, comunicaciones, adquisición y almacenamiento.}
 	\label{fig:diagramaBloques}
 \end{figure}
 
@@ -95,7 +96,9 @@ En particular, para el trabajo final de la Maestría en Sistemas Embebidos, se r
 	\item Almacenar los datos en una memoria no volátil.
 \end{itemize}
 
-En la primera iteración, se contempla la posibilidad de simular algún elemento del sistema según sea necesario para avanzar rápidamente en el diseño del firmware de control y las funciones mencionadas. A los fines prácticos de cumplir los requerimientos de tiempo del trabajo final de maestría, quedarán excluídos del diseño:
+En la primera iteración, se contempla la posibilidad de simular algún elemento del sistema según sea necesario para avanzar rápidamente en el diseño del firmware de control y las funciones mencionadas. 
+
+A los fines prácticos de cumplir los requerimientos de tiempo del trabajo final de maestría, quedarán excluídos del diseño:
 
 \begin{itemize}
 	\item La transmisión de datos en tiempo real a una estación receptora en tierra.
@@ -110,6 +113,7 @@ Según un estudio preliminar, para el registro de señales acústicas resulta ne
 Se muestra en la figura \ref{fig:diagramaBloquesReducido} un diagrama en bloques reducido con los componentes del sistema incluídos en la presente memoria.
 
 \begin{figure}[h]
+  \centering
 	\includegraphics[width=\textwidth]{./Figures/Diagrama_en_Bloques_reducido.pdf}
 	\caption{Diagrama en bloques del sistema. Se diferencian por color los distintos sub-módulos funcionales y se indica mediante línea de puntos los componentes incluidos en el alcance.}
 	\label{fig:diagramaBloquesReducido}

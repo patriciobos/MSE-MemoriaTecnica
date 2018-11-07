@@ -8,6 +8,8 @@
 \section{Requerimientos}
 \label{sec:requerimientos}
 
+A continuación se enumeran los requerimientos del proyecto.
+
 \begin{enumerate}
   \item Requerimientos de documentación:
    \begin{enumerate}
@@ -34,135 +36,57 @@
 \end{enumerate}
 
 
-\subsection{Este es el título de una subsección}
-\label{subsec:ejemplo}
+\section{Planificación}
+\label{sec:plan}
 
-Se recomienda no utilizar \textbf{texto en negritas} en ningún párrafo, ni tampoco texto \underline{subrayado}. En cambio sí se sugiere utilizar \textit{texto en cursiva} donde se considere apropiado.
+La planificación completa del proyecto puede encontrarse publicada en la web del Laboratorio de Sistemas Embebidos de FIUBA [\textbf{insertar referencia}].
 
-Se sugiere que la escritura sea impersonal. Por ejemplo, no utilizar ``el diseño del firmware lo hice de acuerdo con tal principio'', sino ``el firmware fue diseñado utilizando tal principio''. En lo posible hablar en tiempo pasado, ya que la memoria describe un trabajo que ya fue realizado.
-
-Se recomienda no utilizar una sección de glosario sino colocar la descripción de las abreviaturas como parte del mismo cuerpo del texto. Por ejemplo, RTOS (\textit{Real Time Operating System}, Sistema Operativo de Tiempo Real) o en caso de considerarlo apropiado mediante notas a pie de página.
-
-Si se desea indicar alguna página web utilizar el siguiente formato de referencias bibliográficas, dónde las referencias se detallan en la sección de bibliografía de la memoria,utilizado el formato establecido por IEEE en \citep{IEEE:citation}. Por ejemplo, ``el presente trabajo se basa en la plataforma EDU-CIAA-NXP, la cual se describe en detalle en \citep{CIAA}''.
-
-\subsection{Figuras} 
-
-Al insertar figuras en la memoria se deben considerar determinadas pautas. Para empezar, usar siempre tipografía claramente legible. Luego, tener claro que es incorrecto escribir por ejemplo esto: ``El diseño elegido es un cuadrado, como se ve en la siguiente figura:''
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale=.35]{./Figures/cuadradoAzul.png}
-\end{figure}
-
-La forma correcta de utilizar una figura es la siguiente: ``Se eligió utilizar un cuadrado azul para el logo, el cual se ilustra en la figura \ref{fig:cuadradoAzul}''.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[scale=.35]{./Figures/cuadradoAzul.png}
-	\caption{Ilustración del cuadrado azul que se eligió para el diseño del logo.}
-	\label{fig:cuadradoAzul}
-\end{figure}
-
-El texto de las figuras debe estar siempre en español, excepto que se decida reproducir una figura original tomada de alguna referencia. En ese caso la referencia de la cual se tomó la figura debe ser indicada en el epígrafe de la figura e incluida como una nota al pie, como se ilustra en la figura \ref{fig:palabraIngles}.
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[scale=.25]{./Figures/word.jpeg}
-	\caption{Imagen tomada de la página oficial del procesador\protect\footnotemark.}
-	\label{fig:palabraIngles}
-\end{figure}
-
-\footnotetext{\url{https://goo.gl/images/i7C70w}}
-
-
-La figura y el epígrafe deben conformar una unidad cuyo significado principal pueda ser comprendido por el lector sin necesidad de leer el cuerpo central de la memoria. Para eso es necesario que el epígrafe sea todo lo detallado que corresponda y si en la figura se utilizan abreviaturas entonces aclarar su significado en el epígrafe o en la misma figura.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[scale=.4]{./Figures/questionMark.png}
-	\caption{El lector no sabe por qué de pronto aparece esta figura.}
-	\label{fig:questionMark}
-\end{figure}
-
-Nunca colocar una figura en el documento antes de hacer la primera referencia a ella, como se ilustra con la figura \ref{fig:questionMark}, porque sino el lector no comprenderá por qué de pronto aparece la figura en el documento, lo que distraerá su atención.
-
-\subsection{Tablas}
-
-Para las tablas utilizar el mismo formato que para las figuras, sólo que el epígrafe se debe colocar arriba de la tabla, como se ilustra en la tabla \ref{tab:peces}. Observar que sólo algunas filas van con líneas visibles y notar el uso de las negritas para los encabezados.  La referencia se logra utilizando el comando \verb|\ref{<label>}| donde label debe estar definida dentro del entorno de la tabla.
-
-\begin{verbatim}
-\begin{table}[h]
-	\centering
-	\caption[caption corto]{caption largo más descriptivo}
-	\begin{tabular}{l c c}    
-		\toprule
-		\textbf{Especie}       & \textbf{Tamaño}  & \textbf{Valor aprox.}\\
-		\midrule
-		Amphiprion Ocellaris	  & 10 cm 			& \$ 6.000 \\		
-		Hepatus Blue Tang      & 15 cm			 & \$ 7.000 \\
-		Zebrasoma Xanthurus    & 12 cm			 & \$ 6.800 \\
-		\bottomrule
-		\hline
-	\end{tabular}
-	\label{tab:peces}
-\end{table}
-\end{verbatim}
+A los fines de facilitar la comprensión del trabajo realizado, se detallan en la tabla \ref{tab:planificacion} las etapas del proyecto junto con la cantidad de horas destinadas y los hitos a alcanzar en cada una de ellas.  Puede observarse que el proyecto insume 600 horas de trabajo en total.
 
 \begin{table}[h]
 	\centering
-	\caption[caption corto]{caption largo más descriptivo}
-	\begin{tabular}{l c c}    
-		\toprule
-		\textbf{Especie} 	 & \textbf{Tamaño}  & \textbf{Valor aprox.}  \\
-		\midrule
-		Amphiprion Ocellaris	 & 10 cm 			& \$ 6.000 \\		
-		Hepatus Blue Tang	 & 15 cm				& \$ 7.000 \\
-		Zebrasoma Xanthurus	 & 12 cm				& \$ 6.800 \\
-		\bottomrule
-		\hline
-	\end{tabular}
-	\label{tab:peces}
+	\includegraphics[width=\textwidth]{./Figures/planificacion.png}
+	\caption[Diagrama \textit{Etapas del proyecto}.]{Etapas principales del proyecto con el detalle de las horas planificadas y los hitos a alcanzar en cada una de ellas.}
+	\label{tab:planificacion}
 \end{table}
 
-En cada capítulo se debe reiniciar el número de conteo de las figuras y las tablas, por ejemplo, Fig. 2.1 o Tabla 2.1, pero no se debe reiniciar el conteo en cada sección. Por suerte la plantilla se encarga de esto por nosotros.
+Para las etapas planificadas en la tabla \ref{tab:planificacion}, se realizó un desglose de tareas que puede verse esquemáticamente en el diagrama de \textit{Activity on Node} que se ilustra en la figura \ref{fig:AoN}.  Se utiliza el mismo código de colores para identificar las diferentes etapas del proyecto y las tareas planificadas que las componen. En el diagrama, los tiempos de duración de las tareas está expresado en horas. Asimismo, las tareas poseen un código único que será usado para realizar la trazabilidad de los requerimientos.
 
-\subsection{Ecuaciones}
-\label{sec:Ecuaciones}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/AoN.pdf}
+	\caption[Diagrama \textit{Activity on Node}.]{Diagrama \textit{Activity on Node}.  En colores pueden distinguirse las diferentes etapas del proyecto: en amarillo la etapa de documentación y análisis preliminar; en azul la etapa de diseño e implementación; en verde la etapa de verificación y validación y en rojo el proceso de cierre. El tiempo t está expresado en horas.}
+	\label{fig:AoN}
+\end{figure}
 
-Al insertar ecuaciones en la memoria estas se deben numerar de la siguiente forma:
+\clearpage
+\section{Metodologías}
 
-\begin{equation}
-	\label{eq:metric}
-	ds^2 = c^2 dt^2 \left( \frac{d\sigma^2}{1-k\sigma^2} + \sigma^2\left[ d\theta^2 + \sin^2\theta d\phi^2 \right] \right)
-\end{equation}
-                                                        
-Es importante tener presente que en el caso de las ecuaciones estas pueden ser referidas por su número, como por ejemplo ``tal como describe la ecuación \ref{eq:metric}'', pero también es correcto utilizar los dos puntos, como por ejemplo ``la expresión matemática que describe este comportamiento es la siguiente:''
+En esta sección se describen los aspectos metodológicos relevantes que se aplicaron durante el desarrollo del trabajo.  
 
-\begin{equation}
-	\label{eq:schrodinger}
-	\frac{\hbar^2}{2m}\nabla^2\Psi + V(\mathbf{r})\Psi = -i\hbar \frac{\partial\Psi}{\partial t}
-\end{equation}
+\subsection{Control de versiones}
+\label{subsec:branching}
 
-Para las ecuaciones se debe utilizar un tamaño de letra equivalente al utilizado para el texto del trabajo, en tipografía cursiva y preferentemente del tipo Times New Roman o similar. El espaciado antes y después de cada ecuación es de aproximadamente el doble que entre párrafos consecutivos del cuerpo principal del texto. Por suerte la plantilla se encarga de esto por nosotros.
+Se adoptó un modelo de desarrollo creado por Vincent Driessen llamado ``\textit{A successful Git branching model''}\footnote{\url{https://nvie.com/posts/a-successful-git-branching-model/}}.  El modelo está basado en la herramienta de control de versiones \textit{git} y consiste en un conjunto de procedimientos para ordenar y sistematizar el flujo de trabajo. Este modelo propone utilizar un repositorio considerado a los fines prácticos ``central'' (en git todos los repositorios son idénticos) llamado \textit{origin}.  Todos los desarrolladores trabajan contra este repositorio central con las operaciones típicas de \textit{push} y \textit{pop}.  
 
-Para generar la ecuación \ref{eq:metric} se utilizó el siguiente código:
+Adicionalmente, puede haber intercambios entre los repositorios de los distintos desarrolladores que formen un mismo equipo de trabajo. Estos intercambios pueden visualizarse en la figura \ref{fig:esquema-repos}, donde se esquematizan por un lado los posibles flujos de trabajo entre el repositorio \textit{origin} y los distintos desarrolladores y por el otro, entre los repositorios propios de cada desarrollador. 
 
-\begin{verbatim}
-\begin{equation}
-	\label{eq:metric}
-	ds^2 = c^2 dt^2 \left( \frac{d\sigma^2}{1-k\sigma^2} + 
-	\sigma^2\left[ d\theta^2 + 
-	\sin^2\theta d\phi^2 \right] \right)
-\end{equation}
-\end{verbatim}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{./Figures/centr-decentr@2x.png}
+	\caption[Esquema del flujo de trabajo entre repositorios]{Esquema del flujo de trabajo entre repositorios\protect\footnotemark.}
+	\label{fig:esquema-repos}
+\end{figure}
 
-Y para la ecuación \ref{eq:schrodinger}:
+\footnotetext{Imagen tomada de \url{https://nvie.com/img/centr-decentr@2x.png}.}
 
-\begin{verbatim}
-\begin{equation}
-	\label{eq:schrodinger}
-	\frac{\hbar^2}{2m}\nabla^2\Psi + V(\mathbf{r})\Psi = 
-	-i\hbar \frac{\partial\Psi}{\partial t}
-\end{equation}
+Para la elaboración de este trabajo, donde la codificación recayó principalmente sobre una sóla persona, no fueron habituales las operaciones contra un repositorio distinto de \textit{origin} implementado en \textit{github}. Sin embargo, se considera la experiencia de apropiación de la metodología de trabajo muy valiosa para la formación profesional ya que el autor de este trabajo no había tenido oportunidad de trabajar tan extensa y sistemáticamente con control de versiones previamente.
 
-\end{verbatim}
+En cuanto a la estrategia de uso de ramas, siguiendo el modelo adoptado, se dispuso de dos ramas principales llamas \textit{master} y \textit{develop}.  En \textit{origin/master} sólo se incluyen \textit{commits} con versiones estables con capacidad de ser puestas en producción, es decir sobre el prototipo de manera que éste pueda operar satisfactoriamente.  En \textit{origin/develop} contiene los últimos cambios que integran las diferentes características ya logradas del código.
+
+\subsection{Programación concurrente con Protothreads} 
+\label{subsec:protothreads}
+
+Los Protothreads son una abstracción de programación creada por Adam Dunkel\footnote{\url{http://dunkels.com/adam/pt/}} para implementar mecanismos de programación concurrente conocidos como multi-tarea cooperativa en sistemas embebidos con recursos limitados. Funcionan como hilos de ejecución sin \textit{stack} o co-rutinas y proveen mecanismos para bloquear la ejecución de una tarea sin que se produzca un cambio de contexto.  Esto permite un control de flujo secuencial sin máquinas de estado complejas o soporte multi-hilo completo en arquitecturas basadas en eventos \citep{dunkels06protothreads} \citep{dunkels05using}. 
+
+En el presente trabajo, se hace uso de protothreads en la codificación del protocolo de comunicación 1-wire que se describe en la subsección \ref{subsec:1-wire}.
