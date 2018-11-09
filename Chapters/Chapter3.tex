@@ -38,56 +38,27 @@
 %----------------------------------------------------------------------------------------
 %	SECTION 1
 %----------------------------------------------------------------------------------------
-\section{Análisis del software}
 
-La idea de esta sección es resaltar los problemas encontrados, los criterios utilizados y la justificación de las decisiones que se hayan tomado.
+\section{Arquitectura del firmware}
+\label{sec:arquitectura}
 
-Se puede agregar código o pseudocódigo dentro de un entorno lstlisting con el siguiente código:
+\section{Diseño de módulos y definición de interfaces}
+\label{sec:modulos}
 
-\begin{verbatim}
-\begin{lstlisting}[caption= "un epígrafe descriptivo"]
-
-	las líneas de código irían aquí...
-	
-\end{lstlisting}
-\end{verbatim}
-
-A modo de ejemplo:
-
-\begin{lstlisting}[caption=Pseudocódigo del lazo principal de control.]  % Start your code-block
-
-#define MAX_SENSOR_NUMBER 3
-#define MAX_ALARM_NUMBER  6
-#define MAX_ACTUATOR_NUMBER 6
-
-uint32_t sensorValue[MAX_SENSOR_NUMBER];		
-FunctionalState alarmControl[MAX_ALARM_NUMBER];	//ENABLE or DISABLE
-state_t alarmState[MAX_ALARM_NUMBER];						//ON or OFF
-state_t actuatorState[MAX_ACTUATOR_NUMBER];			//ON or OFF
-
-void vControl() {
-
-	initGlobalVariables();
-	
-	period = 500 ms;
-		
-	while(1) {
-
-		ticks = xTaskGetTickCount();
-		
-		updateSensors();
-		
-		updateAlarms();
-		
-		controlActuators();
-		
-		vTaskDelayUntil(&ticks, period);
-	}
-}
-\end{lstlisting}
-
+\section{Módulo de almacenamiento}
+\label{sec:almacenamiento}
 
 \section{Módulo de adquisición}
+\label{sec:adquisicion}
 
 \subsection{Sensor de temperatura}
 \label{subsec:1-wire}
+
+\subsection{Sensor de velocidad de viento}
+\label{subsec:anemometro}
+
+\section{Módulo interfaz HMI}
+\label{sec:HMI}
+
+\section{Módulo de control}
+\label{control}
