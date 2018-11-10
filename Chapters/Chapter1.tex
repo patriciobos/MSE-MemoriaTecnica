@@ -53,7 +53,7 @@ Se presenta un diagrama en bloques del sistema en la figura \ref{fig:diagramaBlo
 \begin{figure}[ht]
   \centering
 	\includegraphics[width=\textwidth]{./Figures/Diagrama_en_Bloques.pdf}
-	\caption[Diagrama en bloques del sistema.]{Diagrama en bloques del sistema. Se diferencian por color los subsistemas funcionales: energía; unidad central de procesamiento; comunicaciones; adquisición y almacenamiento.}
+	\caption[Diagrama en bloques general del sistema.]{Diagrama en bloques general. Se diferencian por color los sub-módulos funcionales: energía; unidad central de procesamiento; comunicaciones; adquisición y almacenamiento.}
 	\label{fig:diagramaBloques}
 \end{figure}
 
@@ -107,14 +107,14 @@ A los fines prácticos de cumplir los requerimientos de tiempo del trabajo final
 	\item La adquisición de señales acústicas.
 \end{itemize}
 
-Según un estudio preliminar, para el registro de señales acústicas resulta necesario una placa de adquisición A/D con características muy específicas en cuanto a frecuencia de muestreo, bits de resolución y figura de ruido, del tipo NI USB-6356\footnote{\url{http://www.ni.com/pdf/manuals/374452c.pdf}} o equivalente.  Este tipo de placas poseen \textit{drivers} propietarios cerrados que, en principio, no fue posible utilizar con la CIAA-NXP.   Por este motivo, la adquisición de señales acústicas también queda excluida del alcance en esta primera iteración.
+Según un estudio preliminar, para el registro de señales acústicas resulta necesario una placa de adquisición A/D con características muy específicas en cuanto a frecuencia de muestreo, bits de resolución y figura de ruido, del tipo NI USB-6356 \cite{ni6356} o equivalente.  Este tipo de placas poseen \textit{drivers} propietarios cerrados que, en principio, no fue posible utilizar con la CIAA-NXP.   Por este motivo, la adquisición de señales acústicas también queda excluida del alcance en esta primera iteración.
 
 Se muestra en la figura \ref{fig:diagramaBloquesReducido} un diagrama en bloques reducido con los componentes del sistema incluídos en la presente memoria.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
-	\includegraphics[width=\textwidth]{./Figures/Diagrama_en_Bloques_reducido.pdf}
-	\caption{Diagrama en bloques del sistema. Se diferencian por color los distintos sub-módulos funcionales y se indica mediante línea de puntos los componentes incluidos en el alcance.}
+	\includegraphics[width=.75\textwidth]{./Figures/Diagrama_en_Bloques_reducido.pdf}
+	\caption[Diagrama en bloques implementado]{Diagrama en bloques del sistema implementado. Se diferencian por color los distintos sub-módulos funcionales incluidos en el alcance del proyecto.}
 	\label{fig:diagramaBloquesReducido}
 \end{figure}
 

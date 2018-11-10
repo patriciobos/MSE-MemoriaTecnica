@@ -2,6 +2,8 @@
 
 \label{Chapter2}
 
+En este capítulo se identifican aspectos relevante de la planificación . Asimismo, se describen las herramientas empleadas para la realización de este trabajo.
+
 %----------------------------------------------------------------------------------------
 %	SECTION 1
 %----------------------------------------------------------------------------------------
@@ -21,8 +23,8 @@ A continuación se enumeran los requerimientos del proyecto:
 		\item El sistema debe adquirir datos de un array de sensores de temperatura a intervalos regulares con un período de adquisición seleccionable.
 		\item El sistema debe adquirir datos de un anemómetro a intervalos regulares con un período de adquisición seleccionable.
 		\item El sistema debe almacenar los datos de temperatura y velocidad de viento adquiridas junto con una marca de tiempo identificatoria en un medio físico no volátil.
-		\item El sistema debe poder operar con dos perfiles de consumo de energía, uno maximizando el desempeño y otro minimizando el consumo de energía.
-		\item El sistema debe contar con una interfaz serie tipo HMI cableada que permita interactuar y realizar operaciones de configuración y mantenimiento.
+		\item El sistema debe poder operar con dos perfiles de consumo de energía: máximo desempeño y mínimo consumo de energía, respectivamente.
+		\item El sistema debe contar con una interfaz serie cableada que permita realizar operaciones de configuración y mantenimiento.
 	\end{enumerate}
 	\item Requerimientos de verificación:
 	\begin{enumerate}
@@ -43,14 +45,39 @@ La planificación completa del proyecto puede encontrarse publicada en la web de
 
 A los fines de facilitar la comprensión del trabajo realizado, se detallan en la tabla \ref{tab:planificacion} las etapas del proyecto junto con la cantidad de horas destinadas y los hitos a alcanzar en cada una de ellas.  Puede observarse que el proyecto insume 600 horas de trabajo en total.
 
-\begin{table}[h]
+%\begin{table}[h]
+%	\centering
+%	\includegraphics[width=\textwidth]{./Figures/planificacion.png}
+%	\caption[Diagrama \textit{Etapas del proyecto}.]{Etapas principales del proyecto con el detalle de las horas planificadas y los hitos a alcanzar en cada una de ellas.}
+%	\label{tab:planificacion}
+%\end{table}
+
+\begin{table}[ht]
 	\centering
-	\includegraphics[width=\textwidth]{./Figures/planificacion.png}
 	\caption[Diagrama \textit{Etapas del proyecto}.]{Etapas principales del proyecto con el detalle de las horas planificadas y los hitos a alcanzar en cada una de ellas.}
+	\begin{tabular}{l c l}    
+		\toprule
+		\textbf{Etapa}       & \textbf{Horas}  & \textbf{Hitos}\\
+		\midrule
+		\multirow{2}{*}{Documentación y análisis}  & \multirow{2}{*}{100}  & Plan de trabajo\\
+                                                          &                       & Presentación de plan de trabajo\\
+    \hline
+		Diseño e implementación                               & 340                   & Documentación de submódulos \\
+   \hline
+		\multirow{3}{*}{Verificación y validación}            & \multirow{3}{*}{60}   & Reporte de pruebas unitarias \\
+		                                                                            & & Reporte de pruebas de integración \\
+                                                                                & & Reporte de casos de prueba \\ 
+   \hline
+		 \multirow{2}{*}{Proceso de cierre}                 & \multirow{2}{*}{100}		& Memoria Técnica \\
+		& & Presentación de Trabajo Final\\
+		\bottomrule
+		\hline
+	\end{tabular}
 	\label{tab:planificacion}
 \end{table}
 
-Para las etapas planificadas en la tabla \ref{tab:planificacion}, se realizó un desglose de tareas que puede verse esquemáticamente en el diagrama de \textit{Activity on Node} que se ilustra en la figura \ref{fig:AoN}.  Se utiliza el mismo código de colores para identificar las diferentes etapas del proyecto y las tareas planificadas que las componen. En el diagrama, los tiempos de duración de las tareas está expresado en horas. Asimismo, las tareas poseen un código único que será usado para realizar la trazabilidad de los requerimientos.
+
+Para las etapas planificadas en la tabla \ref{tab:planificacion}, se realizó un desglose de tareas que puede verse esquemáticamente en el diagrama de \textit{Activity on Node} que se ilustra en la figura \ref{fig:AoN}. Se utiliza un mismo código de colores para identificar las distintas tareas planificadas que componen una misma etapa del proyecto. En color amarillo las tareas de la etapa de documentación y análisis; en celeste las tareas de diseño e implementación; en verde verificación y validación y finalmente, en rojo las tareas que componen el proceso de cierre. En el diagrama, los tiempos de duración de las tareas están expresados con la variable $t$ en horas. Asimismo, las tareas poseen un código único que será usado para realizar la trazabilidad de los requerimientos.
 
 \begin{figure}[h]
 	\centering
@@ -67,7 +94,7 @@ En esta sección se describen los aspectos metodológicos relevantes que se apli
 \subsection{Control de versiones}
 \label{subsec:branching}
 
-Se adoptó un modelo de desarrollo creado por Vincent Driessen llamado ``\textit{A successful Git branching model''}\footnote{\url{https://nvie.com/posts/a-successful-git-branching-model/}}.  El modelo está basado en la herramienta de control de versiones \textit{git} y consiste en un conjunto de procedimientos para ordenar y sistematizar el flujo de trabajo. Este modelo propone utilizar un repositorio considerado a los fines prácticos ``central'' (en git todos los repositorios son idénticos) llamado \textit{origin}.  Todos los desarrolladores trabajan contra este repositorio central con las operaciones típicas de \textit{push} y \textit{pop}.  
+Se adoptó un modelo de desarrollo creado por Vincent Driessen llamado ``\textit{A successful Git branching model''} \citep{Driessen}.  El modelo está basado en la herramienta de control de versiones \textit{git} y consiste en un conjunto de procedimientos para ordenar y sistematizar el flujo de trabajo. Este modelo propone utilizar un repositorio considerado a los fines prácticos ``central'' (en git todos los repositorios son idénticos) llamado \textit{origin}.  Todos los desarrolladores trabajan contra este repositorio central con las operaciones típicas de \textit{push} y \textit{pop}.  
 
 Adicionalmente, puede haber intercambios entre los repositorios de los distintos desarrolladores que formen un mismo equipo de trabajo. Estos intercambios pueden visualizarse en la figura \ref{fig:esquema-repos}, donde se esquematizan por un lado los posibles flujos de trabajo entre el repositorio \textit{origin} y los distintos desarrolladores y por el otro, entre los repositorios propios de cada desarrollador. 
 
@@ -95,7 +122,7 @@ En términos generales el esquema de ramas propuesto por el modelo de Vincent Dr
 
 \footnotetext{Imagen tomada de \url{https://nvie.com/files/Git-branching-model.pdf}.}
 
-La mecánica de trabajo indica crear una nueva rama por cada característica a implementar.  Cuando la característica se logra, se debe hacer \textit{merge} con la rama \textit{develop} cuidando que no suceda un \textit{fastforeward} y se pierdan los commits de la rama recién integrada.
+La mecánica de trabajo indica crear una nueva rama por cada característica a implementar.  Cuando la característica se logra, se debe hacer \textit{merge} con la rama \textit{develop} cuidando que no suceda un \textit{fastforward} y se pierdan los commits de la rama recién integrada.
 
 Para este trabajo, se crearon ramas para desarrollar cada uno de los subsistemas mencionados en el diagrama en bloques de la figura \ref{fig:diagramaBloques} e incluidos en el alcance del trabajo, a saber:
 
@@ -111,6 +138,6 @@ Para este trabajo, se crearon ramas para desarrollar cada uno de los subsistemas
 \subsection{Programación concurrente con Protothreads} 
 \label{subsec:protothreads}
 
-Los Protothreads son una abstracción de programación creada por Adam Dunkel\footnote{\url{http://dunkels.com/adam/pt/}} para implementar mecanismos de programación concurrente conocidos como multi-tarea cooperativa en sistemas embebidos con recursos limitados. Funcionan como hilos de ejecución sin \textit{stack} o co-rutinas y proveen mecanismos para bloquear la ejecución de una tarea sin que se produzca un cambio de contexto.  Esto permite un control de flujo secuencial sin máquinas de estado complejas o soporte multi-hilo completo en arquitecturas basadas en eventos \citep{dunkels06protothreads} \citep{dunkels05using}. 
+Los Protothreads son una abstracción de programación creada por Adam Dunkel para implementar mecanismos de programación concurrente conocidos como multi-tarea cooperativa en sistemas embebidos con recursos limitados \citep{Protothreads}. Funcionan como hilos de ejecución sin \textit{stack} o co-rutinas y proveen mecanismos para bloquear la ejecución de una tarea sin que se produzca un cambio de contexto.  Esto permite un control de flujo secuencial sin máquinas de estado complejas o soporte multi-hilo completo en arquitecturas basadas en eventos \citep{dunkels06protothreads} \citep{dunkels05using}. 
 
 En el presente trabajo, se hace uso de protothreads en la codificación del protocolo de comunicación 1-wire que se describe en la subsección \ref{subsec:1-wire}.
