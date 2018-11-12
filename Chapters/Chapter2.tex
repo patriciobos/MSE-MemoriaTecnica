@@ -55,29 +55,25 @@ A los fines de facilitar la comprensión del trabajo realizado, se detallan en l
 \begin{table}[ht]
 	\centering
 	\caption[Diagrama \textit{Etapas del proyecto}.]{Etapas principales del proyecto con el detalle de las horas planificadas y los hitos a alcanzar en cada una de ellas.}
-	\begin{tabular}{l c l}    
-		\toprule
-		\textbf{Etapa}       & \textbf{Horas}  & \textbf{Hitos}\\
-		\midrule
-		\multirow{2}{*}{Documentación y análisis}  & \multirow{2}{*}{100}  & Plan de trabajo\\
-                                                          &                       & Presentación de plan de trabajo\\
-    \hline
-		Diseño e implementación                               & 340                   & Documentación de submódulos \\
-   \hline
-		\multirow{3}{*}{Verificación y validación}            & \multirow{3}{*}{60}   & Reporte de pruebas unitarias \\
-		                                                                            & & Reporte de pruebas de integración \\
-                                                                                & & Reporte de casos de prueba \\ 
-   \hline
-		 \multirow{2}{*}{Proceso de cierre}                 & \multirow{2}{*}{100}		& Memoria Técnica \\
-		& & Presentación de Trabajo Final\\
-		\bottomrule
-		\hline
+	\begin{tabular}{lcl}
+	\toprule
+	\textbf{Etapa}   & \textbf{Horas} & \textbf{Hitos} \\ 
+	\midrule
+	\multirow{2}{*}{Documentación y análisis}  & \multirow{2}{*}{100}                     & Plan de trabajo                          \\
+                                             &                                          & Presentación de plan de trabajo  \vspace{5px}        \\ \hline
+	Diseño e implementación                    & 340                                      & Documentación de submódulos  \vspace{5px}            \\ \hline 
+	\multirow{3}{*}{Verificación y validación} & \multirow{3}{*}{60}                      & Reporte de pruebas unitarias             \\
+	                                           &                                          & Reporte de pruebas de integración        \\
+	                                           &                                          & Reporte de casos de prueba       \vspace{5px}        \\ \hline
+	\multirow{2}{*}{Proceso de cierre}         & \multirow{2}{*}{100}                     & Memoria Técnica                          \\
+	                                           &                                          & Presentación de Trabajo Final            \\ 
+	\bottomrule
 	\end{tabular}
 	\label{tab:planificacion}
 \end{table}
 
 
-Para las etapas planificadas en la tabla \ref{tab:planificacion}, se realizó un desglose de tareas que puede verse esquemáticamente en el diagrama de \textit{Activity on Node} que se ilustra en la figura \ref{fig:AoN}. Se utiliza un mismo código de colores para identificar las distintas tareas planificadas que componen una misma etapa del proyecto. En color amarillo las tareas de la etapa de documentación y análisis; en celeste las tareas de diseño e implementación; en verde verificación y validación y finalmente, en rojo las tareas que componen el proceso de cierre. En el diagrama, los tiempos de duración de las tareas están expresados con la variable $t$ en horas. Asimismo, las tareas poseen un código único que será usado para realizar la trazabilidad de los requerimientos.
+Se realizó un desglose de tareas que puede verse esquemáticamente en el diagrama de \textit{Activity on Node} que se ilustra en la figura \ref{fig:AoN}. Se utiliza un mismo color para identificar las distintas tareas que componen una misma etapa del proyecto según la tabla \ref{tab:planificacion}. En color amarillo se detacan las tareas de la etapa de documentación y análisis; en celeste las tareas de diseño e implementación; en verde las tareas de verificación y validación y finalmente, en color rojo, las tareas que componen el proceso de cierre. En el diagrama, los tiempos de duración de las tareas están representados con la variable $t$ y expresados en horas. Asimismo, las tareas poseen un código numérico único que será usado para realizar la trazabilidad de los requerimientos.
 
 \begin{figure}[h]
 	\centering
@@ -96,9 +92,9 @@ En esta sección se describen los aspectos metodológicos relevantes que se apli
 
 Se adoptó un modelo de desarrollo creado por Vincent Driessen llamado ``\textit{A successful Git branching model''} \citep{Driessen}.  El modelo está basado en la herramienta de control de versiones \textit{git} y consiste en un conjunto de procedimientos para ordenar y sistematizar el flujo de trabajo. Este modelo propone utilizar un repositorio considerado a los fines prácticos ``central'' (en git todos los repositorios son idénticos) llamado \textit{origin}.  Todos los desarrolladores trabajan contra este repositorio central con las operaciones típicas de \textit{push} y \textit{pop}.  
 
-Adicionalmente, puede haber intercambios entre los repositorios de los distintos desarrolladores que formen un mismo equipo de trabajo. Estos intercambios pueden visualizarse en la figura \ref{fig:esquema-repos}, donde se esquematizan por un lado los posibles flujos de trabajo entre el repositorio \textit{origin} y los distintos desarrolladores y por el otro, entre los repositorios propios de cada desarrollador. 
+Adicionalmente, puede haber intercambios entre los repositorios de los distintos desarrolladores que formen un mismo equipo de trabajo. Estos intercambios pueden visualizarse en la figura \ref{fig:esquema-repos}, donde se esquematizan, por un lado, los posibles flujos de trabajo entre el repositorio \textit{origin} y los distintos desarrolladores, y por el otro, entre los repositorios propios de cada desarrollador. 
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=.6\textwidth]{./Figures/centr-decentr@2x.png}
 	\caption[Esquema del flujo de trabajo entre repositorios]{Esquema del flujo de trabajo entre repositorios\protect\footnotemark.}
@@ -127,10 +123,11 @@ La mecánica de trabajo indica crear una nueva rama por cada característica a i
 Para este trabajo, se crearon ramas para desarrollar cada uno de los subsistemas mencionados en el diagrama en bloques de la figura \ref{fig:diagramaBloques} e incluidos en el alcance del trabajo, a saber:
 
 \begin{itemize}
-	\item \textit{sdcard} para el módulo de almacenamiento
-	\item \textit{onewire} para el módulo de adquisición
-	\item \textit{HMI} para el módulo HMI
-	\item \textit{control} para el módulo de control
+	\item \textit{sdcard} para el módulo de almacenamiento.
+	\item \textit{onewire} para el módulo de adquisición.
+	\item \textit{HMI} para el módulo de interfaz con el usuario.
+	\item \textit{control} para el módulo de control.
+	\item \textit{ceedling} para el entorno de testing.
 \end{itemize}  
 
 
@@ -138,6 +135,6 @@ Para este trabajo, se crearon ramas para desarrollar cada uno de los subsistemas
 \subsection{Programación concurrente con Protothreads} 
 \label{subsec:protothreads}
 
-Los Protothreads son una abstracción de programación creada por Adam Dunkel para implementar mecanismos de programación concurrente conocidos como multi-tarea cooperativa en sistemas embebidos con recursos limitados \citep{Protothreads}. Funcionan como hilos de ejecución sin \textit{stack} o co-rutinas y proveen mecanismos para bloquear la ejecución de una tarea sin que se produzca un cambio de contexto.  Esto permite un control de flujo secuencial sin máquinas de estado complejas o soporte multi-hilo completo en arquitecturas basadas en eventos \citep{dunkels06protothreads} \citep{dunkels05using}. 
+Los Protothreads son una abstracción creada por Adam Dunkel para implementar mecanismos de programación concurrente, conocidos como multi-tarea cooperativa, en sistemas embebidos con recursos limitados \citep{Protothreads}. Funcionan como hilos de ejecución sin \textit{stack} o co-rutinas y proveen mecanismos para bloquear la ejecución de una tarea sin que se produzca un cambio de contexto.  Esto permite un control de flujo secuencial sin máquinas de estado complejas o soporte multi-hilo completo en arquitecturas basadas en eventos \citep{dunkels06protothreads} \citep{dunkels05using}. 
 
 En el presente trabajo, se hace uso de protothreads en la codificación del protocolo de comunicación 1-wire que se describe en la subsección \ref{subsec:1-wire}.
