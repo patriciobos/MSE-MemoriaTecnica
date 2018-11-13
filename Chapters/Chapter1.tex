@@ -26,7 +26,9 @@ En este capítulo se introduce brevemente el campo de la acústica submarina y l
 %Qué es el ruido submarino.
 %Cómo se mide / intro hidrófono.
 
-La acústica submarina estudia la propagación del sonido en el agua y la interacción de las ondas mecánicas que constituyen el sonido con el agua, los elementos dispersores presentes y las interfaces aire-agua y agua-lecho marino.  Debido a que sufre menor atenuación que otras formas de radiación, el sonido es ampliamente empleado  por el hombre en su exploración de los océanos.  Las frecuencias típicas utilizadas se encuentran en el rango comprendido entre $\sim$10 Hz y 1 MHz, dependiendo de la aplicación.  Los sistemas que utilizan la propagación del sonido bajo el agua con diversos fines se conocen como sistemas SONAR (\textit{\textbf{SO}und \textbf{N}avigation \textbf{A}nd \textbf{R}anging}).
+La acústica submarina estudia la propagación del sonido en el agua y la interacción de las ondas mecánicas que constituyen el sonido con el agua, los elementos dispersores presentes y las interfaces aire-agua y agua-lecho marino.  Debido a que sufre menor atenuación que otras formas de radiación, el sonido es ampliamente empleado  por el hombre en su exploración de los océanos.  Las frecuencias típicas utilizadas se encuentran en el rango comprendido entre $\sim$10 Hz y 1 MHz, dependiendo de la aplicación.  
+
+Los sistemas que utilizan la propagación del sonido bajo el agua con diversos fines se conocen como sistemas SONAR (\textit{\textbf{SO}und \textbf{N}avigation \textbf{A}nd \textbf{R}anging}).
 
 La propagación del sonido en el agua depende de diversos factores.  La dirección de propagación está determinada principalmente por el gradiente vertical de velocidades del sonido, que a su vez depende fundamentalmente de la temperatura y la salinidad del agua.  El perfil de velocidades del sonido puede causar zonas de baja intensidad del sonido, llamadas ``zonas de sombra'', y regiones de alta intensidad llamadas ``cáusticas''. Estas zonas pueden hallarse con el método de trazado de rayos \citep{tappert1977parabolic}.
 
@@ -48,7 +50,7 @@ Cabe destacar que el ruido subacuático puede clasificarse esencialmente en tres
 
 El objetivo de este proyecto consiste en diseñar e implementar un sistema embebido para controlar una estación autónoma para la medición in-situ del ruido ambiente submarino para ser instalada en regiones de interés en el mar argentino y con la capacidad de transmitir datos a una estación receptora en tierra. Este desarrollo permitirá disponer de series temporales de ruido ambiente submarino durante períodos lo suficientemente largos como para analizar los resultados mediante modelos teóricos y/o empíricos que contribuyan a incrementar el conocimiento de dicho parámetro, especialmente a nivel local.
 
-Se presenta un diagrama en bloques del sistema en la figura \ref{fig:diagramaBloques} donde se pueden observar los distintos módulos que componen el sistema.  En color verde los componentes asociados a la gestión de energía; en celeste los componentes asociados al almacenamiento de datos; en amarillo los componentes asociados a la gestión de las comunicaciones; en a
+Se presenta un diagrama en bloques del sistema en la figura \ref{fig:diagramaBloques} donde se pueden observar los distintos módulos que componen el sistema.  En color verde los componentes asociados a la gestión de energía; en celeste los componentes asociados al almacenamiento de datos; en amarillo los componentes asociados a la gestión de las comunicaciones; en color azul los bloques del subsistema de adquisición de datos y finalmente, en color naranja se destaca el módulo central de procesamiento.
 
 \begin{figure}[ht]
   \centering

@@ -34,7 +34,7 @@
   morecomment=[s]{/*}{*/}%
 }
 
-En este capítulo se presentan la arquitectura multicore del firmware, los mecanismos de comunicación entre procesadores y el detalle del diseño de los módulos desarrollados junto con sus interfaces.
+En este capítulo se presentan la arquitectura multicore del \textit{firmware}, los mecanismos de comunicación entre procesadores y el detalle del diseño de los módulos desarrollados junto con sus interfaces.  Finalmente, se incluye una sección de trazabilidad de requerimientos con las funciones implementadas.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 1
@@ -47,7 +47,7 @@ El \textit{firmware} está desarrollado sobre la base de dos proyectos vinculado
 
 El proyecto maestro contiene un link al proyecto esclavo que produce que la imagen binaria del esclavo sea incluida en la imagen  binaria del maestro, cuando el proyecto maestro es compilado \citep{nxp:mcuxpresso}. De esta manera, cuando el proyecto maestro es grabado en la flash del microcontrolador, ambos proyectos son descargados a la memoria del microcontrolador.
 
-El proyecto maestro debe ser el que se ejecuta sobre el procesador Cortex-M4 ya que el procesador Cortex-M0 permanece en estado de \textit{reset} hasta que el otro core lo libera de este estado escribiendo un 0 en el bit M0SUB\_RST del registro RESET\_CTRL1, como se indica en el manual del microcontrolador \citep{nxp:lpc4337}.
+El proyecto maestro debe ser el que se ejecuta sobre el procesador Cortex-M4 ya que el procesador Cortex-M0 permanece en estado de \textit{reset} hasta que el otro \textit{core} lo libera de este estado escribiendo un 0 en el bit M0SUB\_RST del registro RESET\_CTRL1, como se indica en el manual del microcontrolador \citep{nxp:lpc4337}.
 
 Cuando se energiza el microcontrolador o se produce un \textit{reset}, el \textit{core} maestro inicia su secuencia de \textit{startup} y es responsable de iniciar, a su vez, la secuencia de \textit{startup} del \textit{core} esclavo.  
 
@@ -56,6 +56,7 @@ En las tablas \ref{tab:memoriaM4} y \ref{tab:memoriaM0} se muestra la asignació
 Por otra parte, para evitar cualquier tipo de solapamiento en el uso de la RAM, los proyectos asociados a cada \textit{core} se linkean de forma de utilizar exclusivamente bancos de RAM separados.  En este sentido, el procesador cortex-M4 utiliza el primer bloque de RAM de 32 kB y el procesador cortex-M0 utiliza el segundo bloque de RAM de 40kB.
 
 \begin{table}[ht]
+\centering
 \caption{Asignación de bloques de memoria para el Cortex-M4}
 \begin{tabular}{lllll}
 \toprule
@@ -69,6 +70,7 @@ RAM                      & RamLoc32        & RAM            & 0x10000000        
 \end{table}
 
 \begin{table}[ht]
+\centering
 \caption{Asignación de bloques de memoria para el Cortex-M0}
 \begin{tabular}{lllll}
 \toprule
@@ -91,19 +93,39 @@ Adicionalmente, se define una zona de memoria compartida, visible por ambos proc
 \subsection{Inter Processor Communications}
 \label{subsec:IPC}
 
-Para comunicar ambos procesadores se utiliza una biblioteca provista por el fabricante del microcontrolador NXP, documentada en la nota de aplicación ``AN1117: Inter Processor Communications for LPC43xx'' \citep{nxp:an1117}. En este documento se explican 3 mecanismos posibles para que los dos procesadores intercambien información basados en interrupciones, en colas de mensajes y en ``casillas de correo''.  Este útltimo método queda excluido de esta memoria por no haber sido utilizado en el desarrollo.
+Para comunicar ambos procesadores se utiliza una biblioteca provista por el fabricante del microcontrolador NXP, documentada en la nota de aplicación ``AN1117: Inter Processor Communications for LPC43xx'' \citep{nxp:an1117}. En este documento se explican 3 mecanismos posibles para que los dos procesadores intercambien información basados en interrupciones, en colas de mensajes y en ``casillas de correo''.  Este último método queda excluido de esta memoria por no haber sido utilizado en el desarrollo.
 
 \subsubsection{Interrupción}
+\label{subsubsec:interrupcion}
 
 El mecanismo de interrupciones cruzadas es el más simple de los 3 métodos provistos.  Permite que un \textit{core} active una interrupción en el otro \textit{core} para enviar notificaciones cuya interpretación depende y es exclusiva de la aplicación.  El diseñador puede definir una función de \textit{callback} que es ejecutada en el contexto de la rutina de servicio de la interrupción.  
 
-Para enviar señales al \textit{core} ``remoto'', el \textit{core} ``local'' utiliza una instrucción dedicada SEV (\textit{send event}) provista por la arquitectura Cortex.  
+Para enviar señales al \textit{core} ``remoto'', el \textit{core} ``local'' utiliza una instrucción dedicada SEV (\textit{send event}) provista por la arquitectura Cortex.
 
-Asimismo, dentro de la rutina de interrupción se habilita un \textit{flag} para indicar que se ha recibido una notificación IPC.  Esta variable \textit{flag} puede ser usada por las aplicaciones corriendo sobre el \textit{core} que recibe la notificación para chequear el estado de las comunicaciones. La limpieza del \textit{flag} se hace dentro de una sección crítica donde se deshabilitan temporalmente las interrupciones.  En el Cortex-M4 se enmascaran las interrupciones con mayor prioridad y en el Cortex-M0 se deshabilitan directamente ya que este procesador no dispone del mecanismo de enmascaramiento.
+Asimismo, dentro de la rutina de interrupción se habilita un \textit{flag} para indicar que se ha recibido una notificación IPC.  Esta variable \textit{flag} puede ser usada por las aplicaciones corriendo sobre el \textit{core} que recibe la notificación para chequear el estado de las comunicaciones. La limpieza del \textit{flag} se hace dentro de una sección crítica donde se deshabilitan temporalmente las interrupciones.  En el Cortex-M4 se enmascaran las interrupciones con mayor prioridad y en el Cortex-M0 se deshabilitan directamente, ya que este procesador no dispone del mecanismo de enmascaramiento.
+
+El código para generar las interrupciones cruzadas utiliza dos macros. Primero \_\_DSB() (\textit{Data Syncronization Barrier}) para terminar todas las transacciones de memoria pendientes y luego \_\_SEV() (\textit{Send Event}) para generar el envío de una señal de interrupción al otro procesador.
+%, como puede apreciarse en \ref{cod:interrupt}
+\begin{verbatim}
+/*
+ * Initiate interrupt on other processor
+ * Upon calling this function generates and interrupt 
+ * on the other core. Ex. if called from M0 core it 
+ * generates interrupt on M4 core and vice versa.
+ */
+static void ipc_send_signal(void)
+{
+  	__DSB();
+  	__SEV();
+}
+\end{verbatim}\label{cod:interrupt}  
 
 \subsubsection{Colas de mensajes}
+\label{subsubsec:colas}
 
-En el método de la cola de mensajes, el diseñador define dos áreas de memoria compartida, que se utilizan para almacenar los mensajes que cada procesador envía al otro. Un búfer de comandos del \textit{host} está dedicado a los comandos enviados del maestro al esclavo, y un búfer de mensajes del \textit{host} se dedica a los mensajes que el esclavo envía en respuesta. La figura \ref{fig:IPC} muestra la configuración.
+En el método de colas de mensajes, se deben definir dos áreas de memoria compartida, que se utilizan para almacenar los mensajes que cada procesador envía al otro. Una cola (búfer de comandos del \textit{host}) está dedicado a los comandos enviados del procesador maestro al esclavo, y una cola (búfer de mensajes del \textit{host}) se dedica a los mensajes que el procesador esclavo envía en respuesta al procesador maestro. La figura \ref{fig:IPC} muestra esquemáticamente esta configuración.
+
+\vspace{10px}
 
 \begin{figure}[ht]
 	\centering
@@ -112,10 +134,55 @@ En el método de la cola de mensajes, el diseñador define dos áreas de memoria
 	\label{fig:IPC}
 \end{figure}
 
+\vspace{10px}
+\vfill
 \footnotetext{Imagen tomada del manual de usuario del microcontrolador LPC4337 \citep{nxp:lpc4337}}
+
+En el esquema propuesto, sólamente el procesador maestro puede escribir en el búfer de comandos y recibe los mensaje del esclavo leyendo el búfer de mensajes.  De manera análoga, únicamente el esclavo puede escribir en el búfer de mensajes y recibe comandos leyendo el búfer de comandos.
+
+Cuando un procesador escribe un nuevo mensaje en una cola, debe notificar al otro procesador de que hay nueva información para procesar. Para tal fin, se utiliza el mecanismo de interrupción descrito en el apartado Interrupción, dentro de la subsección \ref{subsubsec:interrupcion}.  Luego de esto, el procesador que recibe el mensaje invoca a un despachador de eventos que busca en un vector de manejadores de eventos el que haya sido registrado para tal fin.
+
+\begin{verbatim}
+/* This task will receive the message from the other core
+ * and will invoke the appropriate callback with the message
+ */
+static void ipcex_dispatch_task(void *unused)
+{
+  int ret;
+  ipcex_msg_t msg;
+  	do {
+    	ret = IPC_popMsgTout(&msg, -SYS_OS_ID);
+    	if((ret != QUEUE_VALID) || 
+                      (msg.id.pid >= IPCEX_MAX_PID)){
+      	continue;
+    	}
+    	if (ipcex_callback_lookup[msg.id.pid]) {
+      	ipcex_callback_lookup[msg.id.pid](&msg);
+    	}
+  	} while (SYS_OS_ID);
+}
+\end{verbatim}
+
+SYS\_OS\_ID es una macro que se utiliza para identificar el tipo de Sistema Operativo incluido en la aplicación.  En el caso particular de este trabajo, SYS\_OS\_ID es igual a 0 y esto significa que no hay Sistema Operativo.  Se debe notar que SYS\_OS\_ID = 0 implica que el despachador de eventos se ejecuta una única vez por mensaje recibido.
+
+Para los mensajes, se define un nuevo tipo de dato ipcex\_msg\_t como una estructura que contiene información que identifica al CPU y al proceso destinararios del mensaje junto con dos campos para datos.
+
+\begin{verbatim}
+typedef struct __ipcex_msg {
+  struct {
+    uint16_t cpu;
+    uint16_t pid;
+  } id;
+
+  uint32_t data0;
+  uint32_t data1;
+} ipcex_msg_t;
+\end{verbatim}
 
 \section{Diseño de módulos y definición de interfaces}
 \label{sec:modulos}
+
+Se definió una 
 
 \section{Módulo de almacenamiento}
 \label{sec:almacenamiento}
