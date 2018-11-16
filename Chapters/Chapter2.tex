@@ -103,16 +103,18 @@ Adicionalmente, puede haber intercambios entre los repositorios de los distintos
 
 \footnotetext{Imagen tomada de \url{https://nvie.com/img/centr-decentr@2x.png}.}
 
-Para la elaboración de este trabajo, donde la codificación recayó principalmente sobre una sóla persona, no fueron habituales las operaciones contra un repositorio distinto de \textit{origin}, implementado en \textit{github}. Sin embargo, se considera la experiencia de apropiación de la metodología de trabajo muy valiosa para la formación profesional ya que el autor de este trabajo no había tenido oportunidad de trabajar tan extensa y sistemáticamente con control de versiones previamente.
+Para la elaboración de este trabajo, donde la codificación recayó principalmente sobre una sóla persona, no fueron habituales las operaciones contra un repositorio distinto de \textit{origin}, implementado en \textit{github}. Sin embargo, se considera la experiencia de apropiación de la metodología de trabajo muy valiosa para la formación profesional, ya que el autor de este trabajo no había tenido oportunidad de trabajar tan extensa y sistemáticamente con control de versiones previamente.
 
 En cuanto a la estrategia de uso de ramas, siguiendo el modelo adoptado, se dispuso de dos ramas principales llamadas \textit{master} y \textit{develop}.  En \textit{origin/master} sólo se incluyen \textit{commits} con versiones estables con capacidad de ser puestas en producción, es decir sobre el prototipo de manera que éste pueda operar satisfactoriamente.  En \textit{origin/develop} se encuentran  los últimos cambios que integran las diferentes características ya logradas del código.  Cuando la rama \textit{develop} alcanza un punto de estabilidad y madurez suficiente se debe hacer un \textit{merge} con \textit{master}.% y generar un nuevo número de \textit{release}.
 
-En términos generales el esquema de ramas propuesto por el modelo de Vincent Driessen puede observar en la figura  \ref{fig:branching} donde se explicitan las posibles interacciones entre ramas.
+En términos generales, el esquema de ramas propuesto por el modelo de Vincent Driessen puede observar en la figura  \ref{fig:branching} donde se explicitan las posibles interacciones entre ramas.
+
+\vfill
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=\textwidth]{./Figures/Git-branching-model.pdf}
-	\caption[Estrategia de ramas para git]{Estrategia de ramas para git\protect\footnotemark.}
+	\includegraphics[width=.9\textwidth]{./Figures/Git-branching-model.pdf}
+	\caption[Modelo de ramas utilizado en git]{Modelo de ramas utilizado en git\protect\footnotemark.}
 	\label{fig:branching}
 \end{figure}
 
@@ -120,7 +122,7 @@ En términos generales el esquema de ramas propuesto por el modelo de Vincent Dr
 
 La mecánica de trabajo indica crear una nueva rama por cada característica a implementar.  Cuando la característica se logra, se debe hacer \textit{merge} con la rama \textit{develop} cuidando que no suceda un \textit{fastforward} y se pierdan los commits de la rama recién integrada.
 
-Para este trabajo, se crearon ramas para desarrollar cada uno de los subsistemas mencionados en el diagrama en bloques de la figura \ref{fig:diagramaBloques} e incluidos en el alcance del trabajo, a saber:
+Para este trabajo, se crearon ramas para desarrollar cada uno de los subsistemas mencionados en el diagrama en bloques de la figura \ref{fig:diagramaBloquesReducido} e incluidos en el alcance del trabajo, a saber:
 
 \begin{itemize}
 	\item \textit{sdcard} para el módulo de almacenamiento.
@@ -135,6 +137,8 @@ Para este trabajo, se crearon ramas para desarrollar cada uno de los subsistemas
 \subsection{Programación concurrente con Protothreads} 
 \label{subsec:protothreads}
 
-Los Protothreads son una abstracción creada por Adam Dunkel para implementar mecanismos de programación concurrente, conocidos como multi-tarea cooperativa, en sistemas embebidos con recursos limitados \citep{Protothreads}. Funcionan como hilos de ejecución sin \textit{stack} o co-rutinas y proveen mecanismos para bloquear la ejecución de una tarea sin que se produzca un cambio de contexto.  Esto permite un control de flujo secuencial sin máquinas de estado complejas o soporte multi-hilo completo en arquitecturas basadas en eventos \citep{dunkels06protothreads} \citep{dunkels05using}. 
+Los Protothreads son una abstracción creada por Adam Dunkel para implementar mecanismos de programación concurrente, conocidos como multi-tarea cooperativa, en sistemas embebidos con recursos limitados \citep{Protothreads}. 
+
+Se distribuyen como una biblioteca que puede integrarse al proyecto y proveen la posibilidad de trabajar con hilos de ejecución sin \textit{stack} o co-rutinas, con mecanismos para bloquear la ejecución de una tarea sin que se produzca un cambio de contexto.  Esto permite un control de flujo secuencial sin máquinas de estado complejas o soporte multi-hilo completo en arquitecturas basadas en eventos \citep{dunkels06protothreads} \citep{dunkels05using}. 
 
 En el presente trabajo, se hace uso de protothreads en la codificación del protocolo de comunicación 1-wire que se describe en la subsección \ref{subsec:1-wire}.

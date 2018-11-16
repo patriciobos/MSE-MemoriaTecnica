@@ -7,7 +7,7 @@
 
 \lstset{ %
   backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
-  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  basicstyle=\large,        % the size of the fonts that are used for the code
   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
   breaklines=true,                 % sets automatic line breaking
   captionpos=b,                    % sets the caption-position to bottom
@@ -20,7 +20,7 @@
   keywordstyle=\color{blue},       % keyword style
   language=[ANSI]C,					% the language of the code
   %otherkeywords={*,...},           % if you want to add more keywords to the set
-  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbers=none,                    % where to put the line-numbers; possible values are (none, left, right)
   numbersep=5pt,                   % how far the line-numbers are from the code
   numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
   rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
@@ -143,8 +143,9 @@ En el esquema propuesto, sólamente el procesador maestro puede escribir en el b
 Cuando un procesador escribe un nuevo mensaje en una cola, debe notificar al otro procesador de que hay nueva información para procesar. Para tal fin, se utiliza el mecanismo de interrupción descrito en el apartado Interrupción, dentro de la subsección \ref{subsubsec:interrupcion}.  Luego de esto, el procesador que recibe el mensaje invoca a un despachador de eventos que busca en un vector de manejadores de eventos el que haya sido registrado para tal fin.
 
 \begin{verbatim}
-/* This task will receive the message from the other core
- * and will invoke the appropriate callback with the message
+/* This task will receive the message from the other 
+ * core and will invoke the appropriate callback with
+ * the message
  */
 static void ipcex_dispatch_task(void *unused)
 {
@@ -182,10 +183,101 @@ typedef struct __ipcex_msg {
 \section{Diseño de módulos y definición de interfaces}
 \label{sec:modulos}
 
-Se definió una 
+El \textit{firmware} está fuertemente modularizado en archivos y utiliza un modelo de capas jerárquicas para organizar el código en distintos niveles de abstracción.  En la figura \ref{fig:capas} se pueden observar, agrupados por color, las capas utilizadas en este trabajo.  En color amarillo, el paquete de drivers provistos por el fabricante del silicio; en color naranja la capa de bibiotecas; la capa de abstracción de \textit{hardware} (HAL, por sus siglas en inglés) en color verde; y finalmente, en color celeste, la capa de aplicación con los cuatro módulos implementados.   
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.55\textwidth]{./Figures/capas.pdf}
+	\caption[Estructura de capas para el \textit{firmware}.]{Estructura de capas para el \textit{firmware}. En orden creciente de nivel de abstracción: \textit{core support package} (amarillo), bibliotecas (naranja), sAPI (verde) y la capa de aplicación (celeste) con los 4 módulos implementados.}
+	\label{fig:capas}
+\end{figure}
+
+Para los módulos en la capa de aplicación, se confeccionó una matriz de trazabilidad de los requerimientos referidos al firmware, detallados en la sección \ref{sec:requerimientos}. La tabla \ref{tab:trazabilidad} permite saber en qué módulo del firmware serán implementados los requerimientos funcionales del proyecto.  Asimismo, permite controlar que todo este subconjunto de requerimientos sea implementado y que no haya superposición entre la funcionalidad de cada módulo.
+
+\begin{table}[ht]
+\caption[Matriz de trazabilidad de requerimientos funcionales]{Matriz de trazabilidad de requerimientos funcionales con los módulos de \textit{firmware}}
+\label{tab:trazabilidad}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Requerimiento} & \textbf{Control} & \textbf{sdCard} & \textbf{Adquisición} & \textbf{HMI} \\ \midrule
+2.1 Adquirir temperatura                   &                  &                 & X                    &              \\ %\hline
+2.2 Adquirir velocidad de viento           &                  &                 & X                    &              \\ %\hline
+2.3 Almacenar datos                        &                  & X               &                      &              \\ %\hline
+2.4 Perfiles de consumo                    & X                &                 &                      &              \\ %\hline
+2.5 Interfaz                               &                  &                 &                      & X            \\ \bottomrule
+\end{tabular}
+\end{table}
+
+Se definió una estructura de control para los módulos que incluye información sobre en qué \textit{core} debe ejecutarse, un campo para identificar al módulo, un puntero a la función manejadora de eventos que es invocada cada vez que hay un mensaje para este módulo, un campo para temporizar la ejecución periódica del módulo y finalmente, un campo para el estado del módulo que puede tomar uno de los siguientes valores: DISABLE, READY o PROCESSING.
+
+\begin{verbatim}
+typedef struct {
+   CPUID_T coreID;
+   moduleID_t moduleID;
+   funcPtr_t eventHandler;
+   tick_t period;
+   moduleStatus_t status;
+} module_t;
+\end{verbatim}
+
+Toda la interacción con los módulos se realiza a través de los respectivos manejadores de eventos y una cola de mensajes como la descrita en la subsección \ref{subsubsec:colas}, pero definida en una posición de memoria no compartida, por lo que su uso se limita al \textit{core} donde está definida.
+
+A continuación se listan los prototipos de los manejadores de eventos definidos:
+
+\begin{itemize}
+  \item \texttt{void onewire\_handler(const ipcex\_msg\_t * msg );} 
+  \item \texttt{void sdcard\_handler(const ipcex\_msg\_t * msg );} 
+  \item \texttt{void hmi\_handler(const ipcex\_msg\_t * msg );} 
+  \item \texttt{void control\_handler(const ipcex\_msg\_t * msg );} 
+\end{itemize}
+
+Puede notarse que todos los manejadores reciben un mismo tipo de parámetro, un puntero constante a un mensaje de tipo \texttt{ipcex\_msg\_t}.  Cada módulo es responsable de interpretar los dos campos enteros sin signo de 32 bits de datos que contiene el mensaje.  Normalmente el campo \texttt{data0} define un comando y \texttt{data1} se utiliza opcionalmente para el envío de parámetros.
+
+Para todos los módulos se utilizó un modelo de \textit{firmware} basado en máquinas de estados finitos (MEF) jerárquicas, donde una MEF principal controla la lógica de funcionamiento con el mayor nivel de abstracción. Los diferentes estados pueden o no estar modelados con MEFs dependiendo de la conveniencia.  
 
 \section{Módulo de almacenamiento}
 \label{sec:almacenamiento}
+
+El propósito del módulo de almacenamiento es proveer al sistema de una interfaz para operar con un medio de almacenamiento no volátil que permita guardar en forma permanente los datos registrados por el módulo de adquisición y eventualmente un log con información de \textit{debug}.  
+
+Se evaluaron distintas opciones de medios físicos.  En la tabla \ref{tab:medios} se recopilan las alternativas analizadas y se especifica un orden de magnitud para la capacidad de almacenamiento posible, el tipo de interfaz con el microcontrolador y el protocolo que debe implementarse en el \textit{firmware} para su utilización.
+
+\begin{table}[ht]
+\centering
+\caption{Alternativas de medios físicos evaluados}
+\label{tab:medios}
+\begin{tabular}{lrcc}
+\toprule
+\multicolumn{1}{c}{\textbf{Medio físico}} & \multicolumn{1}{c}{\textbf{Capacidad}} & \textbf{Interfaz} & \textbf{Protocolo} \\ \midrule
+USB Mass Storage Device                   & $\sim$10 Gb                            & USB 2.0           & USB                \\
+Tarjeta de memoria                        & $\sim$10 Gb                            & Micro SD          & SSP                \\
+Disco de estado sólido (SSD)              & $\sim$100 Gb                           & SATA III          & SATA               \\
+Disco duro mecánico (HHD)                 & $\sim$1000 Gb                          & SATA III          & SATA               \\ \bottomrule
+\end{tabular}
+\end{table}
+
+Teniendo en cuenta criterios de costos y simplicidad de interacción con la CIAA-NXP, se decidió utilizar un lector de tarjetas microSD con comunicación sobre un puerto \textit{Synchronous Serial Port} (SSP).  Este protocolo es compatible con el protocolo SPI y utiliza un bus de 4 cables con las señales SCK, SSEL, MISO y MOSI.  Asimismo, el soporte seleccionado minimiza el consumo de energía, lo cual lo hace deseable para la aplicación.  El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdcard} junto con un diagrama esquemático del conexionado electrico a la CIAA-NXP.
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=.4\textwidth]{./Figures/sdCardReader.jpg}
+	\caption{Lector de tarjetas SD / Micro SD utilizado.}
+	\label{fig:lector_sdcard}
+\end{figure}
+
+
+Se presenta el diagrama de estado de la MEF principal del módulo en la figura \ref{fig:mef_sdcard}, donde puede apreciase el punto de entrada con un circulo negro, los estado que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad. 
+
+Debe notarse que al energizarse el sistema o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.  
+
+Una vez inicializado, todas las operación del módulo terminan en el estado \texttt{IDLE}, en donde se cambia el estado del módulo de \texttt{PROCESSING} a \texttt{READY}.
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/MEF_sdCard.pdf}
+	\caption[MEF principal del módulo de almacenamiento sdCard]{Máquina de estados finitos principal del módulo de almacenamiento sdCard}
+	\label{fig:mef_sdcard}
+\end{figure}
 
 \section{Módulo de adquisición}
 \label{sec:adquisicion}
