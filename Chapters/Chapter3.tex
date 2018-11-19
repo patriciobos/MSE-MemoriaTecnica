@@ -256,15 +256,48 @@ Disco duro mecánico (HHD)                 & $\sim$1000 Gb                      
 \end{tabular}
 \end{table}
 
-Teniendo en cuenta criterios de costos y simplicidad de interacción con la CIAA-NXP, se decidió utilizar un lector de tarjetas microSD con comunicación sobre un puerto \textit{Synchronous Serial Port} (SSP).  Este protocolo es compatible con el protocolo SPI y utiliza un bus de 4 cables con las señales SCK, SSEL, MISO y MOSI.  Asimismo, el soporte seleccionado minimiza el consumo de energía, lo cual lo hace deseable para la aplicación.  El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdcard} junto con un diagrama esquemático del conexionado electrico a la CIAA-NXP.
+Teniendo en cuenta criterios de costos y simplicidad de interacción con la CIAA-NXP, se decidió utilizar un lector de tarjetas microSD con comunicación sobre un puerto \textit{Synchronous Serial Port} (SSP).  Este protocolo es compatible con el protocolo SPI y utiliza un bus de 4 cables con las señales SCK, SSEL, MISO y MOSI.  Asimismo, el soporte seleccionado minimiza el consumo de energía, lo cual lo hace deseable para la aplicación.  
+
+El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdCard}, donde puede verse esquemáticamente el diagrama de conexionado entre la CIAA-NXP y el lector (figura \ref{fig:lector_conexionado}) y una vista superior del módulo de hardware (figura \ref{fig:lector_hardware}).
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\begin{tabular}{rll}
+			\textbf{CIAA-NXP }&	& \textbf{Lector de tarjetas}\\
+			+3.3V     & --\textgreater{} & +3.3V   \\
+			GPIO0     & --\textgreater{} & CS  \\
+			SPI\_MOSI & --\textgreater{} & MOSI  \\
+			SPI\_SCK  & --\textgreater{} & SCK \\
+			SPI\_MISO & --\textgreater{} & MISO  \\
+			GND       & --\textgreater{} & GND  \\
+		\end{tabular}
+		\caption{ }
+  		\label{fig:lector_conexionado}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.9\textwidth]{./Figures/sdCardReader.jpg}
+		\caption{ }
+		\label{fig:lector_hardware}
+	\end{subfigure}
+	\caption{(A) Diagrama de conexionado eléctrico y (B) Lector de tarjetas SD utilizado.}
+	\label{fig:lector_sdCard}
+\end{figure}
+
+Para la utilización del lector de tarjetas se hizo uso de la biblioteca FatFs, desarrollada por chaN \citep{fatFS}. FatFs es un módulo de sistema de archivos FAT/exFAT genérico para sistemas embebidos limitados en recursos. En la figura \ref{fig:chan} se esquematizan las interfaces de la biblioteca en una aplicación típica. 
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=.4\textwidth]{./Figures/sdCardReader.jpg}
-	\caption{Lector de tarjetas SD / Micro SD utilizado.}
-	\label{fig:lector_sdcard}
+	\includegraphics[width=.43\textwidth]{./Figures/chan.png}
+	\caption[Diagrama de capas de fatFs]{Diagrama de capas con la ubicación de la biblioteca fatFs en el sistema y sus interfaces\protect\footnotemark.}
+	\label{fig:chan}
 \end{figure}
 
+\footnotetext{Imagen tomada de \url{http://elm-chan.org/fsw/ff/doc/appnote.html}.}
+
+El código está escrito en ANSI C y es \textit{software} libre bajo licencia estilo BSD \citep{BSD}.
 
 Se presenta el diagrama de estado de la MEF principal del módulo en la figura \ref{fig:mef_sdcard}, donde puede apreciase el punto de entrada con un circulo negro, los estado que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad. 
 
@@ -278,6 +311,36 @@ Una vez inicializado, todas las operación del módulo terminan en el estado \te
 	\caption[MEF principal del módulo de almacenamiento sdCard]{Máquina de estados finitos principal del módulo de almacenamiento sdCard}
 	\label{fig:mef_sdcard}
 \end{figure}
+
+En la table \ref{tab:estadosAlmacenamiento} se describen cada uno de los posibles estados de la MEF principal del módulo de almacenamiento.  Asimismo, se mencionan las señales para alcanzar cada uno de los estados de la MEF y se explicitan las acciones y actividades más destacables que se realizan en cada uno de ellos.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[ht]
+\centering
+\caption{Descripción de los estados de la MEF principal del módulo de almacenamiento.}
+\label{tab:estadosAlmacenamiento}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lll}
+\toprule
+\multicolumn{1}{c}{\textbf{Estado}} & \multicolumn{1}{c}{\textbf{Señal necesaria para alcanzarlo}}                                                             & \multicolumn{1}{c}{\textbf{Acciones y actividades}}                                                                                                                                                             
+\\
+\midrule
+DISABLE                             & Reset o sig\_disable                                                                                                     & \begin{tabular}[c]{@{}l@{}}Desinicializar el controlador SPI.\\ Desinicializar la bilioteca fatFS.\\ Desinicializar el módulo de almacenamiento.\\ Cambiar el estado del módulo de READY a DISABLE.\end{tabular} \\
+                                    &                                                                                                                          &                                                                                                                                                                                                                  \\
+INIT                                & sig\_init                                                                                                                & \begin{tabular}[c]{@{}l@{}}Inicializar el controlador SPI.\\ Inicializar la bilioteca fatFS.\\ Inicializar el módulo de almacenamiento.\\ Cambiar el estado del módulo de DISABLE a READY.\end{tabular}          \\
+                                    &                                                                                                                          &                                                                                                                                                                                                                  \\
+IDLE                                & \begin{tabular}[c]{@{}l@{}} \\Transición incodicional desde \\ otros subestados al terminar\\ su actividad.\end{tabular} & Cambiar estado del módulo de PROCESSING a READY                                                                                                                                                                  \\
+                                    &                                                                                                                          &                                                                                                                                                                                                                  \\
+UPDATE                              & sig\_update                                                                                                              & Ejecutar tarea periódica de mantenimiento de la tarjeta SD                                                                                                                                                       \\
+                                    &                                                                                                                          &                                                                                                                                                                                                                  \\
+WRITE                               & sig\_write                                                                                                               & \begin{tabular}[c]{@{}l@{}}\\Obtener timestamp \\ Escribir datos en la tarjeta SD\end{tabular}                                                                                                                   \\
+                                    &                                                                                                                          &                                                                                                                                                                                                                  \\
+READ                                & sig\_read                                                                                                                & Leer datos en la tarjeta SD                                                                                                                                                                                     \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
 
 \section{Módulo de adquisición}
 \label{sec:adquisicion}
