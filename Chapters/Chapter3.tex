@@ -192,7 +192,11 @@ El \textit{firmware} está fuertemente modularizado en archivos y utiliza un mod
 	\label{fig:capas}
 \end{figure}
 
+\vspace{10px}
+
 Para los módulos en la capa de aplicación, se confeccionó una matriz de trazabilidad de los requerimientos referidos al firmware, detallados en la sección \ref{sec:requerimientos}. La tabla \ref{tab:trazabilidad} permite saber en qué módulo del firmware serán implementados los requerimientos funcionales del proyecto.  Asimismo, permite controlar que todo este subconjunto de requerimientos sea implementado y que no haya superposición entre la funcionalidad de cada módulo.
+
+\vspace{10px}
 
 \begin{table}[ht]
 \caption[Matriz de trazabilidad de requerimientos funcionales]{Matriz de trazabilidad de requerimientos funcionales con los módulos de \textit{firmware}}
@@ -210,6 +214,8 @@ Para los módulos en la capa de aplicación, se confeccionó una matriz de traza
 
 Se definió una estructura de control para los módulos que incluye información sobre en qué \textit{core} debe ejecutarse, un campo para identificar al módulo, un puntero a la función manejadora de eventos que es invocada cada vez que hay un mensaje para este módulo, un campo para temporizar la ejecución periódica del módulo y finalmente, un campo para el estado del módulo que puede tomar uno de los siguientes valores: DISABLE, READY o PROCESSING.
 
+\vspace{10px}
+
 \begin{verbatim}
 typedef struct {
    CPUID_T coreID;
@@ -220,9 +226,13 @@ typedef struct {
 } module_t;
 \end{verbatim}
 
+\vspace{10px}
+
 Toda la interacción con los módulos se realiza a través de los respectivos manejadores de eventos y una cola de mensajes como la descrita en la subsección \ref{subsubsec:colas}, pero definida en una posición de memoria no compartida, por lo que su uso se limita al \textit{core} donde está definida.
 
 A continuación se listan los prototipos de los manejadores de eventos definidos:
+
+\vspace{10px}
 
 \begin{itemize}
   \item \texttt{void onewire\_handler(const ipcex\_msg\_t * msg );} 
@@ -231,20 +241,27 @@ A continuación se listan los prototipos de los manejadores de eventos definidos
   \item \texttt{void control\_handler(const ipcex\_msg\_t * msg );} 
 \end{itemize}
 
+\vspace{10px}
+
 Puede notarse que todos los manejadores reciben un mismo tipo de parámetro, un puntero constante a un mensaje de tipo \texttt{ipcex\_msg\_t}.  Cada módulo es responsable de interpretar los dos campos enteros sin signo de 32 bits de datos que contiene el mensaje.  Normalmente el campo \texttt{data0} define un comando y \texttt{data1} se utiliza opcionalmente para el envío de parámetros.
 
-Para todos los módulos se utilizó un modelo de \textit{firmware} basado en máquinas de estados finitos (MEF) jerárquicas, donde una MEF principal controla la lógica de funcionamiento con el mayor nivel de abstracción. Los diferentes estados pueden o no estar modelados con MEFs dependiendo de la conveniencia.  
+Para todos los módulos se utilizó un modelo de \textit{firmware} basado en máquinas de estados finitos (MEF) jerárquicas, donde una MEF principal controla la lógica de funcionamiento con el mayor nivel de abstracción. Los diferentes estados, a su vez, pueden o no estar modelados con MEFs dependiendo de la conveniencia de esto último.  
 
 \section{Módulo de almacenamiento}
 \label{sec:almacenamiento}
 
 El propósito del módulo de almacenamiento es proveer al sistema de una interfaz para operar con un medio de almacenamiento no volátil que permita guardar en forma permanente los datos registrados por el módulo de adquisición y eventualmente un log con información de \textit{debug}.  
 
+\subsection{Medio físico}
+\label{subsec:mediofisico}
+
 Se evaluaron distintas opciones de medios físicos.  En la tabla \ref{tab:medios} se recopilan las alternativas analizadas y se especifica un orden de magnitud para la capacidad de almacenamiento posible, el tipo de interfaz con el microcontrolador y el protocolo que debe implementarse en el \textit{firmware} para su utilización.
+
+\vspace{10px}
 
 \begin{table}[ht]
 \centering
-\caption{Alternativas de medios físicos evaluados}
+\caption{Alternativas de medios físicos evaluados.}
 \label{tab:medios}
 \begin{tabular}{lrcc}
 \toprule
@@ -256,9 +273,13 @@ Disco duro mecánico (HHD)                 & $\sim$1000 Gb                      
 \end{tabular}
 \end{table}
 
-Teniendo en cuenta criterios de costos y simplicidad de interacción con la CIAA-NXP, se decidió utilizar un lector de tarjetas microSD con comunicación sobre un puerto \textit{Synchronous Serial Port} (SSP).  Este protocolo es compatible con el protocolo SPI y utiliza un bus de 4 cables con las señales SCK, SSEL, MISO y MOSI.  Asimismo, el soporte seleccionado minimiza el consumo de energía, lo cual lo hace deseable para la aplicación.  
+\vspace{10px}
+
+Teniendo en cuenta criterios de costos y simplicidad de interacción con la CIAA-NXP, se decidió utilizar un lector de tarjetas microSD con comunicación sobre un puerto \textit{Synchronous Serial Port} (SSP).  Este protocolo es compatible con el protocolo SPI y utiliza un bus de 4 cables con las señales SCK, SSEL, MISO y MOSI.  Asimismo, el soporte seleccionado minimiza el consumo de energía comparado con las otras alternativas, lo cual lo hace deseable para la aplicación.  
 
 El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdCard}, donde puede verse esquemáticamente el diagrama de conexionado entre la CIAA-NXP y el lector (figura \ref{fig:lector_conexionado}) y una vista superior del módulo de hardware (figura \ref{fig:lector_hardware}).
+
+\vspace{20px}
 
 \begin{figure}[h]
 	\centering
@@ -267,7 +288,7 @@ El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdCard}
 		\begin{tabular}{rll}
 			\textbf{CIAA-NXP }&	& \textbf{Lector de tarjetas}\\
 			+3.3V     & --\textgreater{} & +3.3V   \\
-			GPIO0     & --\textgreater{} & CS  \\
+			GND       & --\textgreater{} & CS  \\
 			SPI\_MOSI & --\textgreater{} & MOSI  \\
 			SPI\_SCK  & --\textgreater{} & SCK \\
 			SPI\_MISO & --\textgreater{} & MISO  \\
@@ -286,6 +307,8 @@ El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdCard}
 	\label{fig:lector_sdCard}
 \end{figure}
 
+\vspace{10px}
+
 Para la utilización del lector de tarjetas se hizo uso de la biblioteca FatFs, desarrollada por chaN \citep{fatFS}. FatFs es un módulo de sistema de archivos FAT/exFAT genérico para sistemas embebidos limitados en recursos. En la figura \ref{fig:chan} se esquematizan las interfaces de la biblioteca en una aplicación típica. 
 
 \begin{figure}[htpb]
@@ -299,11 +322,18 @@ Para la utilización del lector de tarjetas se hizo uso de la biblioteca FatFs, 
 
 El código está escrito en ANSI C y es \textit{software} libre bajo licencia estilo BSD \citep{BSD}.
 
+\subsection{Máquina de Estados Finitos}
+\label{subsec:MEFsdcard}
+
 Se presenta el diagrama de estado de la MEF principal del módulo en la figura \ref{fig:mef_sdcard}, donde puede apreciase el punto de entrada con un circulo negro, los estado que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad. 
 
 Debe notarse que al energizarse el sistema o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.  
 
-Una vez inicializado, todas las operación del módulo terminan en el estado \texttt{IDLE}, en donde se cambia el estado del módulo de \texttt{PROCESSING} a \texttt{READY}.
+Una vez inicializado, el módulo se encontrará la mayor parte del tiempo en el estado \texttt{IDLE} a la espera de un comando válido.  
+
+Cuando el módulo esté realizando alguna operación de lectura, escritura o actualización sobre la tarjeta SD, el estado del módulo tendrá el valor \texttt{PROCESSING} para indicarle al módulo de control que debe tener acceso a tiempo de CPU para poder completar las operaciones pendientes.  
+
+Todas las operación del módulo desde que es inicializado terminan incondicionalmente en el estado \texttt{IDLE}, en donde el valor de la variable que registra el estado del módulo cambia de \texttt{PROCESSING} a \texttt{READY}.
 
 \begin{figure}[htpb]
 	\centering
@@ -316,23 +346,23 @@ En la table \ref{tab:estadosAlmacenamiento} se describen cada uno de los posible
 
 % Please add the following required packages to your document preamble:
 % \usepackage{graphicx}
-\begin{table}[ht]
+\begin{table}[htpb]
 \centering
 \caption{Descripción de los estados de la MEF principal del módulo de almacenamiento.}
 \label{tab:estadosAlmacenamiento}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lll}
 \toprule
-\multicolumn{1}{c}{\textbf{Estado}} & \multicolumn{1}{c}{\textbf{Señal necesaria para alcanzarlo}}                                                             & \multicolumn{1}{c}{\textbf{Acciones y actividades}}                                                                                                                                                             
+\multicolumn{1}{c}{\textbf{Estado}} & \multicolumn{1}{c}{\textbf{Señal para cambio}}                                                             & \multicolumn{1}{c}{\textbf{Acciones y actividades}}                                                                                                                                                             
 \\
 \midrule
 DISABLE                             & Reset o sig\_disable                                                                                                     & \begin{tabular}[c]{@{}l@{}}Desinicializar el controlador SPI.\\ Desinicializar la bilioteca fatFS.\\ Desinicializar el módulo de almacenamiento.\\ Cambiar el estado del módulo de READY a DISABLE.\end{tabular} \\
                                     &                                                                                                                          &                                                                                                                                                                                                                  \\
 INIT                                & sig\_init                                                                                                                & \begin{tabular}[c]{@{}l@{}}Inicializar el controlador SPI.\\ Inicializar la bilioteca fatFS.\\ Inicializar el módulo de almacenamiento.\\ Cambiar el estado del módulo de DISABLE a READY.\end{tabular}          \\
                                     &                                                                                                                          &                                                                                                                                                                                                                  \\
-IDLE                                & \begin{tabular}[c]{@{}l@{}} \\Transición incodicional desde \\ otros subestados al terminar\\ su actividad.\end{tabular} & Cambiar estado del módulo de PROCESSING a READY                                                                                                                                                                  \\
+IDLE                                & \begin{tabular}[c]{@{}l@{}} \\Transición incondicional\\ desde otros estados al \\terminar su actividad.\end{tabular} & Cambiar estado del módulo de PROCESSING a READY                                                                                                                                                                  \\
                                     &                                                                                                                          &                                                                                                                                                                                                                  \\
-UPDATE                              & sig\_update                                                                                                              & Ejecutar tarea periódica de mantenimiento de la tarjeta SD                                                                                                                                                       \\
+UPDATE                              & sig\_update                                                                                                              & Ejecutar tarea periódica de actualización de la tarjeta SD                                                                                                                                                       \\
                                     &                                                                                                                          &                                                                                                                                                                                                                  \\
 WRITE                               & sig\_write                                                                                                               & \begin{tabular}[c]{@{}l@{}}\\Obtener timestamp \\ Escribir datos en la tarjeta SD\end{tabular}                                                                                                                   \\
                                     &                                                                                                                          &                                                                                                                                                                                                                  \\
@@ -342,14 +372,115 @@ READ                                & sig\_read                                 
 }
 \end{table}
 
+\clearpage
 \section{Módulo de adquisición}
 \label{sec:adquisicion}
+
+El propósito del módulo de adquisición es proveer al sistema de una interfaz para operar los distintos sensores que puedan conectarse a la estación.  Originalmente, se contempló el uso de uno o varios termómetros y un anemómetro para medir temperatura del agua y velocidad del viento en superficie, respectivamente. Adicionalmente, se contempla incorporar hidrofónos para registrar el nivel de ruido submarino, principal objetivo de la estación de medición.
+
+Se mencionó en la sección \ref{sec:objetivosyalcances}, que los hidrófonos quedaron fuera del alcance del proyecto en esta etapa del desarrollo.  De igual manera, el control del anemómetro quedará fuera de la implementación ya que se optó por priorizar el requerimiento implícito de cumplir con la fecha de entrega.  Se retoma este punto en el capítulo \ref{Chapter5}, en la sección \ref{subsec:metasnoalcanzadas}, donde se discuten sus implicancias.
+
+Sin pérdida de generalidad, la arquitectura del módulo puede utilizarse para incorporar los sensores no implementados más adelante.
 
 \subsection{Sensor de temperatura}
 \label{subsec:1-wire}
 
-\subsection{Sensor de velocidad de viento}
-\label{subsec:anemometro}
+%En la presente sección se presenta la implementación del control para el sensor de temperatura. 
+
+Se evaluaron distintas opciones para el sensor de temperatura que estuvieran disponibles en el mercado local.  Se recopila en la tabla \ref{tab:temperatura} la información relevada para los sensores candidatos, donde puede verse fabricante y modelo de cada dispositivo junto con las principales características de interés para la aplicación.
+
+Cabe destacar que la limitante para el rango de temperatura no es el propio sensor sino el plástico que recubre los hilos conductores que lo conectan al microcontrolador, motivo por el cual todas las alternativas evaluadas poseen rangos equivalente.  Se utiliza en la tabla un código sencillo para indicar un orden de magnitud del costo relativo del sensor con \$ para costo bajo, \$\$ para costo medio y \$\$\$ para costo alto.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[htpb]
+\centering
+\caption{Alternativas de sensor de temperatura evaluadas.}
+\label{tab:temperatura}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{ccccccc}
+\toprule
+\textbf{Fabricante} & \textbf{Sensor} & \textbf{Tipo}                                                                    & \textbf{Precisión}      & \textbf{Rango} & \textbf{Interfaz} & \textbf{Costo} \\
+\midrule
+Maxim Integrated    & DS18B20         & Termómetro digital                                                               & $\pm$ 0.5 \grados C                & -55 a +125 \grados C  & 1-wire            & \$             \\
+\multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{}                                                             & \multicolumn{1}{l}{}    & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} \\
+Genérico            & IM120628010     & Termistor NTC                                                                    & 1\%                     & -25 a +125 \grados C  & 1-wire            & \$             \\
+\multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{}                                                             & \multicolumn{1}{l}{}    & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} \\
+TI                  & LM35            & Integrated Circuit - $\Delta V_{BE}$                                               & $\pm$ 0.5 \grados C                & -55 a +150 \grados C  & Analógica         & \$   \\
+\multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{}                                                             & \multicolumn{1}{l}{}    & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} \\
+Altas Scientific    & PT-1000A        & \begin{tabular}[c]{@{}c@{}}RTD \\ (resistance temperature detector)\end{tabular} & $\pm$ (0.15 + (0.002*t)) \grados C & -55 a +125 \grados C  & Analógica         & \$\$\$         \\
+\bottomrule         
+\end{tabular}%
+}
+\end{table}
+
+El sensor elegido es el termómetro digital DS18B20 del fabricante Maxim Integrated \citep{ds18b20}. Los motivos de la elección fueron principalmente la facilidad de uso en un entorno embebido de recursos limitados, la disponibilidad de documentación completa y detallada junto con numerosas notas de aplicación y el bajo costo del dispositivo.
+
+En la figura \ref{fig:ds18b20_bloques} se puede apreciar un diagrama en bloques del sensor, en donde destaca la interfaz de 3 cables con una línea bidireccional de datos (DQ) y dos cables para la alimentación (GND y $V_{DD}$). 
+
+El sensor admite una configuración de alimentación ``parásita'', en la cual se energiza desde la línea de datos DQ, lo que habilita a prescindir de un cable a costa de mayores requerimientos para la temporización de las comunicaciones y la utilización de un transistor a modo de \textit{``strong pull-up''} (conectado el bus de datos directamente a $V_{DD}$).
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ds18b20_bloques.png}
+	\caption[Diagrama en bloques del sensor de temperatura DS18B20]{Diagrama en bloques del sensor de temperatura\protect\footnotemark.}
+	\label{fig:ds18b20_bloques}
+\end{figure}
+
+\footnotetext{Imagen tomada de \url{https://www.maximintegrated.com/en/images/qv/2812.png}}
+
+Cada sensor posee un código de identificación único de 64 bits que permite operar con múltiples sensores sobre un mismo bus de tipo 1-wire.  Mediante un algoritmo de descubrimiento se pueden identificar los sensores conectados a un mismo bus y controlarlos independientemente. 
+
+La capacidad para identificar cuántos sensores hay conectados en cada momento y poder interrogarlos individualmente se utilizó para incorporar una funcionalidad de autochequeo, en la cual el microcontrolador es capaz de detectar si un sensor ha dejado de funcionar correctamente.
+
+Otras características destacables son la posibilidad de configurar la resolución entre 9 y 12 bits, el uso de CRC en las comunicaciones y la capacidad para definir umbrales de alarma para los valores de temperatura medidos.
+
+Este sensor se comercializa con distintas longitudes de cable, dentro de un encapsulado metálico sumergible.  Para este trabajo se adquirieron dos sensores sumergibles con 5 metros de cable y 2 metros de cable, respectivamente.   
+
+Los dos sensores operan sobre una misma línea de datos con una resistencia de \textit{pull-up} de 2,2 K$\Omega$, como puede verse en el diagrama de conexionado eléctrico de la figura \ref{fig:ds18b20_conexionado}.  El encapsulado sumergible puede apreciarse en la figura \ref{fig:termometro}.
+
+\vspace{10px}
+
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}{.6\textwidth}
+		\centering
+		\includegraphics[height=4cm]{./Figures/ds18b20_conexionado.pdf}
+		\caption{ }
+  		\label{fig:ds18b20_conexionado}
+	\end{subfigure}%
+	\begin{subfigure}{.4\textwidth}
+		\centering
+		\includegraphics[height=4cm]{./Figures/ds18b20.jpg}
+		\caption{ }
+		\label{fig:termometro}
+	\end{subfigure}
+	\caption{(A) Diagrama de conexionado eléctrico y (B) Sensor de temperatura utilizado.}
+	\label{fig:ds18b20}
+\end{figure}
+
+Para el control de los dispositivos se adaptó una implementación de controlador de bus \textit{1-wire} para microcontroladores de la familia LPC1343, desarrollada en forma de biblioteca por James Harwood \citep{harwood}.  En esta biblioteca se hace uso de las técnicas de programación concurrente descritas en el capitulo \ref{Chapter2}, subsección \ref{subsec:protothreads}.
+
+\subsection{Máquina de Estados Finitos}
+
+En forma análoga a lo presentado en la subsección \ref{subsec:MEFsdcard}, se muestra aquí el diagrama de estado de la MEF principal del módulo en la figura \ref{fig:mef_adquisicion}, donde puede apreciase el punto de entrada con un circulo negro, los estado que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad. 
+
+Igualmente, debe notarse que al energizarse el sistema o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.  
+
+Una vez inicializado, el módulo se encontrará la mayor parte del tiempo en el estado \texttt{IDLE} a la espera de un comando válido.  
+
+Cuando el módulo esté realizando alguna operación de adquisición, configuración o autochequeo sobre los sensores conectados, el estado del módulo tendrá el valor \texttt{PROCESSING} para indicarle al módulo de control que debe tener acceso a tiempo de CPU para poder completar las operaciones pendientes.  
+
+Todas las operación del módulo desde que es inicializado terminan incondicionalmente en el estado \texttt{IDLE}, en donde el valor de la variable que registra el estado cambia de \texttt{PROCESSING} a \texttt{READY}.
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/MEF_adquisicion.pdf}
+	\caption[MEF principal del módulo de adquisición de temperatura]{Máquina de estados finitos principal del módulo de adquisición de temperatura}
+	\label{fig:mef_adquisicion}
+\end{figure}
+%\subsection{Sensor de velocidad de viento}
+%\label{subsec:anemometro}
 
 \section{Módulo interfaz HMI}
 \label{sec:HMI}
