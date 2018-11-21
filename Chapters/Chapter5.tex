@@ -13,12 +13,32 @@ En este capítulo se destacan los principales aportes del trabajo realizado y se
 
 \section{Conclusiones generales }
 
-La idea de esta sección es resaltar cuáles son los principales aportes del trabajo realizado y cómo se podría continuar. Debe ser especialmente breve y concisa. Es buena idea usar un listado para enumerar los logros obtenidos.
+%La idea de esta sección es resaltar cuáles son los principales aportes del trabajo realizado y cómo se podría continuar. Debe ser especialmente breve y concisa. Es buena idea usar un listado para enumerar los logros obtenidos.
+
+En este trabajo se logró completar una primera iteración en el ciclo de diseño e implementación de un sistema embebido para el control de una estación de monitorio de ruido ambiente submarino.  
+
+Se pudo desarrollar un \textit{firmware} multicore modular que sienta las bases para una segunda iteración donde se diseñen e implementen tanto los componentes que quedaron fuera del alcance de esta etapa, así como también los que estaban contemplados pero no pudieron implementarse.
+
+Los principales aportes de este trabajos son:
+
+\begin{itemize}
+	\item Adopción de una metodología de desarrollo basada en control de versiones sistemática y robusta.
+	\item Desarrollo de una arquitectura modular multicore que permite el intercambio de funcionalidades entre procesadores de forma flexible.
+	\item Implementación de mecanismos de comunicación y sincronización entre procesadores, basados en interrupciones cruzadas y colas de mensajes.
+	\item Desarrollo de 4 módulos con funcionalidad de adquisición de datos, almacenamientos de datos, HMI y control del sistema, respectivamente. 
+	\item Implementación de mecanismos de control y autochequeo para aumentar la seguridad de operación del sistema.
+	\item Documentación completa de ingeniería de detalle de los módulos desarrollados.
+	\item Documentación completa de testing.
+	\item Documentación completa de trazabilidad entre requerimientos, ingeniería de detalle y testing.
+\end{itemize} 
 
 \subsection{Técnicas útiles}
 
-\subsection{Metas no alcanzadas}
-\label{subsec:metasnoalcanzadas}
+Resultaron particularmente útiles las técnicas de gestión de proyecto empleadas en la planificación de este trabajo.
+
+
+\subsection{Metas alcanzadas}
+\label{subsec:metasalcanzadas}
 
 A los fines prácticos de terminar el trabajo en la fecha pactada, no fue posible implementar el control del anemómetro.  Esto no responde a una dificultad técnica sino a hechos imprevistos en la planificación que sobrecargaron la dedicación horaria a actividades ajenas al proyecto e imposibilitaron el cumplimiento del requisito asociado a este sensor.
 

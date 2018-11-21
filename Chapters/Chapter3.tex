@@ -102,7 +102,9 @@ El mecanismo de interrupciones cruzadas es el más simple de los 3 métodos prov
 
 Para enviar señales al \textit{core} ``remoto'', el \textit{core} ``local'' utiliza una instrucción dedicada SEV (\textit{send event}) provista por la arquitectura Cortex.
 
-Asimismo, dentro de la rutina de interrupción se habilita un \textit{flag} para indicar que se ha recibido una notificación IPC.  Esta variable \textit{flag} puede ser usada por las aplicaciones corriendo sobre el \textit{core} que recibe la notificación para chequear el estado de las comunicaciones. La limpieza del \textit{flag} se hace dentro de una sección crítica donde se deshabilitan temporalmente las interrupciones.  En el Cortex-M4 se enmascaran las interrupciones con mayor prioridad y en el Cortex-M0 se deshabilitan directamente, ya que este procesador no dispone del mecanismo de enmascaramiento.
+Asimismo, dentro de la rutina de interrupción se habilita un \textit{flag} para indicar que se ha recibido una notificación IPC.  Esta variable \textit{flag} puede ser usada por las aplicaciones corriendo sobre el \textit{core} que recibe la notificación para chequear el estado de las comunicaciones. 
+
+La limpieza del \textit{flag} se hace dentro de una sección crítica donde se deshabilitan temporalmente las interrupciones. En el Cortex-M4 se enmascaran las interrupciones con mayor prioridad y en el Cortex-M0 se deshabilitan directamente, ya que este procesador no dispone del mecanismo de enmascaramiento.
 
 El código para generar las interrupciones cruzadas utiliza dos macros. Primero \_\_DSB() (\textit{Data Syncronization Barrier}) para terminar todas las transacciones de memoria pendientes y luego \_\_SEV() (\textit{Send Event}) para generar el envío de una señal de interrupción al otro procesador.
 %, como puede apreciarse en \ref{cod:interrupt}
@@ -183,18 +185,24 @@ typedef struct __ipcex_msg {
 \section{Diseño de módulos y definición de interfaces}
 \label{sec:modulos}
 
-El \textit{firmware} está fuertemente modularizado en archivos y utiliza un modelo de capas jerárquicas para organizar el código en distintos niveles de abstracción.  En la figura \ref{fig:capas} se pueden observar, agrupados por color, las capas utilizadas en este trabajo.  En color amarillo, el paquete de drivers provistos por el fabricante del silicio; en color naranja la capa de bibiotecas; la capa de abstracción de \textit{hardware} (HAL, por sus siglas en inglés) en color verde; y finalmente, en color celeste, la capa de aplicación con los cuatro módulos implementados.   
+El \textit{firmware} está fuertemente modularizado en archivos y utiliza un modelo de capas jerárquicas para organizar el código en distintos niveles de abstracción.  
+
+En la figura \ref{fig:capas} se pueden observar, agrupados por color, las capas utilizadas en este trabajo.  En color amarillo, el paquete de drivers provistos por el fabricante del silicio; en color naranja la capa de bibiotecas; la capa de abstracción de \textit{hardware} (HAL, por sus siglas en inglés) en color verde; y finalmente, en color celeste, la capa de aplicación con los cuatro módulos implementados.   
+
+%\vspace{10px}
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=.55\textwidth]{./Figures/capas.pdf}
+	\includegraphics[width=.5\textwidth]{./Figures/capas.pdf}
 	\caption[Estructura de capas para el \textit{firmware}.]{Estructura de capas para el \textit{firmware}. En orden creciente de nivel de abstracción: \textit{core support package} (amarillo), bibliotecas (naranja), sAPI (verde) y la capa de aplicación (celeste) con los 4 módulos implementados.}
 	\label{fig:capas}
 \end{figure}
 
 \vspace{10px}
 
-Para los módulos en la capa de aplicación, se confeccionó una matriz de trazabilidad de los requerimientos referidos al firmware, detallados en la sección \ref{sec:requerimientos}. La tabla \ref{tab:trazabilidad} permite saber en qué módulo del firmware serán implementados los requerimientos funcionales del proyecto.  Asimismo, permite controlar que todo este subconjunto de requerimientos sea implementado y que no haya superposición entre la funcionalidad de cada módulo.
+Para los módulos en la capa de aplicación, se confeccionó una matriz de trazabilidad de los requerimientos referidos al firmware, detallados en la sección \ref{sec:requerimientos}. 
+
+La tabla \ref{tab:trazabilidad} permite saber en qué módulo del firmware serán implementados los requerimientos funcionales del proyecto.  Asimismo, permite controlar que todo este subconjunto de requerimientos sea implementado y que no haya superposición entre la funcionalidad de cada módulo.
 
 \vspace{10px}
 
@@ -212,7 +220,7 @@ Para los módulos en la capa de aplicación, se confeccionó una matriz de traza
 \end{tabular}
 \end{table}
 
-Se definió una estructura de control para los módulos que incluye información sobre en qué \textit{core} debe ejecutarse, un campo para identificar al módulo, un puntero a la función manejadora de eventos que es invocada cada vez que hay un mensaje para este módulo, un campo para temporizar la ejecución periódica del módulo y finalmente, un campo para el estado del módulo que puede tomar uno de los siguientes valores: DISABLE, READY o PROCESSING.
+Se definió un nuevo tipo de dato, \texttt{module\_t} en base a una estructura que contiene campos de control para los módulos. El primer campos indican en qué \textit{core} debe ejecutarse el módulo. Sigue un campo para identificar al módulo y un puntero a la función manejadora de eventos que es invocada cada vez que hay un mensaje para este módulo. \texttt{period} permite temporizar la ejecución periódica del módulo y finalmente, se incluye un campo para el estado del módulo que puede tomar uno de los siguientes valores: DISABLE, READY o PROCESSING.
 
 \vspace{10px}
 
@@ -245,7 +253,9 @@ A continuación se listan los prototipos de los manejadores de eventos definidos
 
 Puede notarse que todos los manejadores reciben un mismo tipo de parámetro, un puntero constante a un mensaje de tipo \texttt{ipcex\_msg\_t}.  Cada módulo es responsable de interpretar los dos campos enteros sin signo de 32 bits de datos que contiene el mensaje.  Normalmente el campo \texttt{data0} define un comando y \texttt{data1} se utiliza opcionalmente para el envío de parámetros.
 
-Para todos los módulos se utilizó un modelo de \textit{firmware} basado en máquinas de estados finitos (MEF) jerárquicas, donde una MEF principal controla la lógica de funcionamiento con el mayor nivel de abstracción. Los diferentes estados, a su vez, pueden o no estar modelados con MEFs dependiendo de la conveniencia de esto último.  
+Para todos los módulos se utilizó un modelo de \textit{firmware} basado en máquinas de estados finitos (MEF) jerárquicas, donde una MEF principal controla la lógica de funcionamiento con el mayor nivel de abstracción. Los diferentes estados, a su vez, pueden o no estar modelados con MEFs dependiendo de la conveniencia de esto último.
+
+Se definió una arquitectura para la MEF principal lo más genérica posible de forma que pueda ser compartida por los distintos módulos.  En este sentido, todos los módulos poseen un estado \texttt{DISABLE}, \texttt{INIT}, \texttt{IDLE}, \texttt{CONFIG} y \texttt{CHECK}.  La funcionalidad que implementen será propia del módulo. Todos los módulos inician en estado \texttt{DISABLE}. Adicionalmente, la MEF principal tendrá estados que sean específicos para lograr su propósito.
 
 \section{Módulo de almacenamiento}
 \label{sec:almacenamiento}
@@ -277,13 +287,13 @@ Disco duro mecánico (HHD)                 & $\sim$1000 Gb                      
 
 Teniendo en cuenta criterios de costos y simplicidad de interacción con la CIAA-NXP, se decidió utilizar un lector de tarjetas microSD con comunicación sobre un puerto \textit{Synchronous Serial Port} (SSP).  Este protocolo es compatible con el protocolo SPI y utiliza un bus de 4 cables con las señales SCK, SSEL, MISO y MOSI.  Asimismo, el soporte seleccionado minimiza el consumo de energía comparado con las otras alternativas, lo cual lo hace deseable para la aplicación.  
 
-El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdCard}, donde puede verse esquemáticamente el diagrama de conexionado entre la CIAA-NXP y el lector (figura \ref{fig:lector_conexionado}) y una vista superior del módulo de hardware (figura \ref{fig:lector_hardware}).
+El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdCard}, donde puede verse esquemáticamente el diagrama de conexionado eléctrico entre la CIAA-NXP y el lector (figura \ref{fig:lector_conexionado}) y una vista superior del módulo de hardware (figura \ref{fig:lector_hardware}). Cabe notar que al haber un único dispositivo ``escalvo'' en el bus SSP, la señal de \textit{chip select} (CS) se conecta con GND, lo que implica que el dispositivo está permanente seleccionado.
 
 \vspace{20px}
 
 \begin{figure}[h]
 	\centering
-	\begin{subfigure}{.5\textwidth}
+	\begin{subfigure}{.4\textwidth}
 		\centering
 		\begin{tabular}{rll}
 			\textbf{CIAA-NXP }&	& \textbf{Lector de tarjetas}\\
@@ -297,9 +307,10 @@ El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdCard}
 		\caption{ }
   		\label{fig:lector_conexionado}
 	\end{subfigure}%
-	\begin{subfigure}{.5\textwidth}
+	\begin{subfigure}{.6\textwidth}
+	\hspace{15px}
 		\centering
-		\includegraphics[width=.9\textwidth]{./Figures/sdCardReader.jpg}
+		\includegraphics[height=3.3cm]{./Figures/sdCardReader.jpg}
 		\caption{ }
 		\label{fig:lector_hardware}
 	\end{subfigure}
@@ -337,7 +348,7 @@ Todas las operación del módulo desde que es inicializado terminan incondiciona
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=\textwidth]{./Figures/MEF_sdCard.pdf}
+	\includegraphics[width=\textwidth]{./Figures/MEF_sdCard_2.pdf}
 	\caption[MEF principal del módulo de almacenamiento sdCard]{Máquina de estados finitos principal del módulo de almacenamiento sdCard}
 	\label{fig:mef_sdcard}
 \end{figure}
@@ -348,29 +359,31 @@ En la table \ref{tab:estadosAlmacenamiento} se describen cada uno de los posible
 % \usepackage{graphicx}
 \begin{table}[htpb]
 \centering
-\caption{Descripción de los estados de la MEF principal del módulo de almacenamiento.}
+\caption[Descripción de los estados de la MEF principal del módulo de almacenamiento.]{Descripción de los estados de la MEF principal del módulo de almacenamiento.  Se indican las señales que puede recibir junto con las acciones más relevantes de cada estado.}
 \label{tab:estadosAlmacenamiento}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lll}
 \toprule
-\multicolumn{1}{c}{\textbf{Estado}} & \multicolumn{1}{c}{\textbf{Señal para cambio}}                                                             & \multicolumn{1}{c}{\textbf{Acciones y actividades}}                                                                                                                                                             
-\\
-\midrule
-DISABLE                             & Reset o sig\_disable                                                                                                     & \begin{tabular}[c]{@{}l@{}}Desinicializar el controlador SPI.\\ Desinicializar la bilioteca fatFS.\\ Desinicializar el módulo de almacenamiento.\\ Cambiar el estado del módulo de READY a DISABLE.\end{tabular} \\
-                                    &                                                                                                                          &                                                                                                                                                                                                                  \\
-INIT                                & sig\_init                                                                                                                & \begin{tabular}[c]{@{}l@{}}Inicializar el controlador SPI.\\ Inicializar la bilioteca fatFS.\\ Inicializar el módulo de almacenamiento.\\ Cambiar el estado del módulo de DISABLE a READY.\end{tabular}          \\
-                                    &                                                                                                                          &                                                                                                                                                                                                                  \\
-IDLE                                & \begin{tabular}[c]{@{}l@{}} \\Transición incondicional\\ desde otros estados al \\terminar su actividad.\end{tabular} & Cambiar estado del módulo de PROCESSING a READY                                                                                                                                                                  \\
-                                    &                                                                                                                          &                                                                                                                                                                                                                  \\
-UPDATE                              & sig\_update                                                                                                              & Ejecutar tarea periódica de actualización de la tarjeta SD                                                                                                                                                       \\
-                                    &                                                                                                                          &                                                                                                                                                                                                                  \\
-WRITE                               & sig\_write                                                                                                               & \begin{tabular}[c]{@{}l@{}}\\Obtener timestamp \\ Escribir datos en la tarjeta SD\end{tabular}                                                                                                                   \\
-                                    &                                                                                                                          &                                                                                                                                                                                                                  \\
-READ                                & sig\_read                                                                                                                & Leer datos en la tarjeta SD                                                                                                                                                                                     \\
-\bottomrule
+\multicolumn{1}{c}{\textbf{Estado}} & \multicolumn{1}{c}{\textbf{Señal para cambio}} & \multicolumn{1}{c}{\textbf{Acciones y actividades}} \\ \midrule
+DISABLE & Reset o sig\_disable & \begin{tabular}[c]{@{}l@{}}Desinicializar el controlador SPI.\\ Desinicializar la bilioteca fatFS.\\ Desinicializar el módulo de almacenamiento.\\ Cambiar el estado del módulo de READY a DISABLE.\end{tabular} \\
+ &  &  \\
+INIT & sig\_init & \begin{tabular}[c]{@{}l@{}}Inicializar el controlador SPI.\\ Inicializar la bilioteca fatFS.\\ Inicializar el módulo de almacenamiento.\\ Cambiar el estado del módulo de DISABLE a READY.\end{tabular} \\
+ &  &  \\
+IDLE & transición incondicional & Cambiar estado del módulo de PROCESSING a READY. \\
+ &  &  \\
+CONFIG & sig\_config & Realizar cambios de configuración al módulo. \\
+ &  &  \\
+CHECK & sig\_check & Realizar autochequeo e informar al módulo de control \\
+ &  &  \\
+UPDATE & sig\_timeout & Ejecutar tarea periódica de actualización de la tarjeta SD. \\
+ &  &  \\
+WRITE & sig\_write & Obtener timestamp y escribir datos en la tarjeta SD. \\
+ &  &  \\
+READ & sig\_read & Leer datos en la tarjeta SD \\ \bottomrule
 \end{tabular}%
 }
 \end{table}
+
 
 \clearpage
 \section{Módulo de adquisición}
@@ -378,9 +391,9 @@ READ                                & sig\_read                                 
 
 El propósito del módulo de adquisición es proveer al sistema de una interfaz para operar los distintos sensores que puedan conectarse a la estación.  Originalmente, se contempló el uso de uno o varios termómetros y un anemómetro para medir temperatura del agua y velocidad del viento en superficie, respectivamente. Adicionalmente, se contempla incorporar hidrofónos para registrar el nivel de ruido submarino, principal objetivo de la estación de medición.
 
-Se mencionó en la sección \ref{sec:objetivosyalcances}, que los hidrófonos quedaron fuera del alcance del proyecto en esta etapa del desarrollo.  De igual manera, el control del anemómetro quedará fuera de la implementación ya que se optó por priorizar el requerimiento implícito de cumplir con la fecha de entrega.  Se retoma este punto en el capítulo \ref{Chapter5}, en la sección \ref{subsec:metasnoalcanzadas}, donde se discuten sus implicancias.
+Se mencionó en la sección \ref{sec:objetivosyalcances}, que los hidrófonos quedaron fuera del alcance del proyecto en esta etapa del desarrollo.  De igual manera, el control del anemómetro quedará fuera de la implementación ya que se optó por priorizar el requerimiento implícito de cumplir con la fecha de entrega.  Se retoma este punto en el capítulo \ref{Chapter5}, en la sección \ref{subsec:metasalcanzadas}, donde se discuten sus implicancias.
 
-Sin pérdida de generalidad, la arquitectura del módulo puede utilizarse para incorporar los sensores no implementados más adelante.
+Sin pérdida de generalidad, la arquitectura de módulo adoptada puede utilizarse para incorporar los sensores no implementados, en una segunda iteración.
 
 \subsection{Sensor de temperatura}
 \label{subsec:1-wire}
@@ -420,9 +433,9 @@ En la figura \ref{fig:ds18b20_bloques} se puede apreciar un diagrama en bloques 
 
 El sensor admite una configuración de alimentación ``parásita'', en la cual se energiza desde la línea de datos DQ, lo que habilita a prescindir de un cable a costa de mayores requerimientos para la temporización de las comunicaciones y la utilización de un transistor a modo de \textit{``strong pull-up''} (conectado el bus de datos directamente a $V_{DD}$).
 
-\begin{figure}[ht]
+\begin{figure}[htpb]
 	\centering
-	\includegraphics[width=\textwidth]{./Figures/ds18b20_bloques.png}
+	\includegraphics[width=.8\textwidth]{./Figures/ds18b20_bloques.png}
 	\caption[Diagrama en bloques del sensor de temperatura DS18B20]{Diagrama en bloques del sensor de temperatura\protect\footnotemark.}
 	\label{fig:ds18b20_bloques}
 \end{figure}
@@ -439,9 +452,9 @@ Este sensor se comercializa con distintas longitudes de cable, dentro de un enca
 
 Los dos sensores operan sobre una misma línea de datos con una resistencia de \textit{pull-up} de 2,2 K$\Omega$, como puede verse en el diagrama de conexionado eléctrico de la figura \ref{fig:ds18b20_conexionado}.  El encapsulado sumergible puede apreciarse en la figura \ref{fig:termometro}.
 
-\vspace{10px}
+%\vspace{10px}
 
-\begin{figure}[ht]
+\begin{figure}[htpb]
 	\centering
 	\begin{subfigure}{.6\textwidth}
 		\centering
@@ -459,13 +472,14 @@ Los dos sensores operan sobre una misma línea de datos con una resistencia de \
 	\label{fig:ds18b20}
 \end{figure}
 
+\clearpage
 Para el control de los dispositivos se adaptó una implementación de controlador de bus \textit{1-wire} para microcontroladores de la familia LPC1343, desarrollada en forma de biblioteca por James Harwood \citep{harwood}.  En esta biblioteca se hace uso de las técnicas de programación concurrente descritas en el capitulo \ref{Chapter2}, subsección \ref{subsec:protothreads}.
 
 \subsection{Máquina de Estados Finitos}
 
 En forma análoga a lo presentado en la subsección \ref{subsec:MEFsdcard}, se muestra aquí el diagrama de estado de la MEF principal del módulo en la figura \ref{fig:mef_adquisicion}, donde puede apreciase el punto de entrada con un circulo negro, los estado que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad. 
 
-Igualmente, debe notarse que al energizarse el sistema o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.  
+Igualmente, debe notarse que cuando el sistema es energizado o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.  
 
 Una vez inicializado, el módulo se encontrará la mayor parte del tiempo en el estado \texttt{IDLE} a la espera de un comando válido.  
 
@@ -479,11 +493,142 @@ Todas las operación del módulo desde que es inicializado terminan incondiciona
 	\caption[MEF principal del módulo de adquisición de temperatura]{Máquina de estados finitos principal del módulo de adquisición de temperatura}
 	\label{fig:mef_adquisicion}
 \end{figure}
+
+Las principales acciones y actividades de cada estado se describen en la tabla \ref{tab:estadosAdquisicion}.  Asimismo, se indican las señales válidas que puede recibir la MEF junto con las transiciones que éstas provocan.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[htpb]
+\centering
+\caption[Descripción de los estados de la MEF principal del módulo de adquisición.]{Descripción de los estados de la MEF principal del módulo de adquisición.  Se indican las señales que puede recibir junto con las acciones más relevantes de cada estado.}
+\label{tab:estadosAdquisicion}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lll}
+\toprule
+\multicolumn{1}{c}{\textbf{Estado}} & \multicolumn{1}{c}{\textbf{Señal para cambio}} & \multicolumn{1}{c}{\textbf{Acciones y actividades}} \\ \midrule
+DISABLE & Reset o sig\_disable & \begin{tabular}[c]{@{}l@{}}Desinicializar el TIMER0.\\ Deshabilitar la interrupción TIMER0\_IRQn. \\ Desinicializar el GPIO 3[0].\\ Cambiar el estado del módulo de READY a DISABLE.\end{tabular} \\
+ &  &  \\
+INIT & sig\_init & \begin{tabular}[c]{@{}l@{}}Inicializar el TIMER0.\\ Habilitar la interrupción TIMER0\_IRQn.\\ Inicializar el GPIO3[0].\\ Cambiar el estado del módulo de DISABLE a READY.\end{tabular} \\
+ &  &  \\
+IDLE & transición incondicional & Cambiar estado del módulo de PROCESSING a READY. \\
+ &  &  \\
+CONFIG & sig\_config & Realizar cambios de configuración al módulo. \\
+ &  &  \\
+CHECK & sig\_check & Realizar autochequeo e informar al módulo de control \\
+ &  &  \\
+ADQUIRE & sig\_timeout & Ejecutar tarea periódica de adquisición de datos \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
 %\subsection{Sensor de velocidad de viento}
 %\label{subsec:anemometro}
 
-\section{Módulo interfaz HMI}
+\section{Módulo interfaz máquina-hombre}
 \label{sec:HMI}
+
+El propósito del módulo interfaz máquina-hombre (HMI, por sus siglas en inglés) es proveer al sistema de un medio de interacción con un operador humano. Las posibles interacciones se realizan a través de una interfaz de comandos interactiva y contempla operaciones de configuración y cambio de parámetros sobre los módulos y operaciones de mantenimiento y depuración del sistema.  
+
+La interfaz se implementa desde el microcontrolador sobre un puerto serie de tipo \textit{Universal Asynchronous Receiver-Transmitter} o UART a través de un conversor RS232/USB de la firma FTDI incorporado en la CIAA-NXP, hasta llegar finalmente a la PC del operador humano.
+
+El código del módulo incluye directivas de compilación condicional que permiten cambiar la cantidad y el nivel de detalle de los mensajes que el sistema envía a través de la interfaz.  Esta opción debe definirse en tiempo de compilación y no puede ser modificada en tiempo de ejecución, es decir, una vez que el sistema esté en funcionamiento  
+
+Mediante la definición de una MACRO en el archivo \texttt{board\_api.h}:
+\begin{verbatim}
+  #define DEBUG_ENABLE
+\end{verbatim}
+
+\noindent se habilitan funciones de depuración que envían mensajes a través de la UART.  
+
+Adicionalmente, si se define la MACRO \texttt{DEBUG\_SEMIHOSTING} se pueden utilizar los recursos de entrada/salida de la PC host que esté depurando el sistema embebido. 
+
+Si la MACRO \texttt{DEBUG\_ENABLE} no es definida, las funciones no se incluyen en el código, ahorrando recursos al sistema.
+
+\begin{verbatim}
+#if defined(DEBUG_ENABLE)
+
+  #if defined(DEBUG_SEMIHOSTING)
+	  
+    #define DEBUGINIT()
+    #define DEBUGOUT(...) printf(__VA_ARGS__)
+    #define DEBUGSTR(str) printf(str)
+    #define DEBUGIN() (int) EOF
+
+  #else
+  
+    #define DEBUGINIT() Board_Debug_Init()
+    #define DEBUGOUT(...) printf(__VA_ARGS__)
+    #define DEBUGSTR(str) Board_UARTPutSTR(str)
+    #define DEBUGIN() Board_UARTGetChar()
+  
+  #endif /* defined(DEBUG_SEMIHOSTING) */
+
+#else
+  
+  #define DEBUGINIT()
+  #define DEBUGOUT(...)
+  #define DEBUGSTR(str)
+  #define DEBUGIN() (int) EOF
+  
+#endif /* defined(DEBUG_ENABLE) */
+\end{verbatim}
+
+Para acceder a la interfaz se debe utilizar una terminal serie tipo \texttt{screen} \citep{screen} en configuración 8N1 a 115200 baudios. 
+
+Existen emuladores de terminales serie como \textit{cutecom}, de gran difusión, que presentan el inconveniente de no implementar funciones de control definidas en los estándares ANSI X3.64 (ISO 6429) e ISO 2022 por lo que la visualización de la interfaz en estas consolas puede ser defectuosa y no se recomienda su uso.
+
+
+\subsection{Interfaz}
+
+[\textbf{FALTA COMPLETAR.  EN ESTA SUBSECCIÓN VAN CAPTURAS DE PANTALLA DE LA INTERFAZ CON SU RESPECTIVA EXPLICACIÓN DE FUNCIONAMIENTO.}]
+
+\subsection{Máquina de estados finitos}
+
+El diagrama de estado de la MEF principal del módulo puede apreciarse en la figura \ref{fig:mef_HMI}, donde se observa el punto de entrada con un circulo negro, los estado que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad. 
+
+Igualmente, debe notarse que cuando el sistema es energizado o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.  
+
+Una vez inicializado, el módulo se encontrará la mayor parte del tiempo en el estado \texttt{IDLE} a la espera de un comando válido para procesar.  
+
+Cuando el módulo esté realizando alguna operación de procesamiento de comandos recibidos por el usuario, configuración o autochequeo, el estado en la del módulo tendrá el valor \texttt{PROCESSING} para indicarle al módulo de control que debe tener acceso a tiempo de CPU para poder completar las operaciones pendientes.  
+
+Todas las operación del módulo desde que es inicializado terminan incondicionalmente en el estado \texttt{IDLE}, en donde el valor de la variable que registra el estado cambia de \texttt{PROCESSING} a \texttt{READY}.
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/MEF_HMI.pdf}
+	\caption[MEF principal del módulo de HMI]{Máquina de estados finitos principal del módulo de interfaz máquina-hombre}
+	\label{fig:mef_HMI}
+\end{figure}
+
+Se describen las principales acciones y actividades de cada estado en la tabla \ref{tab:estadosHMI}.  Asimismo, se indican las señales válidas que puede recibir la MEF junto con las transiciones que éstas provocan.
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[htpb]
+\centering
+\caption[Descripción de los estados de la MEF principal del módulo HMI.]{Descripción de los estados de la MEF principal del módulo de interfaz máquina-hombre (HMI).  Se indican las señales que puede recibir junto con las acciones más relevantes de cada estado.}
+\label{tab:estadosHMI}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lll}
+\toprule
+\multicolumn{1}{c}{\textbf{Estado}} & \multicolumn{1}{c}{\textbf{Señal para cambio}} & \multicolumn{1}{c}{\textbf{Acciones y actividades}} \\ \midrule
+DISABLE & Reset o sig\_disable & \begin{tabular}[c]{@{}l@{}}Desinicializar la UART.\\ Deshabilitar la interrupción de la UART. \\ Deshabilitar la transmisión de la UART\\ Cambiar el estado del módulo de READY a DISABLE.\end{tabular} \\
+ &  &  \\
+INIT & sig\_init & \begin{tabular}[c]{@{}l@{}}Inicializar la UART.\\ Habilitar la interrupción de la UART.\\ Habilitar la transmisión de la UART.\\ Cambiar el estado del módulo de DISABLE a READY.\end{tabular} \\
+ &  &  \\
+IDLE & transición incondicional & Cambiar estado del módulo de PROCESSING a READY. \\
+ &  &  \\
+CONFIG & sig\_config & Realizar cambios de configuración al módulo. \\
+ &  &  \\
+CHECK & sig\_check & Realizar autochequeo e informar al módulo de control \\
+ &  &  \\
+PROCESS & sig\_process & Procesar los comandos recibidos \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\clearpage
 
 \section{Módulo de control}
 \label{control}
