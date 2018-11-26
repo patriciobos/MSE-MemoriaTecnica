@@ -578,8 +578,60 @@ Existen emuladores de terminales serie como \textit{cutecom}, de gran difusión,
 
 
 \subsection{Interfaz}
+\label{subsec:interfaz}
 
-[\textbf{FALTA COMPLETAR.  EN ESTA SUBSECCIÓN VAN CAPTURAS DE PANTALLA DE LA INTERFAZ CON SU RESPECTIVA EXPLICACIÓN DE FUNCIONAMIENTO.}]
+El propósito de la interfaz desarrollada es servir como prueba de concepto e incluye un mínimo de funcionalidad para cumplir los requerimientos relacionados a la controlabilidad de la estación, pricipalmente en lo referido al perído de muestreo de los sensores del módulo de adquisición. Cabe destacar que el valor de esta interfaz no está en su estética ni en su fácilidad de uso, sino en la arquitectura subyacente que permite obtener información sistema y operar sobre sus distintos componentes.
+
+Una primera versión de la interfaz operativa se presenta en la figura \ref{fig:interfaz_main}, donde pueden apreciarse 4 zonas funcionales indentificadas son recuadros sombreados, a saber: encabezado, menú de opciones, línea de comandos y barra de estado. 
+
+En el encabezado puede observarse el nombre de la estación EAMMRA, por las siglás de ``Estación Autónoma Marítima de Medición de Ruido Ambiente'' junto en una identificación del número de revisión de la interfaz, en el caso de la figura \ref{fig:interfaz_main}, r1.0. En el menú de opciones se presentan los comandos que puede introducir el operador en cada pantalla.  Un eco del último comando ingresado queda visible en la línea de comandos para confirmación del usuario.  Finalmente, en la sección barra de estado de la interfaz se pueden visualizar mensajes y salidas del sistema.
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/interfaz_main.pdf}
+	\caption[]{Pantalla principal de la interfaz máquina-hombre. Se destacan con recuadros 4 secciones dentro de pantalla: encabezado, menú de opciones, línea de comandos y barra de estado.}
+	\label{fig:interfaz_main}
+\end{figure}
+
+Se prevee incluir en versiones futuras, además de cambios estilísticos, la implementación completa de funcionalidades que en la presente versión se encuentran maquetadas, principalmente porque no formaban parte de los requerimientos enumerados en la sección \ref{sec:requerimientos}. 
+
+En la tabla \ref{tab:interfaz}, se recopilan las funciones accesibles desde la interfaz y se explicita si éstas se encuentran implementadas o maquetadas. En los módulos que tiene funciones maquetadas se reemplazó la llamada a la función que debería realizar la implementación por el envío de un mensaje generado en el propio módulo hacia la interfaz HMI.  De esta manera se puede comprobar el correcto funcionamiento de la interfaz y el circuito de  comunicación entre módulos, es decir, que:
+
+\begin{itemize}
+	\item el comando es correctamente recibido por la interfaz,
+	\item la interfaz envía correctamente una señal al módulo correspondiente,
+	\item el módulo correspondiente recibe la señal y contesta con un mensaje que se visualiza en la barra de estado de la interfaz.
+\end{itemize}
+
+Las funciones descritas en la tabla \ref{tab:interfaz} se presentan agrupadas en dos pantallas según correspondan al modo configuración o al modo \textit{debug}.  En la figura \ref{fig:interfaz_config} se puede apreciar la disposición de las opciones en el modo configuración.  En forma análoga, en la figura \ref{fig:interfaz_debug} se muestran las opciones disponibles para el modo \textit{debug}.
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/interfaz_config.png}
+	\caption[]{Pantalla secundaria de la interfaz máquina-hombre: modo configuración}
+	\label{fig:interfaz_config}
+\end{figure}
+
+%\begin{figure}[htpb]
+%	\centering
+%	\includegraphics[width=\textwidth]{./Figures/interfaz_config_ej.png}
+%	\caption[]{Pantalla secundaria de la interfaz máquina-hombre en modo \textit{debug}}
+%	\label{fig:interfaz_config_ej}
+%\end{figure}
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/interfaz_debug.png}
+	\caption[]{Pantalla secundaria de la interfaz máquina-hombre: modo \textit{debug}}
+	\label{fig:interfaz_debug}
+\end{figure}
+
+%\begin{figure}[htpb]
+%	\centering
+%	\includegraphics[width=\textwidth]{./Figures/interfaz_debug_ej.png}
+%	\caption[MEF principal del módulo de HMI]{Máquina de estados finitos principal del módulo de interfaz máquina-hombre}
+%	\label{fig:interfaz_debug_ej}
+%\end{figure}
 
 \subsection{Máquina de estados finitos}
 
