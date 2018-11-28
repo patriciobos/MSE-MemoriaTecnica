@@ -17,7 +17,7 @@
 
 %----------------------------------------------------------------------------------------
 
-En este capítulo se introduce brevemente el campo de la acústica submarina y la importancia del parámetro SONAR Ruido Ambiente Submarino como motivación para la realización de este trabajo.  Se presentan los objetivos y el alcance del proyecto.
+En este capítulo se introduce el campo de la acústica submarina y la importancia del parámetro SONAR Ruido Ambiente Submarino como motivación para la realización de este trabajo.  Asimismo, se presentan los objetivos y el alcance del proyecto.
 %----------------------------------------------------------------------------------------
 \section{Descripción técnica-conceptual del proyecto}
 
@@ -28,13 +28,16 @@ En este capítulo se introduce brevemente el campo de la acústica submarina y l
 
 La acústica submarina estudia la propagación del sonido en el agua y la interacción de las ondas mecánicas que constituyen el sonido con el agua, los elementos dispersores presentes y las interfaces aire-agua y agua-lecho marino.  Debido a que sufre menor atenuación que otras formas de radiación, el sonido es ampliamente empleado  por el hombre en su exploración de los océanos.  Las frecuencias típicas utilizadas se encuentran en el rango comprendido entre $\sim$10 Hz y 1 MHz, dependiendo de la aplicación.  
 
-Los sistemas que utilizan la propagación del sonido bajo el agua con diversos fines se conocen como sistemas SONAR (\textit{\textbf{SO}und \textbf{N}avigation \textbf{A}nd \textbf{R}anging}).
+Los sistemas que utilizan la propagación del sonido bajo el agua con diversos fines se conocen como sistemas SONAR (del inglés, \textit{\textbf{SO}und \textbf{N}avigation \textbf{A}nd \textbf{R}anging}).
 
 La propagación del sonido en el agua depende de diversos factores.  La dirección de propagación está determinada principalmente por el gradiente vertical de velocidades del sonido, que a su vez depende fundamentalmente de la temperatura y la salinidad del agua.  El perfil de velocidades del sonido puede causar zonas de baja intensidad del sonido, llamadas ``zonas de sombra'', y regiones de alta intensidad llamadas ``cáusticas''. Estas zonas pueden hallarse con el método de trazado de rayos \citep{tappert1977parabolic}.
 
 El sonido en el agua puede propagarse a grandes distancias, en el orden de miles de kilómetros, debido a la presencia de un canal especial que actúa como guía de onda para el sonido, conocido como SOFAR (\textbf{SO}und \textbf{F}ixing \textbf{A}nd \textbf{R}anging) que se produce, bajo ciertas condiciones, a la profundidad donde el gradiente de velocidades del sonido alcanza un mínimo \citep{medwin1997fundamentals}. 
 
-Los distintos fenómenos que afectan al sonido submarino pueden ser conveniente y lógicamente agrupados en un pequeño número de parámetros conocidos como parámetros SONAR que se pueden relacionar entre sí mediante las ecuaciones SONAR \citep{urick1975principles}.  Estas ecuaciones exhiben las relaciones de trabajo que agrupan los efectos del medio de propagación, el blanco y el equipamiento utilizado y constituyen las herramientas básicas para los profesionales que trabajen en aplicaciones de acústica submarina. 
+Los distintos fenómenos que afectan al sonido submarino pueden ser convenientemente agrupados en un pequeño número de parámetros conocidos como parámetros SONAR que se pueden relacionar entre sí mediante las ecuaciones SONAR \citep{urick1975principles}.  Estas ecuaciones exhiben las relaciones de trabajo que agrupan los efectos del medio de propagación, el blanco y el equipamiento utilizado y constituyen las herramientas básicas para los profesionales que trabajen en aplicaciones de acústica submarina. 
+
+\subsection{Ruido ambiente submarino}
+\label{subsec:ruido}
 
 En el campo de la acústica submarina resulta muy relevante el conocimiento del parámetro SONAR Nivel de Ruido en el mar (NL: \textit{Noise Level}), que incluye el Ruido Ambiente propiamente dicho (NLa) y el Ruido Propio (NLp) asociado al sistema de medición. En el caso de escucha pasiva (estudios de impacto ambiental sobre mamíferos marinos a bajas frecuencias o detección subacuática efectuada desde vehículos submarinos), el NL está dominado por el NLa.
 
@@ -59,7 +62,7 @@ Se presenta un diagrama en bloques del sistema en la figura \ref{fig:diagramaBlo
 	\label{fig:diagramaBloques}
 \end{figure}
 
-Para alcanzar el objetivo general se dispone de un paquete tecnológico compuesto principalmente por un equipo de trabajo multidisciplinario con conocimientos teóricos de los fenómenos físicos subyacentes a la propagación del sonido en el medio submarino, acceso a bibliografía especializada en acústica submarina y  conocimientos de ingeniería en el campo de los sistemas embebidos.
+Para alcanzar el objetivo general se dispone de un equipo de trabajo multidisciplinario con conocimientos teóricos de los fenómenos físicos subyacentes a la propagación del sonido en el medio submarino, acceso a bibliografía especializada en acústica submarina y  conocimientos de ingeniería en el campo de los sistemas embebidos.
 
 %Se presenta un diagrama en bloques del sistema en la figura \ref{fig:diagramaBloques} donde se han agrupado por color los distintos sub-módulos que conforman una misma área funcional.
 
