@@ -25,8 +25,9 @@ Los principales aportes de este trabajos son:
 	\item Adopción de una metodología de desarrollo basada en control de versiones sistemática y robusta.
 	\item Desarrollo de una arquitectura modular multicore que permite el intercambio de funcionalidades entre procesadores de forma flexible.
 	\item Implementación de mecanismos de comunicación y sincronización entre procesadores, basados en interrupciones cruzadas y colas de mensajes.
+	\item Implementación de mecanismos de control y despacho de tareas y eventos.
 	\item Desarrollo de cuatro módulos con funcionalidad de adquisición de datos, almacenamientos de datos, HMI y control del sistema, respectivamente. 
-	\item Implementación de mecanismos de control y autochequeo para aumentar la seguridad de operación del sistema.
+%	\item Implementación de mecanismos de control y autochequeo para aumentar la seguridad de operación del sistema.
 	\item Documentación completa de ingeniería de detalle de los módulos desarrollados.
 	\item Documentación completa de testing.
 	\item Documentación completa de trazabilidad entre requerimientos, ingeniería de detalle y testing.
@@ -56,7 +57,7 @@ La primera fuente constituye un hecho aislado y, por su carácter de imprevisibl
 
 La segunda fuente implica un error de cálculo en la relación entre horas disponibles y la carga horaria de las tareas de docencia asumidas.  Esto último será tenido en cuenta como aprendizaje para futuros proyecto.
 
-Asimismo, dentro de la gestión de riesgos se observa que de los riesgos originalmente previstos:
+En términos generales, fue correcta la valoración de severidad y tasa de ocurrencia para todos los riesgos identificados y de los riesgos originalmente previstos:
 
 \begin{enumerate}
 	\item No contar a tiempo con el anemómetro.
@@ -66,20 +67,90 @@ Asimismo, dentro de la gestión de riesgos se observa que de los riesgos origina
 	\item Cancelación del proyecto PIDDEF del Ministerio de Defensa asociado.
 \end{enumerate}
 
-\noindent sólo se manifestó literalmente el riesgo número 3. En ese sentido, resultó adecuada la estrategia de planificar las tareas para ser llevadas a cabo sin la colaboración de un becario.  Asimismo, fue correcta la valoración de severidad y tasa de ocurrencia para los riesgos identificados.
+\noindent sólo se manifestó íntegramente el riesgo número 3, que acertadamente fue valorado con una probabilidad de la ocurrencia alta. En este sentido, resultó adecuada la estrategia de planificar las tareas para ser llevadas a cabo sin la colaboración de un becario, por lo cual no se produjo ningún impacto negativo en el proyecto. 
 
-Respecto al riesgo número 5, si bien el proyecto no fue cancelado, el hecho de contar con un subsidio trianual como el otorgado por el programa PIDDEF \citep{PIDDEF}, que haya coincidido con el cambio de gestión en la administración pública ocasionó retrasos y sobrecostos significativos.
+Respecto al riesgo número 5, si bien el proyecto no fue cancelado, el hecho de contar con un subsidio trianual como el otorgado por el programa PIDDEF \citep{PIDDEF}, que haya coincidido con el cambio de gestión en la administración pública ocasionó retrasos y sobrecostos significativos que afortunadamente pudieron ser sobrellevados.
+
+%En términos generales, fue correcta la valoración de severidad y tasa de ocurrencia para todos los riesgos identificados.
 
 \subsection{Metas alcanzadas}
 \label{subsec:metasalcanzadas}
 
-A los fines prácticos de terminar el trabajo en la fecha pactada, no fue posible implementar el control del anemómetro.  Esto no responde a una dificultad técnica sino a hechos imprevistos en la planificación que sobrecargaron la dedicación horaria a actividades ajenas al proyecto e imposibilitaron el cumplimiento del requisito asociado a este sensor como fuera mencionado en la subsección \ref{subsec:tecnicas_utiles}.
+Se recopila en la tabla \ref{tab:reqs_alcanzados} el estado de los requerimientos, indicando mediante un tilde y color verde los que fueron alcanzados satisfactoriamente.  Asimismo, se indica con una X y color rojo los requerimientos que no pudieron lograrse.
 
-\textbf{METER TABLA DE REQs ALCANZADOS Y NO ALCANZADOS}
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[!htpb]
+\centering
+\caption{Requerimientos alcanzados.}
+\label{tab:reqs_alcanzados}
+\begin{tabular}{@{}lc@{}}
+\toprule
+%\rowcolor[HTML]{9B9B9B} 
+\textbf{Requerimiento} & \textbf{Estado} \\ \midrule
+\rowcolor[HTML]{EFEFEF} 
+1. Requerimientos de documentación &  \\
+ &  \\
+ \rowcolor[HTML]{9AFF99} 
+\begin{tabular}[c]{@{}l@{}}1.1 Se debe generar un Memoria Técnica con la documentación \\ de ingeniería detallada.\end{tabular} &  \checkmark \\
+ &  \\
+\rowcolor[HTML]{9AFF99} 
+1.2 Se debe generar un documento de casos de prueba. &  \checkmark \\
+ &  \\
+\rowcolor[HTML]{EFEFEF} 
+2. Requerimientos funcionales del sistema &  \\
+ &  \\
+\rowcolor[HTML]{9AFF99} 
+\begin{tabular}[c]{@{}l@{}}2.1 El sistema debe adquirir datos de un array de sensores de \\ temperatura a intervalos regulares con un período de adquisición \\ seleccionable.\end{tabular} &  \checkmark \\
+ &  \\
+ \rowcolor[HTML]{FFCCC9} 
+\begin{tabular}[c]{@{}l@{}}2.2 El sistema debe adquirir datos de un anemómetro a intervalos \\ regulares con un período de adquisición seleccionable.\end{tabular} &  X \\
+ &  \\
+\rowcolor[HTML]{9AFF99} 
+\begin{tabular}[c]{@{}l@{}}2.3 El sistema debe almacenar los datos de temperatura y velocidad\\ de viento adquiridas junto con una marca de tiempo identificatoria \\ en un medio físico no volátil.\end{tabular} & \checkmark \\
+ &  \\
+\rowcolor[HTML]{9AFF99} 
+\begin{tabular}[c]{@{}l@{}}2.4 El sistema debe poder operar con dos perfiles de consumo de \\ energía máximo desempeño y mínimo consumo de energía.\end{tabular} & \checkmark \\
+ &  \\
+ \rowcolor[HTML]{9AFF99} 
+\begin{tabular}[c]{@{}l@{}}2.5 El sistema debe contar con una interfaz serie cableada que \\ permita realizar operaciones de configuración y mantenimiento.\end{tabular} & \checkmark \\
+ &  \\
+\rowcolor[HTML]{EFEFEF} 
+3. Requerimientos de verificación &  \\
+ &  \\
+ \rowcolor[HTML]{9AFF99} 
+\begin{tabular}[c]{@{}l@{}}3.1 Se debe generar una matriz de trazabilidad entre la Memoria\\ Técnica y los requerimientos.\end{tabular} & \checkmark \\
+ &  \\
+ \rowcolor[HTML]{9AFF99} 
+\begin{tabular}[c]{@{}l@{}}3.2 Se debe generar una matriz de trazabilidad entre las pruebas \\ de integración y los requerimientos.\end{tabular} & \checkmark \\
+ &  \\
+\rowcolor[HTML]{EFEFEF} 
+4. Requerimientos de validación &  \\
+ &  \\
+ \rowcolor[HTML]{9AFF99} 
+\begin{tabular}[c]{@{}l@{}}4.1 Se debe generar una matriz de trazabilidad entre el documento\\ de casos de prueba y los requerimientos.\end{tabular} & \checkmark \\ \bottomrule
+\end{tabular}
+\end{table}
+
+A los fines prácticos de terminar el trabajo en la fecha pactada, no fue posible implementar el control del anemómetro.  Esto no responde a una dificultad técnica sino a hechos imprevistos en la planificación que sobrecargaron la dedicación horaria a actividades ajenas al proyecto e imposibilitaron el cumplimiento del requisito asociado a este sensor como fuera mencionado en la subsección \ref{subsec:tecnicas_utiles}.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
 \section{Próximos pasos}
 
-Acá se indica cómo se podría continuar el trabajo más adelante.
+Se indican en esta sección las líneas de acción más inmediatas para continuar la implementación del sistema e incorporar nuevas características a la estación de medición en desarrollo.  Asimismo se establece un orden de prioridad para las acciones identificadas, a saber:
+
+\begin{enumerate}
+  \item Implementar el control del anemómetro y completar los requerimientos previstos para esta etapa del proyecto.
+  \item Reemplazar las funciones \textit{mock} que interactuan con la interfaz del sistema y así completar la implementación de todos los estados de las máquinas de estados finitos principales de cada módulo.
+  \item Incorporar más opciones de configuración a cada módulo.  Para este fin, se contempla el pasaje por referencia de una estructura de configuración diferenciada para cada módulo que contenga los distintos parámetros configurables.  Asimismo, se debe reformular el diseño de la interfaz máquina-hombre para permitir la toma de dichos parámetros.
+  \item Analizar la mejor forma de aprovechar las características asimétricas de los dos procesadores que posee la plataforma CIAA-NXP en cuanto a distribución de los módulos entre los procesadores.  La arquitectura desarrollada permite que el mismo código sea descargado a ambos procesadores, debiendo elegirse en un archivo de configuración qué módulo se ejecuta en qué procesador para que no ocurran colisiones a la hora de acceder a los recursos.  Esto permite explorar alternativas que aumenten la seguridad del sistema ante eventuales fallas de un procesador, existiendo redundancia de otro procesador que pueda retomar la ejecución de las tareas caídas.  Asimismo, resulta de interés evaluar el desempeño del sistema en cuanto a consumo eléctrico, disipación térmica y tiempo de cómputo, entre otras características, en diferentes configuraciones de reparto de módulos entre los procesadores.
+  \item Incorporar los subsistemas contemplados para futuras etapas en la figura \ref{fig:diagramaBloques} y que fueron considerados fuera del alcance en este proyecto, en forma de nuevos módulos de la estación, siguiendo el mismo patrón de diseño presentado en este trabajo.
+  \item Diseñar y fabricar un pocho para la CIAA-NXP que permita conectar y desconectar en forma robusta las diferentes entradas y salidas del sistema de forma de poder operar la estación en condiciones de campo.
+  \item Realizar pruebas de campo. 
+\end{enumerate}
+
+

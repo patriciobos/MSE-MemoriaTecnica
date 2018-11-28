@@ -43,7 +43,7 @@ En este capítulo se presentan la arquitectura multicore del \textit{firmware}, 
 \section{Arquitectura multicore}
 \label{sec:arquitectura}
 
-El \textit{firmware} está desarrollado sobre la base de dos proyectos vinculados del IDE MCUXpresso, uno para cada \textit{core} del microcontrolador. Para el IDE, debe haber un proyecto ``maestro'' que controle la ejecución del código (o al menos la secuencia de \textit{startup}) corriendo en el otro \textit{core}, considerado ``esclavo''.  
+El \textit{firmware} está desarrollado sobre la base de dos proyectos vinculados dentro IDE MCUXpresso, uno para cada \textit{core} del microcontrolador. Para el IDE, debe haber un proyecto ``maestro'' que controle la ejecución del código (o al menos la secuencia de \textit{startup}) corriendo en el otro \textit{core}, considerado ``esclavo''.  
 
 El proyecto maestro contiene un link al proyecto esclavo que produce que la imagen binaria del esclavo sea incluida en la imagen  binaria del maestro, cuando el proyecto maestro es compilado \citep{nxp:mcuxpresso}. De esta manera, cuando el proyecto maestro es grabado en la flash del microcontrolador, ambos proyectos son descargados a la memoria del microcontrolador.
 

@@ -127,8 +127,13 @@ headsepline, % Uncomment to get a line under the header
 \renewcommand{\labelenumi}{\arabic{enumi}.} 
 \renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
 
-
 \addtolength{\footnotesep}{2mm} % Espacio adicional en los footnotes
+
+\usepackage{booktabs}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{tikz}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
 
 \begin{document}
 
