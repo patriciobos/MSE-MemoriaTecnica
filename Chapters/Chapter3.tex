@@ -565,7 +565,7 @@ El propósito del módulo interfaz máquina-hombre (HMI, por sus siglas en ingl�
 
 La interfaz se implementa desde el microcontrolador sobre un puerto serie de tipo \textit{Universal Asynchronous Receiver-Transmitter} o UART a través de un conversor RS232/USB de la firma FTDI incorporado en la CIAA-NXP, hasta llegar finalmente a la PC del operador humano.
 
-El código del módulo incluye directivas de compilación condicional que permiten cambiar la cantidad y el nivel de detalle de los mensajes que el sistema envía a través de la interfaz.  Esta opción debe definirse en tiempo de compilación y no puede ser modificada en tiempo de ejecución, es decir, una vez que el sistema esté en funcionamiento  
+El código del módulo incluye directivas de compilación condicional que permiten cambiar la cantidad y el nivel de detalle de los mensajes que el sistema envía a través de la interfaz.  Esta opción debe definirse en tiempo de compilación y no puede ser modificada en tiempo de ejecución, es decir, una vez que el sistema esté en funcionamiento.  
 
 Mediante la definición de una MACRO en el archivo \texttt{board\_api.h}:
 \begin{verbatim}

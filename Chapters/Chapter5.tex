@@ -41,7 +41,7 @@ Resultaron particularmente útiles las técnicas de gestión de proyecto emplead
 \begin{itemize}
 	\item el incremento de la dedicación horaria destinada al proyecto,
 	\item el empleo de funciones \textit{mock} o maquetadas para algunas características secundarias que pensaban implementarse.
-	\item y en última instancia, la priorización de los requerimientos de fecha de finalización por sobre la cantidad de sensores operativos.
+	\item y en última instancia, la priorización del requerimiento implícito de fecha de finalización por sobre la cantidad de sensores operativos.
 \end{itemize}  
 
 %Este plan de acción neutralizó parcialmente los efectos negativos sobre el resultado del proyecto al costo de no cumplir .
@@ -57,7 +57,7 @@ La primera fuente constituye un hecho aislado y, por su carácter de imprevisibl
 
 La segunda fuente implica un error de cálculo en la relación entre horas disponibles y la carga horaria de las tareas de docencia asumidas.  Esto último será tenido en cuenta como aprendizaje para futuros proyecto.
 
-En términos generales, fue correcta la valoración de severidad y tasa de ocurrencia para todos los riesgos identificados y de los riesgos originalmente previstos:
+En términos generales, fue correcta la valoración de severidad y tasa de ocurrencia para todos los riesgos identificados; de los riesgos originalmente previstos:
 
 \begin{enumerate}
 	\item No contar a tiempo con el anemómetro.
@@ -148,6 +148,7 @@ Se indican en esta sección las líneas de acción más inmediatas para continua
   \item Reemplazar las funciones \textit{mock} que interactuan con la interfaz del sistema y así completar la implementación de todos los estados de las máquinas de estados finitos principales de cada módulo.
   \item Incorporar más opciones de configuración a cada módulo.  Para este fin, se contempla el pasaje por referencia de una estructura de configuración diferenciada para cada módulo que contenga los distintos parámetros configurables.  Asimismo, se debe reformular el diseño de la interfaz máquina-hombre para permitir la toma de dichos parámetros.
   \item Analizar la mejor forma de aprovechar las características asimétricas de los dos procesadores que posee la plataforma CIAA-NXP en cuanto a distribución de los módulos entre los procesadores.  La arquitectura desarrollada permite que el mismo código sea descargado a ambos procesadores, debiendo elegirse en un archivo de configuración qué módulo se ejecuta en qué procesador para que no ocurran colisiones a la hora de acceder a los recursos.  Esto permite explorar alternativas que aumenten la seguridad del sistema ante eventuales fallas de un procesador, existiendo redundancia de otro procesador que pueda retomar la ejecución de las tareas caídas.  Asimismo, resulta de interés evaluar el desempeño del sistema en cuanto a consumo eléctrico, disipación térmica y tiempo de cómputo, entre otras características, en diferentes configuraciones de reparto de módulos entre los procesadores.
+  \item Incorporar al modelo de desarrollo un servidor de integración continua \citep{CI} para automatizar pruebas estáticas y dinámicas sobre el código.  
   \item Incorporar los subsistemas contemplados para futuras etapas en la figura \ref{fig:diagramaBloques} y que fueron considerados fuera del alcance en este proyecto, en forma de nuevos módulos de la estación, siguiendo el mismo patrón de diseño presentado en este trabajo.
   \item Diseñar y fabricar un pocho para la CIAA-NXP que permita conectar y desconectar en forma robusta las diferentes entradas y salidas del sistema de forma de poder operar la estación en condiciones de campo.
   \item Realizar pruebas de campo. 

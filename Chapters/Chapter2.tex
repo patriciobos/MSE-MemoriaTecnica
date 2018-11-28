@@ -150,7 +150,24 @@ Para este trabajo, se crearon ramas para desarrollar cada uno de los subsistemas
 	\item \textit{ceedling} para el entorno de testing.
 \end{itemize}  
 
+\subsection{Paradigma de desarrollo basado en pruebas}
+\label{subsec:tdd}
 
+El paradigma de desarrollo basando en pruebas o TDD (por sus siglas en inglés, \textit{Test Driven Development}) \citep{beck2003test} es una práctica de programación que forma parte de las metodologías ágiles.  TDD plantea invertir el orden tradicional de desarrollo en el cual primero de implementa y luego se prueba.  En este sentido, este paradigma propone un proceso de desarrollo que consiste en codificar pruebas, desarrollar y refactorizar de forma continua el código.
+
+Si bien no se adoptó el modelo de desarrollo TDD en forma íntegra, sí se incorporaron algunos de sus principios a la metodología de trabajo, en particular los que permiten la producción de un \textit{firmware} modular, altamente reutilizable y preparado para el cambio, es decir escalable, conocidos como principios ``SOLID''\citep{martin2000design}:
+
+\begin{itemize}
+	\item Principio de responsabilidad única (\textit{Single responsibility principle}). Cada módulo debe tener una única responsabilidad.
+	\item Principio de abierto/cerrado (\textit{Open/closed principle}). Un módulo debe estar abierto para su extensión, pero cerrado para su modificación.
+	\item Principio de sustitución de Liskov (\textit{Liskov substitution principle}). Los objetos de un programa deberían ser reemplazables por instancias de sus subtipos sin alterar el correcto funcionamiento del programa.
+	\item Principio de segregación de la interfaz (\textit{Interface segregation principle}). Muchas interfaces cliente específicas son mejores que una interfaz de propósito general.
+	\item Principio de inversión de la dependencia (\textit{Dependency inversion principle}). Depender de abstracciones, no depender de implementaciones.  Esto significa que un módulo A no debe depender de otro módulo B, sino a través de una abstracción de B.
+\end{itemize}
+
+Asimismo, se tomó de TDD la filosofía de pensar primero cómo se va a probar que el código cumple los requerimientos para lograr un mejor entendimiento del sistema y aumentar la calidad del diseño.
+
+En el capítulo \ref{Chapter4} se recopila la documentación de casos de prueba que se usaron como entrada al diseño del \textit{firmware} previo de su implementación.
 
 \subsection{Programación concurrente con Protothreads} 
 \label{subsec:protothreads}
