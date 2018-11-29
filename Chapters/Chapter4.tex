@@ -27,49 +27,249 @@ Asimismo, las pruebas sobre los módulos fueron diseñadas para evaluar únicame
 \subsection{Pruebas unitarias}
 \label{subsec:unitarias}
 
-Para realizar pruebas unitarias al código se utilizó el framework Ceedling \citep{ceedling} que se distribuye como una gema del lenguaje de programación ruby.  \textit{Ceedling} integra tres herramientas, \textit{Unity}, \textit{Cmock} y \textit{CException} y se encarga de compilar y ejecutar los test sobre el código.
+Para realizar pruebas unitarias al código se utilizó el framework Ceedling \citep{ceedling} que se distribuye como una gema del lenguaje de programación ruby.  \textit{Ceedling} integra tres herramientas, \textit{Unity}, \textit{Cmock} y \textit{CException} y se encarga de compilar y ejecutar los \textit{test} sobre el código.
 
-A continuación se presentan los casos de prueba que se definieron para ensayar con test unitarios, las funciones de los cuatro módulos desarrollados.  
+A continuación se presentan los casos de prueba que se definieron para ensayar con \textit{test} unitarios, las funciones de los cuatro módulos desarrollados.  
 
-Se utilizó una técnica para expandir la cantidad de test posibles que consiste desdoblar los test sobre cada caracterísitca a evaluar en un test positivo, un test negativo y otro de rango cuando esto último fuera pertinente.  Esto significa evaluar cuando una condición se cumple (positivo) y tambien cómo reaccioná el sistema cuando no se cumple (negativo).  Los test de rango permiten evaluar si los parámetros y resultados que devuelven las funciones ensayadas se encuentran dentro de los valores previsto.
+Se utilizó una técnica para expandir la cantidad de \textit{tests} posibles que consiste en desdoblar el ensayo sobre cada característica a evaluar en al menos tres \textit{tests}: un \textit{test} positivo, un \textit{test} negativo y otro de rango cuando esto último fuera pertinente.  Esto significa evaluar cuando una condición se cumple (positivo) y también cómo reacciona el sistema cuando no se cumple (negativo).  Los \textit{test} de rango permiten evaluar si los parámetros y resultados que devuelven las funciones ensayadas se encuentran dentro de los valores previsto y si se detecta cuando no lo están.
 
 \subsubsection{Módulo Almacenamiento}
 
-En la figura \ref{fig:test_almacenamiento} se recopilan los casos de prueba para el módulo de almacenamiento.  En la primer columna se incluye un código de indentificación único del test que permite realizar la trazabilidad con los requerimientos.
+En la figura \ref{fig:test_almacenamiento} se recopilan los casos de prueba para el módulo de almacenamiento.  En la primer columna se incluye un código de identificación único del \textit{test} que permite realizar la trazabilidad con los requerimientos.
 
 \begin{figure}[htpb]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/TestSD.pdf}
-	\caption{Casos de prueba para test unitarios del módulo de almacenamiento}
+	\caption{Casos de prueba para \textit{test} unitarios del módulo de almacenamiento}
 	\label{fig:test_almacenamiento}
 \end{figure}
 
-Los test negativos se resolvieron con funciones mock que simulan el comportamientos erroneo del componente bajo prueba.  No se realizaron test de rango para este módulo.
+Los \textit{test} negativos se resolvieron con funciones \textit{mock} que simulan el comportamientos erróneo del componente bajo prueba.  No se realizaron \textit{test} de rango para este módulo.
 
-Todos los test ejecutados resultaron exitosos.
+Todos los \textit{test} ejecutados resultaron exitosos.
 
 \subsubsection{Módulo adquisición}
 
-Los casos de prueba para el módulo de adquisición se presentan en la figura \ref{fig:test_adquisición}. Para este módulo se definieron diez test de rango además de los test positivos y negativos.  Para éstos últimos se utilizaron funciones \textit{mock} para simular una falla.
+Los casos de prueba para el módulo de adquisición se presentan en la figura \ref{fig:test_adquisición}. Para este módulo se definieron diez \textit{test} de rango además de los \textit{test} positivos y negativos.  Para éstos últimos se utilizaron funciones \textit{mock} para simular una falla.
 
 \begin{figure}[!htpb]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/TestADQ.pdf}
-	\caption{Casos de prueba para test unitarios del módulo de adquisición}
+	\caption{Casos de prueba para \textit{test} unitarios del módulo de adquisición}
 	\label{fig:test_adquisición}
 \end{figure}
 
-Todos los test ejecutados resultaron exitosos.
+Todos los \textit{test} ejecutados resultaron exitosos.
 
 \subsubsection{Módulo HMI}
 
+
+En la figura \ref{fig:test_interfaz} se recopilan los casos de prueba para el módulo de interfaz máquina-hombre.  En la primer columna se incluye un código de identificación único del \textit{test} que permite realizar la trazabilidad con los requerimientos. Los \textit{test} de tipo negativo se implementaron con funciones \textit{mock} para inyectar una falla.
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/TestHMI.pdf}
+	\caption{Casos de prueba para \textit{test} unitarios del módulo de interfaz máquina-hombre}
+	\label{fig:test_interfaz}
+\end{figure}
+
+Para este módulo se definieron tres \textit{test} de rango válido y tres \textit{test} de rango inválido. Éstos verifican los valores de posición X e Y en la función que desplaza el cursor por la pantalla y el valor de la variable de estado de la MEF que controla el menú de opciones contextual, respectivamente.
+
+Todos los \textit{test} ejecutados resultaron exitosos.
+
 \subsubsection{Módulo Control}
+
+En la figura \ref{fig:test_control} se recopilan los casos de prueba para el módulo de control.  En la primer columna se incluye un código de identificación único del \textit{test} que permite realizar la trazabilidad con los requerimientos. %Los test de tipo negativo se implementaron con funciones \textit{mock} para inyectar una falla.
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/TestCON.pdf}
+	\caption{Casos de prueba para \textit{test} unitarios del módulo de control}
+	\label{fig:test_control}
+\end{figure}
+
+Para este módulo se definieron tres \textit{test} de rango válido y tres \textit{test} de rango inválido. Éstos verifican los valores pasados como parámetros a las funciones para construir y enviar mensajes, y el valor de la señal que se desea enviar a todos los módulos, respectivamente.
+
+Todos los \textit{test} ejecutados resultaron exitosos.
 
 \subsection{Pruebas funcionales}
 \label{subsec:pruebasFuncionales}
 
+Se utilizaron pruebas funcionales para el módulo de almacenamiento desarrolladas por Santiago Germino para la sAPI \citep{pruebasfuncionales}.  En particular, se incluyeron en el código del proyecto las funciones \texttt{fatFsFunctionalTest} y \texttt{fatFsTest}. Se realizaron pequeñas modificaciones para adaptar su contenido a la CIAA-NXP, ya que la misma fue desarrollada para ser ejecutada en la EDU-CIAA-NXP.
 
-[\textbf{pruebas sobre las MEF de cada bloque}]
+La salida de las pruebas se produce por la terminal serie con el resultado que se aprecia en la figura \ref{fig:test_funcional}.
+
+\begin{figure}[htpb]
+\begin{center}
+\begin{verbatim}
+
+------------------------------------------------
+Bienvenido a la prueba de wrappers sdcard/usbms!
+------------------------------------------------
+Iniciando sdcard con configuracion:
+  velocidad inicial 100000 Hz.
+  velocidad de trabajo 25000000 Hz.
+FSSDC: [InitSPI] New card status: Inserted.
+FSSDC: [Init] Initialization begins.
+FSSDC: [Init] New card status: Native Mode.
+FSSDC: [Init] New card status: Initializing.
+FSSDC: [Init] New card status: Ready (Fast Clock).
+Inicio de sdcard OK! Unidad FatFs 'SDC:'.
+NO se probara usbms.
+Logueando STATUS de dipositivos...
+STATUS: Tarjeta SD lista y montada.
+
+-------------------------------------------
+TEST sobre archivo 'SDC:/TEST.TXT'.
+-------------------------------------------
+TEST: Ejecutando 'f_open( WRITE )'...OK!
+TEST: Ejecutando 'f_putc'...OK!
+TEST: Ejecutando 'f_puts'...OK!
+TEST: Ejecutando 'f_open( READ )'...OK!
+TEST: Ejecutando 'f_read'...OK!
+
+>>>> INICIO CONTENIDO DEL ARCHIVO LEIDO >>>>
+La unidad bajo prueba es 'SDC:'
+Lista de caracteres ASCII:
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
+ [\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+Fecha y hora de compilacion: Nov 22 2018 18:59:47
+Estado de pulsadores TEC 1 a 4 al momento de la prueba: 1111
+<<<< FIN CONTENIDO DEL ARCHIVO LEIDO <<<<
+--------
+TEST OK!
+--------
+**FIN**
+\end{verbatim}
+\end{center}
+\caption{Salida por consola del test funcional para el módulo de almacenamiento}
+\label{fig:test_funcional}
+\end{figure}
+
+
+%Se incluyeron en el código del proyecto las funciones que implementan los tests funcionales con los siguientes prototipos:
+%
+%\begin{itemize}
+%	\item \texttt{void fatFsFunctionalTest( void );}
+%	\item \texttt{static bool fatFsTest( const char *unidad );}
+%\end{itemize} 
+
+
+En el algoritmo \ref{lst:funcional} se incluye la versión adaptada de la función original que implementa los \textit{test} funcionales y cuya salida fue mostrada en la figura \ref{fig:test_funcional}. %en los cuales se utilizan los diferentes modos de lectura y escritura sobre la tarjeta microSD.
+
+\begin{lstlisting}[caption={Código para las puebas funcionales para el módulo de almacenamiento.},label={lst:funcional}]
+static bool fatFsTest( const char *unidad )
+{
+	char buf[1024];
+	char filename[64];
+	FIL file;
+	FRESULT fr;
+	int r;
+
+	sprintf( filename, "%s/TEST.TXT", unidad );
+
+	uartWriteString( UART_USB, "\r\n-------------------------------------------\r\n" );
+	sprintf( buf, "TEST sobre archivo '%s'.\r\n", filename);
+	uartWriteString( UART_USB, buf);
+	uartWriteString( UART_USB, "-------------------------------------------\r\n" );
+
+	// Ver http://elm-chan.org/fsw/ff/00index_e.html 
+	// para una referencia de la API de FatFs
+
+	// Abre un archivo. Si no existe lo crea, si existe, lo sobreescribe.
+	fatFsTestStart( "f_open( WRITE )" );
+	fr = f_open( &file, filename, FA_CREATE_ALWAYS | FA_WRITE);
+	if( fr != FR_OK )
+	{
+		fatFsTestERROR( fr );
+		return false;
+	}
+	fatFsTestOK( );
+
+	// Prueba de f_putc
+	fatFsTestStart( "f_putc" );
+	sprintf (buf, "La unidad bajo prueba es '%s'\r\n"
+			"Lista de caracteres ASCII:\r\n", 	unidad);
+	// Escribe mensaje
+	for (uint32_t i = 0; i < strlen(buf); ++i) {
+		r = f_putc( buf[i], &file );
+		if (r < 1)
+		{
+			fatFsTestERROR( r );
+			f_close( &file );
+			return false;
+		}
+	}
+
+	// Escribe todos los caracteres UTF-8 que overlapean ASCII
+	// (sin combinaciones multibyte)
+	for (uint32_t i = 32; i < 127; ++i)
+	{
+		r = f_putc( (TCHAR)i, &file );
+		if (r < 1)
+		{
+			fatFsTestERROR( r );
+			f_close( &file );
+			return false;
+		}
+	}
+	fatFsTestOK( );
+
+	// Prueba f_puts
+	fatFsTestStart( "f_puts");
+	sprintf (buf, "\r\n"
+			"Fecha y hora de compilacion del programa: %s %s\r\n"
+			"Estado de Salidas Digitales DO0 a DO3 al momento de la prueba: %i%i%i%i\r\n",
+			__DATE__, __TIME__,
+			gpioRead( DO0 ), gpioRead( DO1 ), gpioRead( DO2 ), gpioRead( DO3 ));
+
+	r = f_puts( buf, &file );
+	if (r < 1)
+	{
+		fatFsTestERROR( r );
+		f_close( &file );
+		return false;
+	}
+	fatFsTestOK( );
+
+	// Cierra el archivo y vuelve a abrirlo como LECTURA
+	f_close( &file );
+
+	fatFsTestStart( "f_open( READ )" );
+	fr = f_open( &file, filename, FA_READ );
+	if( fr != FR_OK )
+	{
+		fatFsTestERROR( fr );
+		return false;
+	}
+	
+	fatFsTestOK( );
+
+	// Borro contenido del buffer, para que no haya 
+	// dudas de que el contenido se leyo desde el archivo
+	memset( buf, 0, sizeof(buf) );
+
+	// Carga el contenido del archivo
+	UINT bytesLeidos = 0;
+	fatFsTestStart( "f_read" );
+	fr = f_read( &file, buf, sizeof(buf), &bytesLeidos );
+	if (fr != FR_OK)
+	{
+		fatFsTestERROR( fr );
+		return false;
+	}
+	fatFsTestOK( );
+
+	f_close( &file );
+
+	uartWriteString( UART_USB, "\r\n");
+	uartWriteString( UART_USB, ">>>> INICIO CONTENIDO DEL ARCHIVO LEIDO >>>>\r\n");
+	uartWriteString( UART_USB, buf );
+	uartWriteString( UART_USB, "<<<< FIN CONTENIDO DEL ARCHIVO LEIDO <<<<\r\n");
+	return true;
+}
+\end{lstlisting}
+
 
 \subsection{Pruebas de sistema}
 \label{subsec:pruebasSistema}
