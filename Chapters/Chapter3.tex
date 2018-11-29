@@ -98,7 +98,7 @@ Para comunicar ambos procesadores se utiliza una biblioteca provista por el fabr
 \subsubsection{Interrupciones cruzadas}
 \label{subsubsec:interrupcion}
 
-El mecanismo de interrupciones cruzadas es el más simple de los 3 métodos provistos.  Permite que un \textit{core} active una interrupción en el otro \textit{core} para enviar notificaciones cuya interpretación depende y es exclusiva de la aplicación.  El diseñador puede definir una función de \textit{callback} que es ejecutada en el contexto de la rutina de servicio de la interrupción.  
+El mecanismo de interrupciones cruzadas es el más simple de los tres métodos provistos.  Permite que un \textit{core} active una interrupción en el otro \textit{core} para enviar notificaciones cuya interpretación depende y es exclusiva de la aplicación.  El diseñador puede definir una función de \textit{callback} que es ejecutada en el contexto de la rutina de servicio de la interrupción.  
 
 Para enviar señales al \textit{core} ``remoto'', el \textit{core} ``local'' utiliza una instrucción dedicada SEV (\textit{send event}) provista por la arquitectura Cortex.
 
@@ -205,9 +205,9 @@ El tipo de datos \texttt{ipcex\_msg\_t}, tal como viene definido en la bibliotec
 \section{Diseño de módulos y definición de interfaces}
 \label{sec:modulos}
 
-El optó por un diseño fuertemente modularizado en archivos, junto a un modelo de capas jerárquicas para organizar el código en distintos niveles de abstracción.  
+Se optó por un diseño fuertemente modularizado en archivos, junto a un modelo de capas jerárquicas para organizar el código en distintos niveles de abstracción.  
 
-En la figura \ref{fig:capas} se pueden observar, agrupados por color, las capas utilizadas en este trabajo.  En color amarillo, el paquete de drivers provistos por el fabricante del silicio; en color naranja la capa de bibiotecas; la capa de abstracción de \textit{hardware} (HAL, por sus siglas en inglés) en color verde; y finalmente, en color celeste, la capa de aplicación con los cuatro módulos implementados.   
+En la figura \ref{fig:capas} se pueden observar, agrupadas por color, las capas utilizadas en este trabajo.  En color amarillo, el paquete de drivers provistos por el fabricante del silicio; en color naranja la capa de bibiotecas; la capa de abstracción de \textit{hardware} (HAL, por sus siglas en inglés) en color verde; y finalmente, en color celeste, la capa de aplicación con los cuatro módulos implementados.   
 
 %\vspace{10px}
 
@@ -567,12 +567,11 @@ La interfaz se implementa desde el microcontrolador sobre un puerto serie de tip
 
 El código del módulo incluye directivas de compilación condicional que permiten cambiar la cantidad y el nivel de detalle de los mensajes que el sistema envía a través de la interfaz.  Esta opción debe definirse en tiempo de compilación y no puede ser modificada en tiempo de ejecución, es decir, una vez que el sistema esté en funcionamiento.  
 
-Mediante la definición de una MACRO en el archivo \texttt{board\_api.h}:
+Mediante la definición de una MACRO en el archivo \texttt{board\_api.h} se habilitan funciones de depuración que envían mensajes a través de la UART como puede verse en el algorirmo \ref{lst:debug}.  
+
 \begin{verbatim}
   #define DEBUG_ENABLE
 \end{verbatim}
-
-\noindent se habilitan funciones de depuración que envían mensajes a través de la UART como puede verse en el algorirmo \ref{lst:debug}.  
 
 Adicionalmente, si se define la MACRO \texttt{DEBUG\_SEMIHOSTING} se pueden utilizar los recursos de entrada/salida de la PC host que esté depurando el sistema embebido. 
 
@@ -621,12 +620,12 @@ El propósito de la interfaz desarrollada es servir como prueba de concepto e in
 
 Cabe destacar que el valor de esta interfaz no está en su estética ni en su facilidad de uso, sino en la arquitectura subyacente que permite obtener información sistema y operar sobre sus distintos componentes.
 
-Una primera versión de la interfaz operativa se presenta en la figura \ref{fig:interfaz_main}, donde pueden apreciarse 4 zonas funcionales identificadas con recuadros de color rojo, a saber: encabezado, menú de opciones, línea de comandos y barra de estado. 
+Una primera versión de la interfaz operativa se presenta en la figura \ref{fig:interfaz_main}, donde pueden apreciarse cuatro zonas funcionales identificadas con recuadros de color rojo, a saber: encabezado, menú de opciones, línea de comandos y barra de estado. 
 
 \begin{figure}[htpb]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/interfaz_detalles.pdf}
-	\caption[]{Vista de la pantalla principal de la interfaz. Se destacan con recuadros rojos 4 secciones dentro de la pantalla: encabezado, menú de opciones, línea de comandos y barra de estado.}
+	\caption[]{Vista de la pantalla principal de la interfaz. Se destacan con recuadros rojos cuatro secciones dentro de la pantalla: encabezado, menú de opciones, línea de comandos y barra de estado.}
 	\label{fig:interfaz_main}
 \end{figure}
 
