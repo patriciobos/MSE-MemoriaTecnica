@@ -19,7 +19,7 @@ Cabe destacar en este sentido, que en la planificación de las tareas del proyec
 
 Resultó necesario tener bien definidos los requisitos funcionales y sus criterios de aceptación.  Se debieron contemplar todos los casos posibles de uso, tanto exitosos como de error, con lo que se elaboró un documento \citep{TestMasterPlan} de casos de prueba por módulo  y de esta manera, se dio cumplimiento al requerimiento 1.2 indicado en la sección \ref{sec:requerimientos}.  
 
-Se ensayó el código en tres niveles distintos de abstracción: a nivel de función, de módulo y de sistema, según se documenta en las subsecciones \ref{subsec:unitarias}, \ref{subsec:pruebasFuncionales} y \ref{subsec:pruebasSistema}, respectivamente. 
+Se ensayó el código en tres niveles distintos de abstracción: a nivel de función, de módulo y de sistema, según se documenta en las subsecciones \ref{subsec:unitarias} Pruebas unitarias, \ref{subsec:pruebasFuncionales} Pruebas funcionales y \ref{subsec:pruebasSistema} Pruebas de sistema, respectivamente. 
 
 Asimismo, las pruebas sobre los módulos fueron diseñadas para evaluar únicamente la lógica principal de funcionamiento.  En cada caso, se debió abstraer al módulo bajo ensayo de otras capas o servicios que pudieran interactuar con su lógica principal, para lo cual se simuló el resultado de dichas interacciones con \textit{mocks}. 
 
@@ -274,30 +274,67 @@ static bool fatFsTest( const char *unidad )
 \subsection{Pruebas de sistema}
 \label{subsec:pruebasSistema}
 
-Las pruebas que se presentan en esta sección son las de mayor nivel de abstracción, es decir que evaluan el funcionamiento del código a nivel de sistema con todos los módulos ya integrados al \textit{firmware} y en funcionamiento.
+Las pruebas que se presentan en esta sección son las de mayor nivel de abstracción, es decir que evaluan el funcionamiento del código a nivel de sistema con todos los módulos ya integrados al \textit{firmware} y en pleno funcionamiento.
 
 Se permiten las interacciones reales entre los módulos y entre éstos y las distintas capas y servicios que componen el código.  En otras palabras, no se utiliza ningún \textit{mock} para estos ensayos.
 
-Se utilizó el modelo de casos de uso para plantear escenarios representativos del funcionamiento esperado del sistema, de modo que pueda ser evaluado su correcto funcionamiento.  Se buscó que estos escenarios estén fuertemente vinculados con los requerimientos funcionales planteados en la sección \ref{sec:requerimientos}.
+Se utilizó el modelo de casos de uso para plantear escenarios representativos del funcionamiento esperado del sistema, de modo que pueda ser evaluado su correcto desenvolvimiento.  Se procuró que estos escenarios estuvieran fuertemente vinculados con los requerimientos funcionales planteados en la sección \ref{sec:requerimientos}.
 
-Al final de esta sección se incluye una matriz de trazabilidad entre los requerimientos mencionados y las pruebas de integración que a continuación se detallan.  
+Al final de esta sección se incluye una matriz de trazabilidad entre los requerimientos funcionales y las pruebas de integración que se detallan en la presente sección.  
 
-Para la construcción de las pruebas a nivel de sistema se confeccionó una plantilla que se adjunta a la menoria en el apendice \ref{AppendixA}.
+Para la construcción de las pruebas a nivel de sistema se confeccionó una plantilla que se adjunta a la memoria en el apendice \ref{AppendixA}.
 
-El primer caso de prueba, con ID UC01, evalua el escenario principal de funcionamiento con la configuración por defecto con que inicia el sistema al ser energizado. Esto es, todos los módulos habilitados y adquisición de temperatura en forma periódica cada 1000 ms.  En la figura \ref{fig:useCase1} se puede apreciar la planilla utilizada para el ensayo. 
+El primer caso de prueba, identificado con ID UC01, evalua el escenario principal de funcionamiento con la configuración por defecto con que inicia el sistema al ser energizado. Esto es, todos los módulos habilitados y adquisición de temperatura en forma periódica cada 1000 ms.  En la figura \ref{fig:useCase1} se puede apreciar la planilla utilizada para el ensayo. 
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=1\textwidth]{./Figures/UseCase1_recortada.pdf}
-	\caption{Planilla de caso de uso UC01. Medición autónoma de temperatura en forma periódica.}
+	\caption{Planilla de caso de uso UC01. Medición autónoma de temperatura en forma periódica. Se indica en color verde la post condición de éxito del ensayo.}
 	\label{fig:useCase1}
+\end{figure}
+
+Se pudieron validar todos los pasos y el ensayo resultó exitoso.
+
+El segundo caso de prueba, identificado con ID UC02 evalua un escenario en donde el usuario interactua con el sistema para modificar el período de adquisición de valores de temperatura.  Los detalles del ensayo y los resultados obtenidos se presentan en la planilla que se utilizó para la prueba, que se muestra en la figura \ref{fig:useCase2}. 
+
+\vspace{10px}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=1\textwidth]{./Figures/UseCase2_recortada.pdf}
+	\caption{Planilla de casos de uso UC02.  Cambio de período de adquisición de valores de temperatura. Se indica en color verde la post condición de éxito del ensayo.}
+	\label{fig:useCase2}
 \end{figure}
 
 Se pudieron validar todos los pasos y el ensayo resultó exitos.
 
-\begin{figure}[htpb]
+En la figura \ref{fig:useCase2} se presenta los detalles del tercer caso de prueba, identificado con ID UC03.  En este ensayo se evalua un escenario en donde el usuario interactua con el sistema para modificar el perfil de consumo de energía de la estación. 
+
+\vspace{10px}
+
+\begin{figure}[!htb]
 	\centering
-	\includegraphics[width=1\textwidth]{./Figures/UseCase2_recortada.pdf}
-	\caption{Planilla de casos de uso UC02.  Cambio de período de adquisición de valores de temperatura.}
-	\label{fig:useCase2}
+	\includegraphics[width=1\textwidth]{./Figures/UseCase3_recortada.pdf}
+	\caption{Planilla de casos de uso UC03.  Cambio de perfil de consumo de energía. Se indica en color verde la post condición de éxito del ensayo.}
+	\label{fig:useCase3}
 \end{figure}
+
+Se pudieron validar todos los pasos y el ensayo resultó exitoso.
+
+Se elaboró una matriz de trazabilidad de requerimientos con las pruebas de sistema para controlar fehacientemente que se pudieron alcanzar los requerimientos funcionales.
+En la tabla \ref{tab:trazabilidad_test} se puede apreciar que el 
+\begin{table}[ht]
+\centering
+\caption{Matriz de trazabilidad de requerimientos con test de casos de uso.}
+\label{tab:trazabilidad_test}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Requerimiento}					   & \textbf{UC01} 	  & \textbf{UC02}  & \textbf{UC03}  \\ \midrule
+2.1 Adquirir temperatura                   & X                & X              &    		 	\\ %\hline
+2.2 Adquirir velocidad de viento           &                  &                &   		  		\\ %\hline
+2.3 Almacenar datos                        & X                & X              &      			\\ %\hline
+2.4 Perfiles de consumo                    & X                &                & X    			\\ %\hline
+2.5 Interfaz                               & X                & X              & X    			\\ 
+\bottomrule
+\end{tabular}
+\end{table}

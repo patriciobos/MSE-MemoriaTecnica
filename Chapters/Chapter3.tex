@@ -64,6 +64,7 @@ La tabla \ref{tab:trazabilidad} permite saber en qué módulo del firmware será
 \vspace{5px}
 
 \begin{table}[ht]
+\centering
 \caption[Matriz de trazabilidad de requerimientos funcionales]{Matriz de trazabilidad de requerimientos funcionales con los módulos de \textit{firmware}}
 \label{tab:trazabilidad}
 \begin{tabular}{lcccc}
@@ -95,7 +96,7 @@ typedef struct {
 
 \vspace{10px}
 
-Toda la interacción con los módulos se realiza a través de los respectivos manejadores de eventos y una cola de mensajes como la descrita en la subsección \ref{subsubsec:colas}. Para el intercambio de mensajes entre módulos que se encuentren en ejecución en un mismo procesador, se levantaron las restricciones de escritura sobre la propia cola de mensajes que se originalmente pesaban sobre cada procesador.
+Toda la interacción con los módulos se realiza a través de los respectivos manejadores de eventos y una cola de mensajes como la descripta en la subsección \ref{subsubsec:colas}. Para el intercambio de mensajes entre módulos que se encuentren en ejecución en un mismo procesador, se levantaron las restricciones de escritura sobre la propia cola de mensajes que se originalmente pesaban sobre cada procesador.
 
 A continuación se listan los prototipos de los manejadores de eventos definidos:
 
@@ -110,7 +111,7 @@ A continuación se listan los prototipos de los manejadores de eventos definidos
 
 \vspace{10px}
 
-Puede notarse que todos los manejadores reciben un mismo tipo de parámetro, un puntero constante a un mensaje de tipo \texttt{ipcex\_msg\_t}.  Cada módulo es responsable de interpretar los dos campos enteros sin signo de 32 bits de datos que contiene el mensaje.  Normalmente el campo \texttt{data0} define un comando y \texttt{data1} se utiliza opcionalmente para el envío de parámetros.
+Puede notarse que todos los manejadores reciben un mismo tipo de parámetro, un puntero constante a un mensaje de tipo \texttt{ipcex\_msg\_t}.  Cada módulo es responsable de interpretar los dos campos de datos que contiene el mensaje.  Normalmente el primer campo, \texttt{data0} define un comando o señal y el segundo, \texttt{data1} se utiliza opcionalmente para el envío de parámetros u opciones.
 
 Para todos los módulos se utilizó un modelo de \textit{firmware} basado en máquinas de estados finitos (MEF) jerárquicas, donde una MEF principal controla la lógica de funcionamiento con el mayor nivel de abstracción. Los diferentes estados, a su vez, pueden o no estar modelados con MEFs dependiendo de la conveniencia de esto último.
 
@@ -345,7 +346,7 @@ Los dos sensores operan sobre una misma línea de datos con una resistencia de \
 \end{figure}
 
 
-Para el control de los dispositivos se adaptó una implementación de controlador de bus \textit{1-wire} para microcontroladores de la familia LPC1343, desarrollada en forma de biblioteca por James Harwood \citep{harwood}.  En esta biblioteca se hace uso de las técnicas de programación concurrente descritas en el capitulo \ref{Chapter2}, subsección \ref{subsec:protothreads}.
+Para el control de los dispositivos se adaptó una implementación de controlador de bus \textit{1-wire} para microcontroladores de la familia LPC1343, desarrollada en forma de biblioteca por James Harwood \citep{harwood}.  En esta biblioteca se hace uso de las técnicas de programación concurrente descriptas en el capitulo \ref{Chapter2}, subsección \ref{subsec:protothreads}.
 
 \subsection{Máquina de Estados Finitos}
 
@@ -626,3 +627,185 @@ STATUS & sig\_status & Enviar información de un módulo al usuario \\ \bottomru
 
 \section{Módulo de control}
 \label{sec:control}
+
+El propósito del módulo de control es implementar un \textit{framework} o marco de trabajo para el funcionamiento de los demás módulos del sistemas.  En este sentido, provee los mecanismos de \textit{scheduling} para planificar la ejecución de las tareas del sistema y un \textit{dispatcher} para ejecutarlas.  
+
+Asimismo, se incluyen métodos para temporizar regularmente la ejecución de los módulos que requieran tareas periódicas mediante el uso de una base de tiempo con el \textit{sysTick timer} del microcontrolador.  
+
+Asimismo, este módulo implementa los mecanismos de comunicación entre procesadores descriptos en la subsección \ref{subsec:IPC} con algunas modificaciones.  
+
+En primer lugar se definieron dos colas de mensajes idénticas, una para cada procesador, como puede verse en el algoritmo \ref{lst:ipc_queue}.  Cada cola permiten alojar una cantidad \texttt{IPCEX\_QUEUE\_SZ} de mensajes definida mediante una macro con valor numérico igual a 64.
+
+\vspace{10px}
+
+\begin{lstlisting}[caption={Definición de dos colas de eventos, una para cada procesador.},label={lst:ipc_queue}]
+	/* Message QUEUE used by IPC library to exchange message between cores */
+	static ipcex_msg_t ipcex_coreM4[IPCEX_QUEUE_SZ];
+	static ipcex_msg_t ipcex_coreM0[IPCEX_QUEUE_SZ];
+\end{lstlisting}
+
+
+En segundo lugar, se permitió que los procesadores puedan escribir indistintamente en ambas colas, con el resguardo de activar la interrupción cruzada únicamente cuando el mensaje a encolar fuera para el otro procesador. Esta modificación es sencilla de implementar ya que la información del procesador de destino está contenida en el mismo mensaje.  
+
+De esta manera se proveyó un mecanismo de comunicación entre módulos definidos en un mismo procesador.  Asimismo, esto otorgó mayor flexibilidad al sistema en su conjunto, ya que a partir de esta modificación, el código de un módulo pueden incluirse en ambos procesadores y mediante una macro, elegir desde qué procesador se va a ejecutar, sin otras modificaciones en el resto del código.
+
+Por otra parte, se modificó el tipo de dato \texttt{ipcex\_t} para contener, en lugar de dos campos de datos \texttt{uint32\_t}, un campo tipo signal\_t y otro tipo (void *) para el pasaje de parámetros genéricos, como puede verse en el algoritmo \ref{lst:msg_t}. 
+
+\vspace{10px}
+\begin{lstlisting}[caption={Definición nuevo tipo de dato ipcex\_msg\_t para intercambio de mensajes.},label={lst:msg_t}]
+	typedef struct __ipcex_msg {
+	struct {
+		uint16_t cpu;
+		uint16_t pid;
+	} id;
+	signal_t data0;
+	void *   data1;
+} ipcex_msg_t;
+\end{lstlisting} 
+
+El tipo de dato \texttt{signal\_t} es una redefinición de una enumeración que contiene a todas las señales que es posible enviar a los módulos.  Su definición se puede apreciar en el algoritmo \ref{lst:signal_t}. Se define una última señal sig\_invalid para control de errores.
+
+%\vspace{10px}
+\begin{lstlisting}[caption={Definición nuevo tipo de dato signal\_t para el envío de señales a los módulos.},label={lst:signal_t}]
+typedef enum {
+	sig_disable, 
+	sig_init, 
+	sig_config, 
+	sig_check, 
+	sig_timeout, 
+	sig_process, 
+	sig_status, 
+	sig_adquire,  
+	sig_write, 
+	sig_read,
+	sig_invalid
+} signal_t;
+\end{lstlisting}
+
+Se obtiene acceso para controlar los distintos módulos que componen el sistema mediante el registro de un puntero a la estructura de control tipo \texttt{module\_t} de cada módulo, en un vector definido para tal fin.  Dicho vector se indexa mediante un índice tipo \texttt{moduleID\_t} cuya definición puede observarse en el algoritmo \ref{lst:moduleID_t}.  Se define un último índice \texttt{INVALID\_MODULE} para control de errores.
+
+%\vspace{10px}
+\begin{lstlisting}[caption={Definición nuevo tipo de dato moduleID\_t para indexar el control de los módulos.},label={lst:moduleID_t}]
+typedef enum {
+	ONEWIRE, 
+	HMI, 
+	SDCARD, 
+	CONTROL, 
+	INVALID_MODULE
+} moduleID_t;
+\end{lstlisting}
+
+Las distintas estructuras de control son variable privadas definidas en archivos propios de cada módulo.  Para acceder a la direción de memoria que las contiene, cada módulo ofrece una interfaz \texttt{X\_get\_module\_pointer()} que devuelve por valor un puntero a \texttt{module\_t}. La \texttt{`X'} debe reemplazarse por el nombre del módulo correspondiente.  Se ejemplifica su uso en el algoritmo \ref{lst:register}.
+
+%\vspace{10px}%
+\begin{lstlisting}[caption={Función para registrar los módulos del sistema.},label={lst:register}]
+void FR_register_all_modules(void){
+	modules[ONEWIRE]  = ow_get_module_pointer();
+	modules[HMI]      = hmi_get_module_pointer();
+	modules[SDCARD]   = sd_get_module_pointer();
+	modules[CONTROL]  = FR_get_module_pointer();
+};
+\end{lstlisting}
+
+En el algoritmo \ref{lst:dispatcher} se presenta la función para despachar tareas y mensajes.  Se puede observar cómo primero se recorren los módulos en busca del \textit{flag} \texttt{runme} para ejecutar el manejador de eventos que tenga procesamiento pendiente. Se utiliza un mensaje especial vacio para este caso. Asimismo, se saca un mensaje de la cola si lo hubiere y se lo despacha al manejador de eventos correspondiente.
+
+\vspace{10px}
+\begin{lstlisting}[caption={Función para despachar tareas y mensajes.},label={lst:dispatcher}]
+bool_t FR_dispatch_tasks(void){
+
+	moduleID_t moduleID;
+	ipcex_msg_t msg;
+	bool_t goToSleep;
+
+	for(moduleID=0;moduleID<INVALID_MODULE;moduleID++){
+		if(modules[moduleID]->runme == TRUE)
+			(*modules[moduleID]->eventHandler)(&msg_null);
+	}
+
+	if (IPC_tryPopMsg(&msg) == QUEUE_VALID) {
+		if(msg.id.pid < INVALID_MODULE) {
+			moduleID = msg.id.pid;
+			if(modules[moduleID]->status == DISABLED && 
+					msg.data0 == sig_init)
+				(*modules[moduleID]->eventHandler)(&msg);
+
+			else if(modules[moduleID]->status == READY)
+				(*modules[moduleID]->eventHandler)(&msg);
+
+			else
+				IPC_tryPushMsg(msg.id.cpu, &msg);
+		}
+		else 
+			DEBUGSTR("Error! msg.id.pid unknown\r\n");
+	}
+
+	goToSleep = TRUE;
+	// Is there any module with processing pending?
+	for(moduleID=0; moduleID<INVALID_MODULE; moduleID++) {
+		if(modules[moduleID]->runme == TRUE)
+			goToSleep = FALSE;
+	}
+	// Are there still messages in the queue?
+	if ( IPC_msgPending(CPUID_CURR) != 0)
+		goToSleep = FALSE;
+
+	return goToSleep;
+};
+\end{lstlisting}
+
+Para el despacho de eventos se toman los recaudos de observar que se haya sacado un mensaje válido de la cola y que el módulo destinatario del mensaje esté correctamente identificado.  A continuación, se consulta el estado del módulo.  Si el módulo está deshabilitado y el mensaje contiene una señal sig\_init se despacha el mensaje al módulo. Si el módulo se encuentra habilitado, se consulta si se encuentra en condiciones de recibir el mensaje (estado \texttt{READY}) en cuyo caso se despacha el mensaje al módulo.  En caso contrario, si el módulo se encuentre habilitado pero en estado \texttt{PROCESSING}, el mensaje se vuelve a introducir en la cola a la espera que el módulo termine el procesamiento pendiente.
+
+Finalmente, se observa si quedan módulos con procesamiento pendiente y si hay mensajes en la cola sin atender.  Si alguna de estas condiciones resulta verdadera se deshabilita el \textit{flag} \texttt{goToSpleep} que se utiliza en el loop principal para saber si se debe poner el procesador en modo bajo consumo hasta que se produzca una interrupción.
+
+En el algoritmo \ref{lst:main} se puede apreciar la estructura de \textit{super loop} del punto de entrada al código luego de la secuencia de \textit{startup}.  Aquí se realizan las inicializaciones generales que no sean propias de los módulos, se registran los punteros a las estructuras de control y se envía una señal de inicialización a todos los módulos correctamente registrados.  En el \textit{loop} principal se utiliza la macro \texttt{\_\_WFI()} para poner el procesdor en modo bajo consumo hasta la siguiente interrupción según el estado del \textit{flag} \texttt{goToSpleep} como ya fuera mencionado.
+
+\vspace{10px}%
+\begin{lstlisting}[caption={Función principal main().},label={lst:main}]
+int main(void)
+{
+   bool_t goToSleep = FALSE;
+
+   prvSetupHardware();
+   FR_register_all_modules();
+   FR_broadcast_signal(sig_init);
+
+   while(TRUE) {  // the main loop
+
+      goToSleep = FR_dispatch_tasks();
+
+      if (goToSleep == TRUE)
+         __WFI();
+   }
+   return 0;
+}
+\end{lstlisting}
+
+Existe únicamente tres fuentes de interrupción posibles que pueden sacar al procesador del estado de bajo consumo, a saber:
+
+\begin{itemize}
+	\item Interrupción del sysTick Timer que se usa como base de tiempo en ms.
+	\item Interrupción de la UART cuando se recibe un comando para la interfaz con el usuario.
+	\item Interrupción del otro procesador para indicar que ha enviado un mensaje que requiere procesamiento.
+\end{itemize}
+
+En las rutinas de servicio de cada una de estas interrupciones se encolan los mensejes correspondientes que serán debidamente atendidos en la siguiente ejecución del despachador de eventos.  
+
+Por último, se menciona que en este módulo se implementa el control del perfil de consumo de energía. Se definieron dos perfil distintos con las siguientes características:
+
+\begin{itemize}
+	\item Perfil 1: optimizado para \textit{performance}
+	\begin{itemize}
+		\item Todos los módulos habilitados
+		\item Interrupción del sysTick Timer cada 1 ms
+		\item Las adquisiciones de temperatura y su escritura en la microSD cada 1 segundo. 
+	\end{itemize}
+	\item Perfil 2: optimizado para \textit{consumo}
+	\begin{itemize}
+		\item Módulo HMI deshabilitado
+		\item Interrupción del sysTick Timer cada 10 ms
+		\item Las adquisiciones de temperatura y su escritura en la microSD cada 10 segundo. 
+	\end{itemize}
+\end{itemize}    
+
+El sistema se inicia con la configuración del perfil 1 de consumo eléctrico y pude pasar al perfil 2 si el usuario envía una señal de configuración para tal fin a través de la interfaz HMI.  Una vez en el perfil 2, optimizado para \textit{consumo}, sólo es posible volver al perfil 1 reseteando el sistema, ya que la interfaz HMI no se encuentra más disponible.  
+%\subsection{Máquina de estados finitos}

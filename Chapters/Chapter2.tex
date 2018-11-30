@@ -111,6 +111,7 @@ Las tareas identificadas se arreglaron esquemáticamente en el diagrama de \text
 
 En el diagrama, los tiempos de duración de las tareas están representados con la variable $t$ y expresados en horas. Asimismo, las tareas poseen un código numérico único que fue usado para realizar la trazabilidad de los requerimientos en las distintas etapas del proyecto.
 
+Cabe destacar que dentro de las tareas de planificación, se incluyó la definición de casos de prueba.  Se considera que fue una decisión acertada por el mejor entendimiento que se logró sobre las características de diseño que debía contener el sistema. Asimismo, esto permitió descartar características que se pensaban implementar pero que no respondían al cumplimiento de ningún requerimiento. 
 
 \begin{figure}[htpb]
 	\centering
@@ -305,9 +306,9 @@ En el método de colas de mensajes, se deben definir dos áreas de memoria compa
 
 \vspace{15px}
 
-\begin{figure}[ht]
+\begin{figure}[!htpb]
 	\centering
-	\includegraphics[width=\textwidth]{./Figures/IPC.png}
+	\includegraphics[width=.85\textwidth]{./Figures/IPC.png}
 	\caption[Esquema de comunicación entre procesadores]{Esquema de comunicación entre procesadores basado en colas de mensajes\protect\footnotemark.}
 	\label{fig:IPC}
 \end{figure}
@@ -318,7 +319,7 @@ En el método de colas de mensajes, se deben definir dos áreas de memoria compa
 
 En el esquema propuesto, sólamente el procesador maestro puede escribir en el búfer de comandos y recibe los mensaje del esclavo leyendo el búfer de mensajes.  De manera análoga, únicamente el esclavo puede escribir en el búfer de mensajes y recibe comandos leyendo el búfer de comandos.
 
-Cuando un procesador escribe un nuevo mensaje en una cola, debe notificar al otro procesador de que hay nueva información para procesar. Para tal fin, se utiliza el mecanismo de interrupción descrito en el apartado Interrupciones cruzadas, dentro de la subsección \ref{subsubsec:interrupcion}.
+Cuando un procesador escribe un nuevo mensaje en una cola, debe notificar al otro procesador de que hay nueva información para procesar. Para tal fin, se utiliza el mecanismo de interrupción descripto en el apartado Interrupciones cruzadas, dentro de la subsección \ref{subsubsec:interrupcion}.
 
 El procesador que recibe el mensaje invoca a un despachador de eventos que busca en un vector de manejadores de eventos el que haya sido registrado para tal fin. En el algoritmo \ref{lst:ipc_dispatcher} se pude apreciar la función provista por la bilbioteca IPC para despachar eventos.
 
@@ -348,7 +349,7 @@ static void ipcex_dispatch_task(void *unused)
 \vspace{5px}
 SYS\_OS\_ID es una macro que se utiliza para identificar el tipo de Sistema Operativo incluido en la aplicación.  En el caso particular de este trabajo, SYS\_OS\_ID es igual a 0 y esto significa que no hay Sistema Operativo.  Se debe notar que SYS\_OS\_ID = 0 implica que el despachador de eventos se ejecuta una única vez por mensaje recibido.
 
-La función despachadora de eventos descrita en el algoritmo \ref{lst:ipc_dispatcher} fue modificada para adaptarla a las necesitadas del proyecto.  En la sección \ref{sec:control} se documenta cómo se implementó esta función dentro del módulo de control de la estación de monitoreo de ruido acústico.
+La función despachadora de eventos descripta en el algoritmo \ref{lst:ipc_dispatcher} fue modificada para adaptarla a las necesitadas del proyecto.  En la sección \ref{sec:control} se documenta cómo se implementó esta función dentro del módulo de control de la estación de monitoreo de ruido acústico.
 
 Para el intercambio de mensajes en el sistema, se define un nuevo tipo de dato \texttt{ipcex\_msg\_t}.  Se trata de una estructura que contiene información que identifica al CPU y al proceso destinararios del mensaje, definidos dentro de otra estructura anidada, junto con dos campos para datos como se observa en el algoritmo \ref{lst:ipcex_msg_t}. 
 
