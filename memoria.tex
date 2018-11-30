@@ -56,6 +56,7 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage{multirow}
 
+
 %------------------------
 \usepackage{listings}
 
@@ -118,11 +119,8 @@ headsepline, % Uncomment to get a line under the header
 \newcaptionname{spanish}{\abbrevname}{Glosario}
 \newcaptionname{spanish}{\byname}{por}
 
-\renewcommand{\lstlistingname}{Algoritmo}% Listing -> Algorithm
-\renewcommand{\lstlistlistingname}{Índice de \lstlistingname s}% List of Listings -> List of Algorithms
 
-\renewcommand{\listtablename}{Índice de Tablas}
-\renewcommand{\tablename}{Tabla} 
+
 
 \renewcommand{\labelenumi}{\arabic{enumi}.} 
 \renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
@@ -134,9 +132,15 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{tikz}
 \def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
 
+\usepackage[final]{pdfpages}
+
 
 \begin{document}
 
+\renewcommand{\listtablename}{Índice de Tablas}
+\renewcommand{\tablename}{Tabla}  
+\renewcommand{\lstlistingname}{Algoritmo}% Listing -> Algorithm
+\renewcommand{\lstlistlistingname}{Índice de \lstlistingname s}% List of Listings -> List of Algorithms
 \frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
 
 \pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
@@ -261,7 +265,7 @@ No vale poner anti-agradecimientos (este trabajo fue posible a pesar de...)
 % Incluir los apéndices de la memoria como archivos separadas desde la carpeta Appendices
 % Descomentar las líneas a medida que se escriben los apéndices
 
-%\include{Appendices/AppendixA}
+\include{Appendices/AppendixA}
 %\include{Appendices/AppendixB}
 %\include{Appendices/AppendixC}
 
