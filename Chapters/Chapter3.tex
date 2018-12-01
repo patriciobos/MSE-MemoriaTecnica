@@ -31,7 +31,8 @@
   stringstyle=\color{mymauve},     % string literal style
   tabsize=2,	                   % sets default tabsize to 2 spaces
   title=\lstname,                   % show the filename of files included with \lstinputlisting; also try caption instead of title
-  morecomment=[s]{/*}{*/}%
+  morecomment=[s]{/*}{*/},%
+  literate=%
 }
 
 En este capítulo se presenta la arquitectura del \textit{firmware} y el patrón de diseño usado para los módulos del sistema.  Asimismo, se detallan aspectos funciones de cada módulo y se fundamentan las elecciones de los distintos componentes de hardware utilizados.
@@ -405,11 +406,11 @@ La interfaz se implementa desde el microcontrolador sobre un puerto serie de tip
 
 El código del módulo incluye directivas de compilación condicional que permiten cambiar la cantidad y el nivel de detalle de los mensajes que el sistema envía a través de la interfaz.  Esta opción debe definirse en tiempo de compilación y no puede ser modificada en tiempo de ejecución, es decir, una vez que el sistema esté en funcionamiento.  
 
-Mediante la definición de una MACRO en el archivo \texttt{board\_api.h} se habilitan funciones de depuración que envían mensajes a través de la UART como puede verse en el algorirmo \ref{lst:debug}.  
+Mediante una directiva \texttt{DEFINE} para el precompilador se puede definir el símbolo \texttt{DEBUG\_ENABLE} en el archivo \texttt{board\_api.h}.   Si esta macro se encuentra definida, se habilitan funciones de depuración que envían mensajes a través de la UART como puede verse en el algorirmo \ref{lst:debug}.  
 
-\begin{verbatim}
-  #define DEBUG_ENABLE
-\end{verbatim}
+%\begin{verbatim}
+%  #define DEBUG_ENABLE
+%\end{verbatim}
 
 Adicionalmente, si se define la MACRO \texttt{DEBUG\_SEMIHOSTING} se pueden utilizar los recursos de entrada/salida de la PC host que esté depurando el sistema embebido. 
 
@@ -634,7 +635,7 @@ Asimismo, se incluyen métodos para temporizar regularmente la ejecución de los
 
 Asimismo, este módulo implementa los mecanismos de comunicación entre procesadores descriptos en la subsección \ref{subsec:IPC} con algunas modificaciones.  
 
-En primer lugar se definieron dos colas de mensajes idénticas, una para cada procesador, como puede verse en el algoritmo \ref{lst:ipc_queue}.  Cada cola permiten alojar una cantidad \texttt{IPCEX\_QUEUE\_SZ} de mensajes definida mediante una macro con valor numérico igual a 64.
+En primer lugar se definieron dos colas de mensajes idénticas, una para cada procesador, como puede verse en el algoritmo \ref{lst:ipc_queue}.  Cada cola permite alojar una cantidad \texttt{IPCEX\_QUEUE\_SZ} de mensajes definida mediante una macro con valor numérico igual a 64.
 
 \vspace{10px}
 
@@ -695,7 +696,7 @@ typedef enum {
 } moduleID_t;
 \end{lstlisting}
 
-Las distintas estructuras de control son variable privadas definidas en archivos propios de cada módulo.  Para acceder a la direción de memoria que las contiene, cada módulo ofrece una interfaz \texttt{X\_get\_module\_pointer()} que devuelve por valor un puntero a \texttt{module\_t}. La \texttt{`X'} debe reemplazarse por el nombre del módulo correspondiente.  Se ejemplifica su uso en el algoritmo \ref{lst:register}.
+Las distintas estructuras de control son variables privadas definidas en archivos propios de cada módulo.  Para acceder a la direción de memoria que las contiene, cada módulo ofrece una interfaz \texttt{X\_get\_module\_pointer()} que devuelve por valor un puntero a \texttt{module\_t}. La \texttt{`X'} debe reemplazarse por el nombre del módulo correspondiente.  Se ejemplifica su uso en el algoritmo \ref{lst:register}.
 
 %\vspace{10px}%
 \begin{lstlisting}[caption={Función para registrar los módulos del sistema.},label={lst:register}]
@@ -790,7 +791,9 @@ Existe únicamente tres fuentes de interrupción posibles que pueden sacar al pr
 
 En las rutinas de servicio de cada una de estas interrupciones se encolan los mensejes correspondientes que serán debidamente atendidos en la siguiente ejecución del despachador de eventos.  
 
-Por último, se menciona que en este módulo se implementa el control del perfil de consumo de energía. Se definieron dos perfil distintos con las siguientes características:
+En en este módulo se implementa el control del perfil de consumo de energía del sistema, mediante lo cual se da cumplimiento al requerimiento  2.4.
+
+Se definieron dos perfil de consumo distintos con las siguientes características:
 
 \begin{itemize}
 	\item Perfil 1: optimizado para \textit{performance}
@@ -807,5 +810,25 @@ Por último, se menciona que en este módulo se implementa el control del perfil
 	\end{itemize}
 \end{itemize}    
 
-El sistema se inicia con la configuración del perfil 1 de consumo eléctrico y pude pasar al perfil 2 si el usuario envía una señal de configuración para tal fin a través de la interfaz HMI.  Una vez en el perfil 2, optimizado para \textit{consumo}, sólo es posible volver al perfil 1 reseteando el sistema, ya que la interfaz HMI no se encuentra más disponible.  
+El sistema se inicia con la configuración del perfil 1 de consumo eléctrico y pude pasar al perfil 2 si el usuario envía una señal de configuración para tal fin a través de la interfaz HMI. A los fines de esta etapa del desarrollo, una vez en el perfil 2, sólo es posible volver al perfil 1 reseteando el microcontrolador, ya que la interfaz HMI dejará de estar disponible.  Se contempla a futuro la posibilidad de intercalar ciclos de trabajo con los distintos perfiles según sea conveniente.
+
+Por último, se menciona cuál fue la estrategia utilizada para asignar la ejecución de los módulos a los procesadores de la CIAA-NXP e integrar el sistema.  Se descarga el mismo \textit{firmware} a los  procesadores cortex-M0 y cortex-M4 con todas las funcionalidades del sistema.  Mediante un campo en la estructura de control de los módulos, \texttt{CPUID\_T coreID}, se puede cambiar el procesador que ejecuta el módulo, tomando el recaudo de deshabilitar previamente el módulo en el procesador que lo estuviera ejecutando al momento del cambio.
+
+La configuración inicial adoptada se puede apreciar en la tabla \ref{tab:modulos}.
+
+\begin{table}[ht]
+\centering
+\caption{Asignación de módulos a los procesadores}
+\label{tab:modulos}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Procesador} & \textbf{Control} & \textbf{sdCard} & \textbf{Adquisición} & \textbf{HMI} \\ \midrule
+Cortex-M0			&                  &                 &                      & X            \\ 
+Cortex-M4   		& X                & X               & X                    &              \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+
+De esta forma, el procesador cortex-M0 permanecerá en modo bajo consumo la mayor parte del tiempo y sólo se activará cuando se produzca una interrupción.  Las fuentes de interrupción posibles para este procesador en la configuración propuesta son la UART, cuando se recibe un comando por la interfaz de usuario y la interrupción de \textit{software} del otro procesador, que se produce cuando un módulo ejecutándose en éste tenga un mensaje para sacar por la consola, mediante los mecanismos explicado en la sección \ref{subsec:IPC}.
+
 %\subsection{Máquina de estados finitos}

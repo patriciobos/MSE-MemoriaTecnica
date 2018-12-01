@@ -168,7 +168,7 @@ Para este trabajo, se crearon ramas para desarrollar cada uno de los subsistemas
 \begin{itemize}
 	\item \textit{sdcard} para el módulo de almacenamiento.
 	\item \textit{onewire} para el módulo de adquisición.
-	\item \textit{HMI} para el módulo de interfaz con el usuario.
+	\item \textit{hmi} para el módulo de interfaz con el usuario.
 	\item \textit{control} para el módulo de control.
 	\item \textit{ceedling} para el entorno de testing.
 \end{itemize}  
@@ -197,11 +197,65 @@ En el capítulo \ref{Chapter4} se recopila la documentación de casos de prueba 
 
 Los Protothreads son una abstracción creada por Adam Dunkel para implementar mecanismos de programación concurrente, conocidos como multi-tarea cooperativa, en sistemas embebidos con recursos limitados \citep{Protothreads}. 
 
-Se distribuyen como una biblioteca que puede integrarse al proyecto y proveen la posibilidad de trabajar con hilos de ejecución sin \textit{stack} o co-rutinas, con mecanismos para bloquear la ejecución de una tarea sin que se produzca un cambio de contexto.  Esto permite un control de flujo secuencial sin máquinas de estado complejas o soporte multi-hilo completo en arquitecturas basadas en eventos \citep{dunkels06protothreads} \citep{dunkels05using}. 
+Se distribuyen como una biblioteca que puede integrarse al proyecto y posibilitan trabajar con hilos de ejecución sin \textit{stack} o co-rutinas, con mecanismos para bloquear la ejecución de una tarea sin que se produzca un cambio de contexto.  Esto permite un control de flujo secuencial sin máquinas de estado complejas o soporte multi-hilo completo en arquitecturas basadas en eventos \citep{dunkels06protothreads} \citep{dunkels05using}. 
+
+Los protothreads se implementan como un conjunto de macros que el precompilador expande en tiempo de compilación.  
+
+\begin{verbatim}
+	struct pt { unsigned short lc; };
+	#define PT_THREAD(name_args)  char name_args
+	#define PT_BEGIN(pt)          switch(pt->lc) { case 0:
+	#define PT_WAIT_UNTIL(pt, c)  pt->lc = __LINE__; \
+	                              case __LINE__: \
+	                              if(!(c)) return 0
+	#define PT_END(pt)            } pt->lc = 0; return 2
+	#define PT_INIT(pt)           pt->lc = 0
+\end{verbatim}
+
+%\end{lstlisting}
+En los algoritmos \ref{lst:proto1} y \ref{lst:proto2} se puede apreciar un ejemplo sencillo que utiliza esta herramienta y el mismo código con las macros expandidas, respectivamente. El \textit{quid} de la implementación es la utlización de una estructura \texttt{switch} y la macro \texttt{\_\_LINE} para insertar el número de línea y permitir la reentrada a una parte del código. En este ejemplo, \texttt{PT\_WAIT\_UNTIL} se encuentra en la línea 12.
+
+\noindent\begin{minipage}{.5\textwidth}
+\begin{lstlisting}[caption=Ejemplo de uso,frame=tlrb,basicstyle=\footnotesize,label={lst:proto1}]{Name}
+static
+PT_THREAD(example(struct pt *pt))
+{
+  PT_BEGIN(pt);
+  
+  while(1) {
+    PT_WAIT_UNTIL(pt,
+      counter == 1000);
+    printf("Threshold reached\n");
+    counter = 0;
+  }
+  
+  PT_END(pt);
+}
+\end{lstlisting}
+\end{minipage}\hfill
+\begin{minipage}{.5\textwidth}
+\begin{lstlisting}[caption=Código expandido,frame=tlrb,basicstyle=\footnotesize,label={lst:proto2}]{Name}
+static
+char example(struct pt *pt)
+{
+  switch(pt->lc) { case 0:
+ 
+  while(1) {
+    pt->lc = 12; case 12:
+    if(!(counter == 1000)) return 0;
+    printf("Threshold reached\n");
+    counter = 0;
+  }
+ 
+  } pt->lc = 0; return 2;
+}
+\end{lstlisting}
+\end{minipage}
+
+Se debe tener en cuenta que por la forma en que están implementados, no es posible incluir bloques de control \texttt{switch-cese} dentro de los protothreads.	
 
 En el presente trabajo, se hace uso de protothreads en la codificación del protocolo de comunicación 1-wire que se describe en la subsección \ref{subsec:1-wire}.
 
-%\section{Herramientas}
 
 \section{Arquitectura multicore}
 \label{sec:arquitectura}
@@ -270,20 +324,6 @@ Asimismo, dentro de la rutina de interrupción se habilita un \textit{flag} para
 La limpieza del \textit{flag} se hace dentro de una sección crítica donde se deshabilitan temporalmente las interrupciones. En el Cortex-M4 se enmascaran las interrupciones con mayor prioridad y en el Cortex-M0 se deshabilitan directamente, ya que este procesador no dispone del mecanismo de enmascaramiento.
 
 El código para generar las interrupciones cruzadas utiliza dos macros. Primero \_\_DSB() (\textit{Data Syncronization Barrier}) para terminar todas las transacciones de memoria pendientes y luego \_\_SEV() (\textit{Send Event}) para generar el envío de una señal de interrupción al otro procesador como puede verse en el algoritmo \ref{lst:ipc_send_signal}.
-%, como puede apreciarse en \ref{cod:interrupt}
-%\begin{verbatim}
-%/*
-% * Initiate interrupt on other processor
-% * Upon calling this function generates and interrupt 
-% * on the other core. Ex. if called from M0 core it 
-% * generates interrupt on M4 core and vice versa.
-% */
-%static void ipc_send_signal(void)
-%{
-%  	__DSB();
-%  	__SEV();
-%}
-%\end{verbatim}\label{cod:interrupt}  
 
 \begin{lstlisting}[caption={Función ipc\_send\_signal que permite generar una interrupción en el otro procesador.},label={lst:ipc_send_signal}]
 /*
@@ -308,7 +348,7 @@ En el método de colas de mensajes, se deben definir dos áreas de memoria compa
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[width=.85\textwidth]{./Figures/IPC.png}
+	\includegraphics[width=\textwidth]{./Figures/IPC.png}
 	\caption[Esquema de comunicación entre procesadores]{Esquema de comunicación entre procesadores basado en colas de mensajes\protect\footnotemark.}
 	\label{fig:IPC}
 \end{figure}
