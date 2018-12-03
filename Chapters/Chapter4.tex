@@ -324,7 +324,18 @@ En caso de éxito, se observa un último mensaje a través de la interfaz que co
 
 Se pudieron validar todos los pasos y el ensayo resultó exitoso.
 
-Se elaboró una matriz de trazabilidad de requerimientos con las pruebas de sistema para controlar fehacientemente que se pudieron alcanzar los requerimientos funcionales como se observa en la tabla \ref{tab:trazabilidad_test}. 
+En la figura \ref{fig:banco} se puede observar el banco de medición utilizado para los ensayos a nivel de sistema.  En la PC se encuentra en ejecución la interfaz de usuario.  Pueden apreciarse el lector de tarjetas microSD a la derecha de la CIAA-NXP.  Asimismo, dos termómetros digitales DS18B20 se encuentran conectados a través de un protoboard.  Los sensores se encuentran sumergidos en vasos de precipitados con agua a distinta temperatura para facilitar su identificación en los registros.  
+
+Cuando resultó necesario realizar comprobaciones a las señales eléctricas de los dispositivos bajo ensayo, se utilizó un multímetro GwInstek modelo GDM-396 y un osciloscopio digital Tektronix modelo MDO3052.
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=1\textwidth]{./Figures/banco.jpg}
+	\caption{Banco de mediciones para los ensayos de sistema}
+	\label{fig:banco}
+\end{figure}
+
+Finalmente, se elaboró una matriz de trazabilidad de requerimientos con las pruebas de sistema para controlar fehacientemente que se pudieron alcanzar los requerimientos funcionales como se observa en la tabla \ref{tab:trazabilidad_test}. 
 
 \begin{table}[ht]
 \centering
@@ -344,4 +355,4 @@ Se elaboró una matriz de trazabilidad de requerimientos con las pruebas de sist
 
 Cabe destacar que el requerimiento 2.2, referido a la adquisición de valores de velocidad de viento, no fue evaluado en ningún caso de uso.  Esto responde a que dicho requerimiento no fue implementado.  Cuando esta característica sea finalmente incluida en el sistema se contempla definir dos nuevos casos de uso que la utilice, uno para evaluar la adquisición periódica y otro para evaluar la posibilidad de cambiar dicho período.
 
-Finalmente, en la tabla \ref{tab:trazabilidad_test} puede apreciarse que todos los requerimientos implementados están evaluados por al menos dos casos de uso.  Asimismo, debe notarse que si bien los casos de uso UC01 y UC02 cubren los mismos requerimientos, éstos prueban distintos aspectos del requerimiento 2.1.  UC01 evalua la adquisición periódica de valores de temperatura y UC02 la posibilidad de modificar dicho período de adquisición.
+Por último, en la tabla \ref{tab:trazabilidad_test} puede apreciarse que todos los requerimientos implementados están evaluados por al menos dos casos de uso.  Asimismo, debe notarse que si bien los casos de uso UC01 y UC02 cubren los mismos requerimientos, éstos prueban distintos aspectos del requerimiento 2.1.  UC01 evalua la adquisición periódica de valores de temperatura y UC02 la posibilidad de modificar dicho período de adquisición.
