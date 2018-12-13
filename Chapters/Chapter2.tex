@@ -161,7 +161,7 @@ En términos generales, el esquema de ramas propuesto por el modelo de Vincent D
 
 \footnotetext{Imagen tomada de \url{https://nvie.com/files/Git-branching-model.pdf}.}
 
-La mecánica de trabajo indica crear una nueva rama por cada característica a implementar.  Cuando la característica se logra, se debe hacer \textit{merge} con la rama \textit{develop} cuidando que no suceda un \textit{fastforward} y se pierdan los commits de la rama recién integrada.
+La mecánica de trabajo indica crear una nueva rama por cada característica a implementar.  Cuando la característica se logra, se debe hacer \textit{merge} con la rama \textit{develop} cuidando que no suceda un \textit{fastforward} y se pierdan los \textit{commits} de la rama recién integrada.
 
 Para este trabajo, se crearon ramas para desarrollar cada uno de los subsistemas mencionados en el diagrama en bloques de la figura \ref{fig:diagramaBloquesReducido} e incluidos en el alcance del trabajo, a saber:
 
@@ -176,7 +176,7 @@ Para este trabajo, se crearon ramas para desarrollar cada uno de los subsistemas
 \subsection{Paradigma de desarrollo basado en pruebas}
 \label{subsec:tdd}
 
-El paradigma de desarrollo basando en pruebas o TDD (por sus siglas en inglés, \textit{Test Driven Development}) \citep{beck2003test} es una práctica de programación que forma parte de las metodologías ágiles.  TDD plantea invertir el orden tradicional de desarrollo en el cual primero de implementa y luego se prueba.  En este sentido, este paradigma propone un proceso de desarrollo que consiste en codificar pruebas, desarrollar y refactorizar de forma continua el código.
+El paradigma de desarrollo basando en pruebas o TDD (por sus siglas en inglés, \textit{Test Driven Development}) \citep{beck2003test} es una práctica de programación que forma parte de las metodologías ágiles.  TDD plantea invertir el orden tradicional de desarrollo en el cual primero de implementa y luego se prueba.  En este sentido, este paradigma propone un proceso de desarrollo que consiste en codificar pruebas, desarrollar y refactorizar de forma iterativa el código.
 
 Si bien no se adoptó el modelo de desarrollo TDD en forma íntegra, sí se incorporaron algunos de sus principios a la metodología de trabajo, en particular los que permiten la producción de un \textit{firmware} modular, altamente reutilizable y preparado para el cambio, es decir escalable, conocidos como principios ``SOLID''\citep{martin2000design}:
 

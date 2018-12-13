@@ -43,9 +43,9 @@ En este capítulo se presenta la arquitectura del \textit{firmware} y el patrón
 \section{Diseño de módulos y definición de interfaces}
 \label{sec:modulos}
 
-Se optó por un diseño fuertemente modularizado en archivos, junto a un modelo de capas jerárquicas para organizar el código en distintos niveles de abstracción.  
+Se optó por un diseño fuertemente modularizado en archivos, junto a un modelo de capas jerárquicas para organizar el código en distintos niveles de abstracción.
 
-En la figura \ref{fig:capas} se pueden observar, agrupadas por color, las capas utilizadas en este trabajo.  En color amarillo, el paquete de drivers provistos por el fabricante del silicio; en color naranja la capa de bibiotecas; la capa de abstracción de \textit{hardware} (HAL, por sus siglas en inglés) en color verde; y finalmente, en color celeste, la capa de aplicación con los cuatro módulos implementados.   
+En la figura \ref{fig:capas} se pueden observar, agrupadas por color, las capas utilizadas en este trabajo.  En color amarillo, el paquete de drivers provistos por el fabricante del silicio; en color naranja la capa de bibiotecas; la capa de abstracción de \textit{hardware} (HAL, por sus siglas en inglés) en color verde; y finalmente, en color celeste, la capa de aplicación con los cuatro módulos implementados.
 
 %\vspace{10px}
 
@@ -58,7 +58,7 @@ En la figura \ref{fig:capas} se pueden observar, agrupadas por color, las capas 
 
 \vspace{10px}
 
-Para los módulos en la capa de aplicación, se confeccionó una matriz de trazabilidad de los requerimientos referidos al firmware, detallados en la sección \ref{sec:requerimientos}. 
+Para los módulos en la capa de aplicación, se confeccionó una matriz de trazabilidad de los requerimientos referidos al firmware, detallados en la sección \ref{sec:requerimientos}.
 
 La tabla \ref{tab:trazabilidad} permite saber en qué módulo del firmware serán implementados los requerimientos funcionales del proyecto.  Asimismo, permite controlar que todo este subconjunto de requerimientos sea implementado y que no haya superposición entre la funcionalidad de cada módulo.
 
@@ -104,19 +104,19 @@ A continuación se listan los prototipos de los manejadores de eventos definidos
 \vspace{10px}
 
 \begin{itemize}
-  \item \texttt{void onewire\_handler(const ipcex\_msg\_t * msg );} 
-  \item \texttt{void hmi\_handler(const ipcex\_msg\_t * msg );} 
-  \item \texttt{void sdcard\_handler(const ipcex\_msg\_t * msg );} 
-  \item \texttt{void control\_handler(const ipcex\_msg\_t * msg );} 
+  \item \texttt{void onewire\_handler(const ipcex\_msg\_t * msg );}
+  \item \texttt{void hmi\_handler(const ipcex\_msg\_t * msg );}
+  \item \texttt{void sdcard\_handler(const ipcex\_msg\_t * msg );}
+  \item \texttt{void control\_handler(const ipcex\_msg\_t * msg );}
 \end{itemize}
 
 \vspace{10px}
 
-Puede notarse que todos los manejadores reciben un mismo tipo de parámetro, un puntero constante a un mensaje de tipo \texttt{ipcex\_msg\_t}.  Cada módulo es responsable de interpretar los dos campos de datos que contiene el mensaje.  Normalmente el primer campo, \texttt{data0} define un comando o señal y el segundo, \texttt{data1} se utiliza opcionalmente para el envío de parámetros u opciones.
+Puede notarse que todos los manejadores reciben un mismo tipo de parámetro, un puntero constante a un mensaje de tipo \texttt{ipcex\_msg\_t}.  Cada módulo es responsable de interpretar los dos campos de datos que contiene el mensaje.  Normalmente el primer campo, \texttt{signal} define un comando o señal y el segundo, \texttt{param} se utiliza opcionalmente para el envío de parámetros u opciones.
 
 Para todos los módulos se utilizó un modelo de \textit{firmware} basado en máquinas de estados finitos (MEF) jerárquicas, donde una MEF principal controla la lógica de funcionamiento con el mayor nivel de abstracción. Los diferentes estados, a su vez, pueden o no estar modelados con MEFs dependiendo de la conveniencia de esto último.
 
-Se definió una arquitectura de máquia de estados finitos principal lo más genérica posible de forma que pueda ser compartida por los distintos módulos.  En este sentido, todos los módulos poseen un estado \texttt{DISABLE}, \texttt{INIT}, \texttt{IDLE}, \texttt{CONFIG} y \texttt{CHECK}. La funcionalidad que implemente cada uno de estos estados será propia del módulo donde estén definidos. 
+Se definió una arquitectura de máquia de estados finitos principal lo más genérica posible de forma que pueda ser compartida por los distintos módulos.  En este sentido, todos los módulos poseen un estado \texttt{DISABLE}, \texttt{INIT}, \texttt{IDLE}, \texttt{CONFIG} y \texttt{CHECK}. La funcionalidad que implemente cada uno de estos estados será propia del módulo donde estén definidos.
 
 Todos los módulos inician en estado \texttt{DISABLE}. Adicionalmente, la máquina de estados finitos podrá tener otros estados que sean específicos para lograr sus propósitos funcionales.
 
@@ -132,7 +132,7 @@ En la figura \ref{fig:mef_generica} se muestra un diagrama de la máquina de est
 \section{Módulo de almacenamiento}
 \label{sec:almacenamiento}
 
-El propósito del módulo de almacenamiento es proveer al sistema de una interfaz para operar con un medio de almacenamiento no volátil que permita guardar en forma permanente los datos registrados por el módulo de adquisición y eventualmente un log con información de \textit{debug}.  
+El propósito del módulo de almacenamiento es proveer al sistema de una interfaz para operar con un medio de almacenamiento no volátil que permita guardar en forma permanente los datos registrados por el módulo de adquisición y eventualmente un log con información de \textit{debug}.
 
 \subsection{Medio físico}
 \label{subsec:mediofisico}
@@ -157,7 +157,7 @@ Disco duro mecánico (HHD)                 & $\sim$1000 Gb                      
 
 \vspace{10px}
 
-Teniendo en cuenta criterios de costos y simplicidad de interacción con la CIAA-NXP, se decidió utilizar un lector de tarjetas microSD con comunicación sobre un puerto \textit{Synchronous Serial Port} (SSP).  Este protocolo es compatible con el protocolo SPI y utiliza un bus de 4 cables con las señales SCK, SSEL, MISO y MOSI.  Asimismo, el soporte seleccionado minimiza el consumo de energía comparado con las otras alternativas, lo cual lo hace deseable para la aplicación.  
+Teniendo en cuenta criterios de costos y simplicidad de interacción con la CIAA-NXP, se decidió utilizar un lector de tarjetas microSD con comunicación sobre un puerto \textit{Synchronous Serial Port} (SSP).  Este protocolo es compatible con el protocolo SPI y utiliza un bus de 4 cables con las señales SCK, SSEL, MISO y MOSI.  Asimismo, el soporte seleccionado minimiza el consumo de energía comparado con las otras alternativas, lo cual lo hace deseable para la aplicación.
 
 El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdCard}, donde puede verse esquemáticamente el diagrama de conexionado eléctrico entre la CIAA-NXP y el lector (figura \ref{fig:lector_conexionado}) y una vista superior del módulo de hardware (figura \ref{fig:lector_hardware}). Cabe notar que al haber un único dispositivo ``escalvo'' en el bus SSP, la señal de \textit{chip select} (CS) se conecta con GND, lo que implica que el dispositivo está permanente seleccionado.
 
@@ -192,7 +192,7 @@ El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdCard}
 
 \vspace{10px}
 
-Para la utilización del lector de tarjetas se hizo uso de la biblioteca FatFs, desarrollada por chaN \citep{fatFS}. FatFs es un módulo de sistema de archivos FAT/exFAT genérico para sistemas embebidos limitados en recursos. En la figura \ref{fig:chan} se esquematizan las interfaces de la biblioteca en una aplicación típica. 
+Para la utilización del lector de tarjetas se hizo uso de la biblioteca FatFs, desarrollada por chaN \citep{fatFS}. FatFs es un módulo de sistema de archivos FAT/exFAT genérico para sistemas embebidos limitados en recursos. En la figura \ref{fig:chan} se esquematizan las interfaces de la biblioteca en una aplicación típica.
 
 \begin{figure}[htpb]
 	\centering
@@ -208,13 +208,13 @@ El código está escrito en ANSI C y es \textit{software} libre bajo licencia es
 \subsection{Máquina de Estados Finitos}
 \label{subsec:MEFsdcard}
 
-Se presenta el diagrama de estado de la MEF principal del módulo en la figura \ref{fig:mef_sdcard}, donde puede apreciase el punto de entrada con un circulo negro, los estado que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad. 
+Se presenta el diagrama de estado de la MEF principal del módulo en la figura \ref{fig:mef_sdcard}, donde puede apreciase el punto de entrada con un circulo negro, los estado que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad.
 
-Debe notarse que al energizarse el sistema o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.  
+Debe notarse que al energizarse el sistema o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.
 
-Una vez inicializado, el módulo se encontrará la mayor parte del tiempo en el estado \texttt{IDLE} a la espera de un comando válido.  
+Una vez inicializado, el módulo se encontrará la mayor parte del tiempo en el estado \texttt{IDLE} a la espera de un comando válido.
 
-Cuando el módulo esté realizando alguna operación de lectura, escritura o actualización sobre la tarjeta SD, el estado del módulo tendrá el valor \texttt{PROCESSING} para indicarle al módulo de control que debe tener acceso a tiempo de CPU para poder completar las operaciones pendientes.  
+Cuando el módulo esté realizando alguna operación de lectura, escritura o actualización sobre la tarjeta SD, el estado del módulo tendrá el valor \texttt{PROCESSING} para indicarle al módulo de control que debe tener acceso a tiempo de CPU para poder completar las operaciones pendientes.
 
 Todas las operación del módulo desde que es inicializado terminan incondicionalmente en el estado \texttt{IDLE}, en donde el valor de la variable que registra el estado del módulo cambia de \texttt{PROCESSING} a \texttt{READY}.
 
@@ -272,7 +272,7 @@ Sin pérdida de generalidad, la arquitectura de módulo adoptada puede utilizars
 \subsection{Sensor de temperatura}
 \label{subsec:1-wire}
 
-%En la presente sección se presenta la implementación del control para el sensor de temperatura. 
+%En la presente sección se presenta la implementación del control para el sensor de temperatura.
 
 Se evaluaron distintas opciones para el sensor de temperatura que estuvieran disponibles en el mercado local.  Se recopila en la tabla \ref{tab:temperatura} la información relevada para los sensores candidatos, donde puede verse fabricante y modelo de cada dispositivo junto con las principales características de interés para la aplicación.
 
@@ -296,14 +296,14 @@ Genérico            & IM120628010 & Termistor NTC & 1\% & -25 a +125   & 1-wire
 Texas Instruments         & LM35  & Integrated Circuit & $\pm$ 0.5 & -55 a +150   & \textit{Analog}         & \$   \\
 \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} \\
 Altas Scientific    & PT-1000A    & \begin{tabular}[c]{@{}c@{}}RTD \\ (resistance\\ temperature\\ detector)\end{tabular} & $\pm$ (0.15 + 0.002*t)  & -55 a +125   & \textit{Analog}         & \$\$\$         \\
-\bottomrule         
+\bottomrule
 \end{tabular}%
 }
 \end{table}
 
 El sensor elegido es el termómetro digital DS18B20 del fabricante Maxim Integrated \citep{ds18b20}. Los motivos de la elección fueron principalmente la facilidad de uso en un entorno embebido de recursos limitados, la disponibilidad de documentación completa y detallada junto con numerosas notas de aplicación y el bajo costo del dispositivo.
 
-En la figura \ref{fig:ds18b20_bloques} se puede apreciar un diagrama en bloques del sensor, en donde destaca la interfaz de 3 cables con una línea bidireccional de datos (DQ) y dos cables para la alimentación (GND y $V_{DD}$). 
+En la figura \ref{fig:ds18b20_bloques} se puede apreciar un diagrama en bloques del sensor, en donde destaca la interfaz de 3 cables con una línea bidireccional de datos (DQ) y dos cables para la alimentación (GND y $V_{DD}$).
 
 El sensor admite una configuración de alimentación ``parásita'', en la cual se energiza desde la línea de datos DQ, lo que habilita a prescindir de un cable a costa de mayores requerimientos para la temporización de las comunicaciones y la utilización de un transistor a modo de \textit{``strong pull-up''} (conectado el bus de datos directamente a $V_{DD}$).
 
@@ -316,13 +316,13 @@ El sensor admite una configuración de alimentación ``parásita'', en la cual s
 
 \footnotetext{Imagen tomada de \url{https://www.maximintegrated.com/en/images/qv/2812.png}}
 
-Cada sensor posee un código de identificación único de 64 bits que permite operar con múltiples sensores sobre un mismo bus de tipo 1-wire.  Mediante un algoritmo de descubrimiento se pueden identificar los sensores conectados a un mismo bus y controlarlos independientemente. 
+Cada sensor posee un código de identificación único de 64 bits que permite operar con múltiples sensores sobre un mismo bus de tipo 1-wire.  Mediante un algoritmo de descubrimiento se pueden identificar los sensores conectados a un mismo bus y controlarlos independientemente.
 
 La capacidad para identificar cuántos sensores hay conectados en cada momento y poder interrogarlos individualmente se utilizó para incorporar una funcionalidad de autochequeo, en la cual el microcontrolador es capaz de detectar si un sensor ha dejado de funcionar correctamente.
 
 Otras características destacables son la posibilidad de configurar la resolución entre 9 y 12 bits, el uso de CRC en las comunicaciones y la capacidad para definir umbrales de alarma para los valores de temperatura medidos.
 
-Este sensor se comercializa con distintas longitudes de cable, dentro de un encapsulado metálico sumergible.  Para este trabajo se adquirieron dos sensores sumergibles con 5 metros de cable y 2 metros de cable, respectivamente.   
+Este sensor se comercializa con distintas longitudes de cable, dentro de un encapsulado metálico sumergible.  Para este trabajo se adquirieron dos sensores sumergibles con 5 metros de cable y 2 metros de cable, respectivamente.
 
 Los dos sensores operan sobre una misma línea de datos con una resistencia de \textit{pull-up} de 2,2 K$\Omega$, como puede verse en el diagrama de conexionado eléctrico de la figura \ref{fig:ds18b20_conexionado}.  El encapsulado sumergible puede apreciarse en la figura \ref{fig:termometro}.
 
@@ -351,13 +351,13 @@ Para el control de los dispositivos se adaptó una implementación de controlado
 
 \subsection{Máquina de Estados Finitos}
 
-En forma análoga a lo presentado en la subsección \ref{subsec:MEFsdcard}, se muestra aquí el diagrama de estado de la MEF principal del módulo en la figura \ref{fig:mef_adquisicion}, donde puede apreciase el punto de entrada con un circulo negro, los estado que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad. 
+En forma análoga a lo presentado en la subsección \ref{subsec:MEFsdcard}, se muestra aquí el diagrama de estado de la MEF principal del módulo en la figura \ref{fig:mef_adquisicion}, donde puede apreciase el punto de entrada con un circulo negro, los estado que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad.
 
-Igualmente, debe notarse que cuando el sistema es energizado o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.  
+Igualmente, debe notarse que cuando el sistema es energizado o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.
 
-Una vez inicializado, el módulo se encontrará la mayor parte del tiempo en el estado \texttt{IDLE} a la espera de un comando válido.  
+Una vez inicializado, el módulo se encontrará la mayor parte del tiempo en el estado \texttt{IDLE} a la espera de un comando válido.
 
-Cuando el módulo esté realizando alguna operación de adquisición, configuración o autochequeo sobre los sensores conectados, el estado del módulo tendrá el valor \texttt{PROCESSING} para indicarle al módulo de control que debe tener acceso a tiempo de CPU para poder completar las operaciones pendientes.  
+Cuando el módulo esté realizando alguna operación de adquisición, configuración o autochequeo sobre los sensores conectados, el estado del módulo tendrá el valor \texttt{PROCESSING} para indicarle al módulo de control que debe tener acceso a tiempo de CPU para poder completar las operaciones pendientes.
 
 Todas las operación del módulo desde que es inicializado terminan incondicionalmente en el estado \texttt{IDLE}, en donde el valor de la variable que registra el estado cambia de \texttt{PROCESSING} a \texttt{READY}.
 
@@ -400,19 +400,19 @@ ADQUIRE & sig\_timeout & Ejecutar tarea periódica de adquisición de datos \\ \
 \section{Módulo interfaz máquina-hombre}
 \label{sec:HMI}
 
-El propósito del módulo interfaz máquina-hombre (HMI, por sus siglas en inglés) es proveer al sistema de un medio de interacción con un operador humano. Las posibles interacciones se realizan a través de una interfaz de comandos interactiva y contempla operaciones de configuración y cambio de parámetros sobre los módulos y operaciones de mantenimiento y depuración del sistema.  
+El propósito del módulo interfaz máquina-hombre (HMI, por sus siglas en inglés) es proveer al sistema de un medio de interacción con un operador humano. Las posibles interacciones se realizan a través de una interfaz de comandos interactiva y contempla operaciones de configuración y cambio de parámetros sobre los módulos y operaciones de mantenimiento y depuración del sistema.
 
 La interfaz se implementa desde el microcontrolador sobre un puerto serie de tipo \textit{Universal Asynchronous Receiver-Transmitter} o UART a través de un conversor RS232/USB de la firma FTDI incorporado en la CIAA-NXP, hasta llegar finalmente a la PC del operador humano.
 
-El código del módulo incluye directivas de compilación condicional que permiten cambiar la cantidad y el nivel de detalle de los mensajes que el sistema envía a través de la interfaz.  Esta opción debe definirse en tiempo de compilación y no puede ser modificada en tiempo de ejecución, es decir, una vez que el sistema esté en funcionamiento.  
+El código del módulo incluye directivas de compilación condicional que permiten cambiar la cantidad y el nivel de detalle de los mensajes que el sistema envía a través de la interfaz.  Esta opción debe definirse en tiempo de compilación y no puede ser modificada en tiempo de ejecución, es decir, una vez que el sistema esté en funcionamiento.
 
-Mediante una directiva \texttt{DEFINE} para el precompilador se puede definir el símbolo \texttt{DEBUG\_ENABLE} en el archivo \texttt{board\_api.h}.   Si esta macro se encuentra definida, se habilitan funciones de depuración que envían mensajes a través de la UART como puede verse en el algorirmo \ref{lst:debug}.  
+Mediante una directiva \texttt{DEFINE} para el precompilador se puede definir el símbolo \texttt{DEBUG\_ENABLE} en el archivo \texttt{board\_api.h}.   Si esta macro se encuentra definida, se habilitan funciones de depuración que envían mensajes a través de la UART como puede verse en el algorirmo \ref{lst:debug}.
 
 %\begin{verbatim}
 %  #define DEBUG_ENABLE
 %\end{verbatim}
 
-Adicionalmente, si se define la MACRO \texttt{DEBUG\_SEMIHOSTING} se pueden utilizar los recursos de entrada/salida de la PC host que esté depurando el sistema embebido. 
+Adicionalmente, si se define la MACRO \texttt{DEBUG\_SEMIHOSTING} se pueden utilizar los recursos de entrada/salida de la PC host que esté depurando el sistema embebido.
 
 Si la MACRO \texttt{DEBUG\_ENABLE} no es definida, las funciones no se incluyen en el código, ahorrando recursos al sistema.
 
@@ -422,32 +422,32 @@ Si la MACRO \texttt{DEBUG\_ENABLE} no es definida, las funciones no se incluyen 
 #if defined(DEBUG_ENABLE)
 
   #if defined(DEBUG_SEMIHOSTING)
-	  
+
     #define DEBUGINIT()
     #define DEBUGOUT(...) printf(__VA_ARGS__)
     #define DEBUGSTR(str) printf(str)
     #define DEBUGIN() (int) EOF
 
   #else
-  
+
     #define DEBUGINIT() Board_Debug_Init()
     #define DEBUGOUT(...) printf(__VA_ARGS__)
     #define DEBUGSTR(str) Board_UARTPutSTR(str)
     #define DEBUGIN() Board_UARTGetChar()
-  
+
   #endif /* defined(DEBUG_SEMIHOSTING) */
 
 #else
-  
+
   #define DEBUGINIT()
   #define DEBUGOUT(...)
   #define DEBUGSTR(str)
   #define DEBUGIN() (int) EOF
-  
+
 #endif /* defined(DEBUG_ENABLE) */
 \end{lstlisting}
 
-Para acceder a la interfaz se debe utilizar una terminal serie tipo \texttt{screen} \citep{screen} en configuración 8N1 a 115200 baudios. 
+Para acceder a la interfaz se debe utilizar una terminal serie tipo \texttt{screen} \citep{screen} en configuración 8N1 a 115200 baudios.
 
 Existen emuladores de terminales serie como \textit{cutecom}, de gran difusión, que presentan el inconveniente de no implementar funciones de control definidas en los estándares ANSI X3.64 (ISO 6429) e ISO 2022 por lo que la visualización de la interfaz en estas consolas puede ser defectuosa y no se recomienda su uso.
 
@@ -455,11 +455,11 @@ Existen emuladores de terminales serie como \textit{cutecom}, de gran difusión,
 \subsection{Interfaz}
 \label{subsec:interfaz}
 
-El propósito de la interfaz desarrollada es servir como prueba de concepto e incluye un mínimo de funcionalidad para cumplir los requerimientos relacionados a la controlabilidad de la estación, principalmente en lo referido al período de muestreo de los sensores del módulo de adquisición. 
+El propósito de la interfaz desarrollada es servir como prueba de concepto e incluye un mínimo de funcionalidad para cumplir los requerimientos relacionados a la controlabilidad de la estación, principalmente en lo referido al período de muestreo de los sensores del módulo de adquisición.
 
 Cabe destacar que el valor de esta interfaz no está en su estética ni en su facilidad de uso, sino en la arquitectura subyacente que permite obtener información sistema y operar sobre sus distintos componentes.
 
-Una primera versión de la interfaz operativa se presenta en la figura \ref{fig:interfaz_main}, donde pueden apreciarse cuatro zonas funcionales identificadas con recuadros de color rojo, a saber: encabezado, menú de opciones, línea de comandos y barra de estado. 
+Una primera versión de la interfaz operativa se presenta en la figura \ref{fig:interfaz_main}, donde pueden apreciarse cuatro zonas funcionales identificadas con recuadros de color rojo, a saber: encabezado, menú de opciones, línea de comandos y barra de estado.
 
 \begin{figure}[htpb]
 	\centering
@@ -468,11 +468,11 @@ Una primera versión de la interfaz operativa se presenta en la figura \ref{fig:
 	\label{fig:interfaz_main}
 \end{figure}
 
-En el encabezado puede observarse el nombre de la estación EAMMRA, por las siglas de ``Estación Autónoma Marítima de Medición de Ruido Ambiente'' junto en una identificación del número de revisión de la interfaz, en el caso de la figura \ref{fig:interfaz_main}, r1.0. 
+En el encabezado puede observarse el nombre de la estación EAMMRA, por las siglas de ``Estación Autónoma Marítima de Medición de Ruido Ambiente'' junto en una identificación del número de revisión de la interfaz, en el caso de la figura \ref{fig:interfaz_main}, r1.0.
 
 En la zona asociada al menú de opciones se presentan los comandos que puede introducir el operador. En cada pantalla, las opciones que se muestran cambian según el contexto.
 
-Se realiza un eco de los comandos ingresados, que aparecen en la línea de comandos para confirmación del usuario. Asimismo, si se ingresa un caracter que no sea parte de las opciones disponibles, el sistema lo informa a continuación del eco con el mensaje `` no es un comando valido.'' 
+Se realiza un eco de los comandos ingresados, que aparecen en la línea de comandos para confirmación del usuario. Asimismo, si se ingresa un caracter que no sea parte de las opciones disponibles, el sistema lo informa a continuación del eco con el mensaje `` no es un comando valido.''
 
 Los diferentes módulos pueden enviar mensajes para el usuario que aparecerán en la sección indicada como barra de estado.  De igual manera, cuando el sistema requiera confirmación por parte del usuario, se exhibirá un mensaje para tal fin en esta sección.
 
@@ -493,18 +493,18 @@ Se contempla diferenciar a futuro las opciones de cada módulo acorde se agregue
   \item \texttt{(D)} Habilitar / Deshabilitar: permite intercambiar el estado del módulo entre \texttt{READY} y \texttt{DISABLED}.  Para tal fin, si el módulo se encuentra en estado \texttt{READY}, se le envía una señal sig\_disable.  En caso que se encuentre en estado \texttt{DISABLED} se le envía una señal sig\_init.  Antes de enviar la señal correspondiente se informa al usuario el estado actual del módulo y se pide que confirme o cancele la operación mediante el ingreso de \texttt{`s'} o \texttt{`n'}, respectivamente.
   \item \texttt{(I)} Info del modulo: muestra el estado actual del módulo en la barra de estado.  Las respuestas posibles son \texttt{READY}, \texttt{PROCESSING} y \texttt{DISABLED}
   \item \texttt{(C)} Configurar: permite cambiar la configuración del módulo.  En esta etapa del desarrollo se implementó únicamente la posibilidad de cambiar el tiempo con que se ejecuta la tarea periódica, si la hubiera.
-  \item \texttt{(A)} Autocomprobación: permite realizar una comprobación interna de funcionamiento mediante el envío de una señal sig\_check al módulo. En esta etapa del desarrollo la funcionalidad está implementada con una función \textit{mock} que devuelve un mensaje en la barra de estado. 
+  \item \texttt{(A)} Autocomprobación: permite realizar una comprobación interna de funcionamiento mediante el envío de una señal sig\_check al módulo. En esta etapa del desarrollo la funcionalidad está implementada con una función \textit{mock} que devuelve un mensaje en la barra de estado.
   \item \texttt{(X)} para volver al menú anterior: cambia el menú a la pantalla principal del modo configuración.
 \end{itemize}
 
 \begin{figure}[htpb]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/interfaz_config_detalle.png}
-	\caption[Pantalla de configuración del módulo de adquisición.]{Pantalla de configuración del módulo de adquisición con una operación de deshabilitación en curso.} 
+	\caption[Pantalla de configuración del módulo de adquisición.]{Pantalla de configuración del módulo de adquisición con una operación de deshabilitación en curso.}
 	\label{fig:interfaz_config_detalle}
 \end{figure}
 
-Asimismo, desde el menú principal se puede acceder a un modo \textit{debug} con opciones de depuración y mantenimiento como puede observarse en la figura \ref{fig:interfaz_debug}.  
+Asimismo, desde el menú principal se puede acceder a un modo \textit{debug} con opciones de depuración y mantenimiento como puede observarse en la figura \ref{fig:interfaz_debug}.
 
 \begin{figure}[htpb]
 	\centering
@@ -522,7 +522,7 @@ Las opciones para este modo son:
   \item \texttt{(X)} para volver al menú anterior: cambia el menú a la plantalla principal del modo \textit{debug}.
 \end{itemize}
 
-En la tabla \ref{tab:interfaz_config}, se recopilan los comandos que se pueden ingresar por la interfaz en el modo configuración junto con una descripción de la funcionalidad que activa en el sistema.  Asimismo, se explicita si la función se encuentran implementada o maquetada. 
+En la tabla \ref{tab:interfaz_config}, se recopilan los comandos que se pueden ingresar por la interfaz en el modo configuración junto con una descripción de la funcionalidad que activa en el sistema.  Asimismo, se explicita si la función se encuentran implementada o maquetada.
 
 \begin{table}[htpb]
 \centering
@@ -543,7 +543,7 @@ A & \begin{tabular}[c]{@{}c@{}}Autocomprobación del módulo.\\ Informa en la ba
 %}
 \end{table}
 
-En forma análoga, se presenta en la tabla \ref{tab:interfaz_debug}, una recopilación de los comandos que se pueden ingresar en el modo debug junto con una descripción de la misma.  Asimismo, se explicita si la función se encuentran implementada o maquetada. 
+En forma análoga, se presenta en la tabla \ref{tab:interfaz_debug}, una recopilación de los comandos que se pueden ingresar en el modo debug junto con una descripción de la misma.  Asimismo, se explicita si la función se encuentran implementada o maquetada.
 
 \begin{table}[htpb]
 \centering
@@ -558,7 +558,7 @@ E & \begin{tabular}[c]{@{}c@{}}Informa el estado actual\\ de todos los módulos 
 A & \begin{tabular}[c]{@{}c@{}}Autocomprobación\\ de todos los módulos.\\ Se registra el resultado\\ en el log del sistema\end{tabular} &  & X \\
 \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} \\
 L & \begin{tabular}[c]{@{}c@{}}Listar el contenido del \\ log del sistema.\\ Se limpia presionando\\ cualquier tecla\end{tabular} & X & \\
-\bottomrule 
+\bottomrule
 \end{tabular}
 %}
 \end{table}
@@ -571,19 +571,19 @@ En los módulos que tiene funciones maquetadas se reemplazó la llamada a la fun
 	\item el módulo correspondiente recibe la señal y contesta con un mensaje que se visualiza en la barra de estado de la interfaz.
 \end{itemize}
 
-Se contempla incluir en versiones futuras, además de cambios estilísticos, la implementación completa de funcionalidades que en la presente versión se encuentran maquetadas.  Si bien estás y otras características son deseable para la usabilidad de la interfaz y la operación de la estación, no formaban parte de los requerimientos enumerados en la sección \ref{sec:requerimientos}. 
+Se contempla incluir en versiones futuras, además de cambios estilísticos, la implementación completa de funcionalidades que en la presente versión se encuentran maquetadas.  Si bien estás y otras características son deseable para la usabilidad de la interfaz y la operación de la estación, no formaban parte de los requerimientos enumerados en la sección \ref{sec:requerimientos}.
 
 
 
 \subsection{Máquina de estados finitos}
 
-El diagrama de estado de la MEF principal del módulo puede apreciarse en la figura \ref{fig:mef_HMI}, donde se observa el punto de entrada con un circulo negro, los estados que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad. 
+El diagrama de estado de la MEF principal del módulo puede apreciarse en la figura \ref{fig:mef_HMI}, donde se observa el punto de entrada con un circulo negro, los estados que puede tomar la máquina y las señales que provocan los cambios de estado. Se omiten del gráfico las salidas del sistema por simplicidad.
 
-Igualmente, debe notarse que cuando el sistema es energizado o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.  
+Igualmente, debe notarse que cuando el sistema es energizado o luego de un \textit{reset}, el módulo se encuentra deshabilitado, con la MEF en el estado \texttt{DISABLE}, del cual sólo puede salir si se recibe una señal de inicialización.
 
-Una vez inicializado, el módulo se encontrará la mayor parte del tiempo en el estado \texttt{IDLE} a la espera de un comando válido para procesar.  
+Una vez inicializado, el módulo se encontrará la mayor parte del tiempo en el estado \texttt{IDLE} a la espera de un comando válido para procesar.
 
-Cuando el módulo esté realizando alguna operación de procesamiento de comandos recibidos por el usuario, configuración o autochequeo, el estado en la del módulo tendrá el valor \texttt{PROCESSING} para indicarle al módulo de control que debe tener acceso a tiempo de CPU para poder completar las operaciones pendientes.  
+Cuando el módulo esté realizando alguna operación de procesamiento de comandos recibidos por el usuario, configuración o autochequeo, el estado en la del módulo tendrá el valor \texttt{PROCESSING} para indicarle al módulo de control que debe tener acceso a tiempo de CPU para poder completar las operaciones pendientes.
 
 Todas las operación del módulo desde que es inicializado terminan incondicionalmente en el estado \texttt{IDLE}, en donde el valor de la variable que registra el estado cambia de \texttt{PROCESSING} a \texttt{READY}.
 
@@ -617,7 +617,7 @@ CONFIG & sig\_config & Realizar cambios de configuración al módulo. \\
  &  &  \\
 CHECK & sig\_check & Realizar autochequeo e informar al módulo de control \\
  &  &  \\
-PROCESS & sig\_process & Procesar los comandos recibidos \\ 
+PROCESS & sig\_process & Procesar los comandos recibidos \\
  &  &  \\
 STATUS & sig\_status & Enviar información de un módulo al usuario \\ \bottomrule
 \end{tabular}%
@@ -629,11 +629,11 @@ STATUS & sig\_status & Enviar información de un módulo al usuario \\ \bottomru
 \section{Módulo de control}
 \label{sec:control}
 
-El propósito del módulo de control es implementar un \textit{framework} o marco de trabajo para el funcionamiento de los demás módulos del sistemas.  En este sentido, provee los mecanismos de \textit{scheduling} para planificar la ejecución de las tareas del sistema y un \textit{dispatcher} para ejecutarlas.  
+El propósito del módulo de control es implementar un \textit{framework} o marco de trabajo para el funcionamiento de los demás módulos del sistemas.  En este sentido, provee los mecanismos de \textit{scheduling} para planificar la ejecución de las tareas del sistema y un \textit{dispatcher} para ejecutarlas.
 
-Asimismo, se incluyen métodos para temporizar regularmente la ejecución de los módulos que requieran tareas periódicas mediante el uso de una base de tiempo con el \textit{sysTick timer} del microcontrolador.  
+Asimismo, se incluyen métodos para temporizar regularmente la ejecución de los módulos que requieran tareas periódicas mediante el uso de una base de tiempo con el \textit{sysTick timer} del microcontrolador.
 
-Asimismo, este módulo implementa los mecanismos de comunicación entre procesadores descriptos en la subsección \ref{subsec:IPC} con algunas modificaciones.  
+Asimismo, este módulo implementa los mecanismos de comunicación entre procesadores descriptos en la subsección \ref{subsec:IPC} con algunas modificaciones.
 
 En primer lugar se definieron dos colas de mensajes idénticas, una para cada procesador, como puede verse en el algoritmo \ref{lst:ipc_queue}.  Cada cola permite alojar una cantidad \texttt{IPCEX\_QUEUE\_SZ} de mensajes definida mediante una macro con valor numérico igual a 64.
 
@@ -646,38 +646,38 @@ En primer lugar se definieron dos colas de mensajes idénticas, una para cada pr
 \end{lstlisting}
 
 
-En segundo lugar, se permitió que los procesadores puedan escribir indistintamente en ambas colas, con el resguardo de activar la interrupción cruzada únicamente cuando el mensaje a encolar fuera para el otro procesador. Esta modificación es sencilla de implementar ya que la información del procesador de destino está contenida en el mismo mensaje.  
+En segundo lugar, se permitió que los procesadores puedan escribir indistintamente en ambas colas, con el resguardo de activar la interrupción cruzada únicamente cuando el mensaje a encolar fuera para el otro procesador. Esta modificación es sencilla de implementar ya que la información del procesador de destino está contenida en el mismo mensaje.
 
 De esta manera se proveyó un mecanismo de comunicación entre módulos definidos en un mismo procesador.  Asimismo, esto otorgó mayor flexibilidad al sistema en su conjunto, ya que a partir de esta modificación, el código de un módulo pueden incluirse en ambos procesadores y mediante una macro, elegir desde qué procesador se va a ejecutar, sin otras modificaciones en el resto del código.
 
-Por otra parte, se modificó el tipo de dato \texttt{ipcex\_t} para contener, en lugar de dos campos de datos \texttt{uint32\_t}, un campo tipo signal\_t y otro tipo (void *) para el pasaje de parámetros genéricos, como puede verse en el algoritmo \ref{lst:msg_t}. 
+Por otra parte, se modificó el tipo de dato \texttt{ipcex\_t} para contener, en lugar de dos campos de datos \texttt{uint32\_t}, un campo tipo signal\_t y otro tipo (void *) para el pasaje de parámetros genéricos, como puede verse en el algoritmo \ref{lst:msg_t}.
 
 \vspace{10px}
 \begin{lstlisting}[caption={Definición nuevo tipo de dato ipcex\_msg\_t para intercambio de mensajes.},label={lst:msg_t}]
 	typedef struct __ipcex_msg {
 	struct {
-		uint16_t cpu;
-		uint16_t pid;
+		cpuID_t cpu;
+		moduleID_t pid;
 	} id;
 	signal_t signal;
-	void *   data;
+	void *   param;
 } ipcex_msg_t;
-\end{lstlisting} 
+\end{lstlisting}
 
 El tipo de dato \texttt{signal\_t} es una redefinición de una enumeración que contiene a todas las señales que es posible enviar a los módulos.  Su definición se puede apreciar en el algoritmo \ref{lst:signal_t}. Se define una última señal sig\_invalid para control de errores.
 
 %\vspace{10px}
 \begin{lstlisting}[caption={Definición nuevo tipo de dato signal\_t para el envío de señales a los módulos.},label={lst:signal_t}]
 typedef enum {
-	sig_disable, 
-	sig_init, 
-	sig_config, 
-	sig_check, 
-	sig_timeout, 
-	sig_process, 
-	sig_status, 
-	sig_adquire,  
-	sig_write, 
+	sig_disable,
+	sig_init,
+	sig_config,
+	sig_check,
+	sig_timeout,
+	sig_process,
+	sig_status,
+	sig_adquire,
+	sig_write,
 	sig_read,
 	sig_invalid
 } signal_t;
@@ -688,10 +688,10 @@ Se obtiene acceso para controlar los distintos módulos que componen el sistema 
 %\vspace{10px}
 \begin{lstlisting}[caption={Definición nuevo tipo de dato moduleID\_t para indexar el control de los módulos.},label={lst:moduleID_t}]
 typedef enum {
-	ONEWIRE, 
-	HMI, 
-	SDCARD, 
-	CONTROL, 
+	ONEWIRE,
+	HMI,
+	SDCARD,
+	CONTROL,
 	INVALID_MODULE
 } moduleID_t;
 \end{lstlisting}
@@ -704,7 +704,7 @@ void FR_register_all_modules(void){
 	modules[ONEWIRE]  = ow_get_module_pointer();
 	modules[HMI]      = hmi_get_module_pointer();
 	modules[SDCARD]   = sd_get_module_pointer();
-	modules[CONTROL]  = FR_get_module_pointer();
+	modules[CONTROL]  = fr_get_module_pointer();
 };
 \end{lstlisting}
 
@@ -726,8 +726,8 @@ bool_t FR_dispatch_tasks(void){
 	if (IPC_tryPopMsg(&msg) == QUEUE_VALID) {
 		if(msg.id.pid < INVALID_MODULE) {
 			moduleID = msg.id.pid;
-			if(modules[moduleID]->status == DISABLED && 
-					msg.data0 == sig_init)
+			if(modules[moduleID]->status == DISABLED &&
+					msg.signal == sig_init)
 				(*modules[moduleID]->eventHandler)(&msg);
 
 			else if(modules[moduleID]->status == READY)
@@ -736,7 +736,7 @@ bool_t FR_dispatch_tasks(void){
 			else
 				IPC_tryPushMsg(msg.id.cpu, &msg);
 		}
-		else 
+		else
 			DEBUGSTR("Error! msg.id.pid unknown\r\n");
 	}
 
@@ -789,7 +789,7 @@ Existe únicamente tres fuentes de interrupción posibles que pueden sacar al pr
 	\item Interrupción del otro procesador para indicar que ha enviado un mensaje que requiere procesamiento.
 \end{itemize}
 
-En las rutinas de servicio de cada una de estas interrupciones se encolan los mensejes correspondientes que serán debidamente atendidos en la siguiente ejecución del despachador de eventos.  
+En las rutinas de servicio de cada una de estas interrupciones se encolan los mensejes correspondientes que serán debidamente atendidos en la siguiente ejecución del despachador de eventos.
 
 En en este módulo se implementa el control del perfil de consumo de energía del sistema, mediante lo cual se da cumplimiento al requerimiento  2.4.
 
@@ -800,15 +800,15 @@ Se definieron dos perfil de consumo distintos con las siguientes característica
 	\begin{itemize}
 		\item Todos los módulos habilitados
 		\item Interrupción del sysTick Timer cada 1 ms
-		\item Las adquisiciones de temperatura y su escritura en la microSD cada 1 segundo. 
+		\item Las adquisiciones de temperatura y su escritura en la microSD cada 1 segundo.
 	\end{itemize}
 	\item Perfil 2: optimizado para \textit{consumo}
 	\begin{itemize}
 		\item Módulo HMI deshabilitado
 		\item Interrupción del sysTick Timer cada 10 ms
-		\item Las adquisiciones de temperatura y su escritura en la microSD cada 10 segundo. 
+		\item Las adquisiciones de temperatura y su escritura en la microSD cada 10 segundo.
 	\end{itemize}
-\end{itemize}    
+\end{itemize}
 
 El sistema se inicia con la configuración del perfil 1 de consumo eléctrico y pude pasar al perfil 2 si el usuario envía una señal de configuración para tal fin a través de la interfaz HMI. A los fines de esta etapa del desarrollo, una vez en el perfil 2, sólo es posible volver al perfil 1 reseteando el microcontrolador, ya que la interfaz HMI dejará de estar disponible.  Se contempla a futuro la posibilidad de intercalar ciclos de trabajo con los distintos perfiles según sea conveniente.
 
@@ -823,8 +823,8 @@ La configuración inicial adoptada se puede apreciar en la tabla \ref{tab:modulo
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Procesador} & \textbf{Control} & \textbf{sdCard} & \textbf{Adquisición} & \textbf{HMI} \\ \midrule
-Cortex-M0			&                  &                 &                      & X            \\ 
-Cortex-M4   		& X                & X               & X                    &              \\ 
+Cortex-M0			&                  &                 &                      & X            \\
+Cortex-M4   		& X                & X               & X                    &              \\
 \bottomrule
 \end{tabular}
 \end{table}
