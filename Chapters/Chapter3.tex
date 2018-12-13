@@ -112,7 +112,7 @@ A continuación se listan los prototipos de los manejadores de eventos definidos
 
 \vspace{10px}
 
-Puede notarse que todos los manejadores reciben un mismo tipo de parámetro, un puntero constante a un mensaje de tipo \texttt{ipcex\_msg\_t}.  Cada módulo es responsable de interpretar los dos campos de datos que contiene el mensaje.  Normalmente el primer campo, \texttt{data0} define un comando o señal y el segundo, \texttt{data1} se utiliza opcionalmente para el envío de parámetros u opciones.
+Puede notarse que todos los manejadores reciben un mismo tipo de parámetro, un puntero constante a un mensaje de tipo \texttt{ipcex\_msg\_t}.  Cada módulo es responsable de interpretar los dos campos de datos que contiene el mensaje.  Normalmente el primer campo, \texttt{signal} define un comando o señal y el segundo, \texttt{param} se utiliza opcionalmente para el envío de parámetros u opciones.
 
 Para todos los módulos se utilizó un modelo de \textit{firmware} basado en máquinas de estados finitos (MEF) jerárquicas, donde una MEF principal controla la lógica de funcionamiento con el mayor nivel de abstracción. Los diferentes estados, a su vez, pueden o no estar modelados con MEFs dependiendo de la conveniencia de esto último.
 
@@ -656,11 +656,11 @@ Por otra parte, se modificó el tipo de dato \texttt{ipcex\_t} para contener, en
 \begin{lstlisting}[caption={Definición nuevo tipo de dato ipcex\_msg\_t para intercambio de mensajes.},label={lst:msg_t}]
 	typedef struct __ipcex_msg {
 	struct {
-		uint16_t cpu;
-		uint16_t pid;
+		cpuID_t cpu;
+		moduleID_t pid;
 	} id;
-	signal_t data0;
-	void *   data1;
+	signal_t signal;
+	void *   param;
 } ipcex_msg_t;
 \end{lstlisting} 
 
@@ -704,7 +704,7 @@ void FR_register_all_modules(void){
 	modules[ONEWIRE]  = ow_get_module_pointer();
 	modules[HMI]      = hmi_get_module_pointer();
 	modules[SDCARD]   = sd_get_module_pointer();
-	modules[CONTROL]  = FR_get_module_pointer();
+	modules[CONTROL]  = fr_get_module_pointer();
 };
 \end{lstlisting}
 
@@ -727,7 +727,7 @@ bool_t FR_dispatch_tasks(void){
 		if(msg.id.pid < INVALID_MODULE) {
 			moduleID = msg.id.pid;
 			if(modules[moduleID]->status == DISABLED && 
-					msg.data0 == sig_init)
+					msg.signal == sig_init)
 				(*modules[moduleID]->eventHandler)(&msg);
 
 			else if(modules[moduleID]->status == READY)
