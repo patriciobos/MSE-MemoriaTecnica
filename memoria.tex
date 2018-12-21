@@ -51,8 +51,19 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
 
-\usepackage{caption}
-\usepackage{subcaption}
+\usepackage{caption,subcaption}
+
+% Add a small space between figure and sub-figure number in references
+% (Usually \p@subfigure is defined as \thefigure, see subcaption package
+% documentation for details)
+\makeatletter
+   \def\p@subfigure{\thefigure\,}
+   \def\p@subtable{\thetable\,}
+\makeatother
+ 
+% Use uppercase letters for sub-figure numbering (A, B, ... instead of a, b, ...)
+% (Per default \thesubfigure is defined as \alph{subfigure}, i.e. lowercase letters)
+\renewcommand\thesubfigure{\alph{subfigure}}
 
 \usepackage{multirow}
 \spanishplainpercent
@@ -119,11 +130,9 @@ headsepline, % Uncomment to get a line under the header
 \newcaptionname{spanish}{\abbrevname}{Glosario}
 \newcaptionname{spanish}{\byname}{por}
 
-
-
-
 \renewcommand{\labelenumi}{\arabic{enumi}.} 
 \renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
+
 
 \addtolength{\footnotesep}{2mm} % Espacio adicional en los footnotes
 
@@ -142,6 +151,8 @@ headsepline, % Uncomment to get a line under the header
 \renewcommand{\lstlistingname}{Algoritmo}% Listing -> Algorithm
 \renewcommand{\lstlistlistingname}{Índice de \lstlistingname s}% List of Listings -> List of Algorithms
 \frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+
 
 \pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
 

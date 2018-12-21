@@ -17,7 +17,7 @@
 
 %----------------------------------------------------------------------------------------
 
-En este capítulo se introduce el campo de la acústica submarina y la importancia del parámetro SONAR Ruido Ambiente Submarino como motivación para la realización de este trabajo.  Asimismo, se presentan los objetivos y el alcance del proyecto.
+En este capítulo se introduce el campo de estudio de la acústica submarina y la importancia del parámetro SONAR Ruido Ambiente Submarino como motivación para la realización de este trabajo.  Asimismo, se presentan los objetivos y el alcance del presente proyecto.
 %----------------------------------------------------------------------------------------
 \section{Descripción técnica-conceptual del proyecto}
 
@@ -26,20 +26,20 @@ En este capítulo se introduce el campo de la acústica submarina y la importanc
 %Qué es el ruido submarino.
 %Cómo se mide / intro hidrófono.
 
-La acústica submarina estudia la propagación del sonido en el agua y la interacción de las ondas mecánicas que constituyen el sonido con el agua, los elementos dispersores presentes y las interfaces aire-agua y agua-lecho marino.  Debido a que sufre menor atenuación que otras formas de radiación, el sonido es ampliamente empleado  por el hombre en su exploración de los océanos.  Las frecuencias típicas utilizadas se encuentran en el rango comprendido entre $\sim$10 Hz y 1 MHz, dependiendo de la aplicación.  
+La acústica submarina estudia la propagación del sonido en el agua y la interacción de las ondas mecánicas que constituyen el sonido con el agua, los elementos dispersores presentes y las interfaces aire-agua y agua-lecho marino.  Debido a que presenta menor atenuación que otras formas de radiación, el sonido es ampliamente empleado  por el hombre en su exploración de los océanos.  Las frecuencias típicas utilizadas se encuentran en el rango comprendido entre $\sim$10 Hz y 1 MHz, dependiendo de la aplicación.  
 
 Los sistemas que utilizan la propagación del sonido bajo el agua con diversos fines se conocen como sistemas SONAR (del inglés, \textit{\textbf{SO}und \textbf{N}avigation \textbf{A}nd \textbf{R}anging}).
 
-La propagación del sonido en el agua depende de diversos factores.  La dirección de propagación está determinada principalmente por el gradiente vertical de velocidades del sonido, que a su vez depende fundamentalmente de la temperatura y la salinidad del agua.  El perfil de velocidades del sonido puede causar zonas de baja intensidad del sonido, llamadas ``zonas de sombra'', y regiones de alta intensidad llamadas ``cáusticas''. Estas zonas pueden hallarse con el método de trazado de rayos \citep{tappert1977parabolic}.
+La propagación del sonido en el agua depende de diversos factores.  La dirección de propagación está determinada principalmente por el gradiente vertical de velocidades del sonido, que a su vez depende fundamentalmente de la temperatura y la salinidad del agua.  El perfil de velocidades del sonido puede generar, bajo ciertas condiciones, zonas de baja intensidad del sonido, llamadas ``zonas de sombra'', y regiones de alta intensidad llamadas ``cáusticas''. Estas zonas pueden hallarse, por ejemplo, mediante el método de trazado de rayos \citep{tappert1977parabolic}.
 
-El sonido en el agua puede propagarse a grandes distancias, en el orden de miles de kilómetros, debido a la presencia de un canal especial que actúa como guía de onda para el sonido, conocido como SOFAR (\textbf{SO}und \textbf{F}ixing \textbf{A}nd \textbf{R}anging) que se produce, bajo ciertas condiciones, a la profundidad donde el gradiente de velocidades del sonido alcanza un mínimo \citep{medwin1997fundamentals}. 
+Por otra parte, el sonido en el agua puede propagarse a grandes distancias, del orden de miles de kilómetros, particularmente debido a la presencia de canales especiales que actúa como guías de onda para el sonido, conocidos como SOFAR (\textbf{SO}und \textbf{F}ixing \textbf{A}nd \textbf{R}anging) que se produce, bajo ciertas condiciones específicas y su eje se ubica a la profundidad donde el gradiente de velocidades del sonido alcanza un mínimo \citep{medwin1997fundamentals}. 
 
 Los distintos fenómenos que afectan al sonido submarino pueden ser convenientemente agrupados en un pequeño número de parámetros conocidos como parámetros SONAR que se pueden relacionar entre sí mediante las ecuaciones SONAR \citep{urick1975principles}.  Estas ecuaciones exhiben las relaciones de trabajo que agrupan los efectos del medio de propagación, el blanco y el equipamiento utilizado y constituyen las herramientas básicas para los profesionales que trabajen en aplicaciones de acústica submarina. 
 
 \subsection{Ruido ambiente submarino}
 \label{subsec:ruido}
 
-En el campo de la acústica submarina resulta muy relevante el conocimiento del parámetro SONAR Nivel de Ruido en el mar (NL: \textit{Noise Level}), que incluye el Ruido Ambiente propiamente dicho (NLa) y el Ruido Propio (NLp) asociado al sistema de medición. En el caso de escucha pasiva (estudios de impacto ambiental sobre mamíferos marinos a bajas frecuencias o detección subacuática efectuada desde vehículos submarinos), el NL está dominado por el NLa.
+En el campo de la acústica submarina resulta muy relevante el conocimiento del parámetro SONAR Nivel de Ruido en el mar (NL: \textit{Noise Level}), que incluye el Ruido Ambiente propiamente dicho (NLa) y el Ruido Propio (NLp) asociado al sistema de medición. En el caso de escucha pasiva, (como por ejemplo estudios de impacto ambiental sobre mamíferos marinos a bajas frecuencias o detección subacuática efectuada desde vehículos submarinos), el NL está dominado por el NLa.
 
 Conceptualmente, el Nivel de Ruido en el mar está asociado al ruido de ``fondo'' (\textit{background}) remanente en ausencia de toda otra fuente identificable. Es el nivel de energía acústica mínimo que debe tener una señal para ser detectada.
 
@@ -51,14 +51,14 @@ Cabe destacar que el ruido subacuático puede clasificarse esencialmente en tres
 	\item Ruido Propio: generado por el propio sistema de electrónico de medición de ruido y por la plataforma donde se encuentre instalado.
 \end{itemize} 
 
-El objetivo de este proyecto consiste en diseñar e implementar un sistema embebido para controlar una estación autónoma para la medición in-situ del ruido ambiente submarino para ser instalada en regiones de interés en el mar argentino y con la capacidad de transmitir datos a una estación receptora en tierra. Este desarrollo permitirá disponer de series temporales de ruido ambiente submarino durante períodos lo suficientemente largos como para analizar los resultados mediante modelos teóricos y/o empíricos que contribuyan a incrementar el conocimiento de dicho parámetro, especialmente a nivel local.
+El objetivo de este proyecto consiste en diseñar e implementar un sistema embebido para controlar una estación autónoma para la medición in-situ del ruido ambiente submarino que pueda ser instalada en regiones de interés en el mar argentino y con la capacidad de transmitir datos a una estación receptora en tierra. Este desarrollo permitirá disponer de series temporales de nivel ruido submarino durante períodos lo suficientemente largos como para analizar los resultados mediante modelos teóricos y/o empíricos que contribuyan a incrementar el conocimiento de dicho parámetro, especialmente a nivel local.
 
 Se presenta un diagrama en bloques del sistema en la figura \ref{fig:diagramaBloques} donde se pueden observar los distintos módulos que componen el sistema.  En color verde los componentes asociados a la gestión de energía; en celeste los componentes asociados al almacenamiento de datos; en amarillo los componentes asociados a la gestión de las comunicaciones; en color azul los bloques del subsistema de adquisición de datos y finalmente, en color naranja se destaca el módulo central de procesamiento.
 
 \begin{figure}[ht]
   \centering
 	\includegraphics[width=\textwidth]{./Figures/Diagrama_en_Bloques.pdf}
-	\caption[Diagrama en bloques general del sistema.]{Diagrama en bloques general. Se diferencian por color los sub-módulos funcionales: energía; unidad central de procesamiento; comunicaciones; adquisición y almacenamiento.}
+	\caption[Diagrama en bloques general del sistema.]{Diagrama en bloques general del sistema. Se diferencian por color los módulos funcionales: energía; unidad central de procesamiento; comunicaciones; adquisición y almacenamiento.}
 	\label{fig:diagramaBloques}
 \end{figure}
 
@@ -97,7 +97,7 @@ Actualmente, en el ámbito de la comunidad científica internacional, existe una
 En particular, para el trabajo final de la Maestría en Sistemas Embebidos, se realizará una primera iteración sobre el ciclo de diseño centrada en la programación del sistema embebido que constituye la unidad central de procesamiento de la boya.  Se propone desarrollar sobre la plataforma CIAA-NXP, un firmware multicore de control que utilice ambos procesadores del microcontrolador LPC4337 y sea capaz de cumplir las siguientes funciones:
 
 \begin{itemize}
-	\item Adquirir datos ambientales de temperatura y velocidad de viento.
+	\item Adquirir datos ambientales de temperatura del agua y velocidad de viento.
 	\item Controlar el sistema mediante una interfaz serie.
 	\item Almacenar los datos en una memoria no volátil.
 \end{itemize}
@@ -114,7 +114,7 @@ A los fines prácticos de cumplir los requerimientos de tiempo del trabajo final
 	\item La adquisición de señales acústicas.
 \end{itemize}
 
-Según un estudio preliminar, para el registro de señales acústicas resulta necesario una placa de adquisición A/D con características muy específicas en cuanto a frecuencia de muestreo, bits de resolución y figura de ruido, del tipo NI USB-6356 \cite{ni6356} o equivalente.  Este tipo de placas poseen \textit{drivers} propietarios cerrados que, en principio, no fue posible utilizar con la CIAA-NXP.   Por este motivo, la adquisición de señales acústicas también queda excluida del alcance en esta primera iteración.
+Según un estudio preliminar, para el registro de señales acústicas resulta necesario una placa de adquisición A/D con características muy específicas en cuanto a frecuencia de muestreo, bits de resolución y figura de ruido, del tipo NI USB-6356 \cite{ni6356} o equivalente.  Esta placa pose un \textit{driver} propietario cerrado que, en principio, no fue posible utilizar con la CIAA-NXP.   Por este motivo, la adquisición de señales acústicas también quedó excluida del alcance en esta primera iteración.
 
 Se muestra en la figura \ref{fig:diagramaBloquesReducido} un diagrama en bloques reducido con los componentes del sistema incluídos en la presente memoria.
 

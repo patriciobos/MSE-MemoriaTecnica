@@ -89,16 +89,16 @@ A los fines de facilitar la comprensión del trabajo realizado, se detallan en l
 \begin{tabular}{lcl}
 \toprule
 \textbf{Etapa}                            & \textbf{Horas}       & \textbf{Hitos}                                \\ \midrule
-\multirow{2}{*}{Documentación y análisis} & \multirow{2}{*}{100} & Plan de trabajo                             \\
+\multirow{2}{*}{I. Documentación y análisis} & \multirow{2}{*}{100} & Plan de trabajo                             \\
                                           &                      & Presentación de plan de trabajo \vspace{5px}\\
                                           & \multicolumn{1}{l}{} &                                             \\ 
-Diseño e implementación                   & 340                  & Documentación de submódulos  \vspace{5px}   \\
+II. Diseño e implementación                   & 340                  & Documentación de submódulos  \vspace{5px}   \\
                                           & \multicolumn{1}{l}{} &                                             \\ 
                							  &                      & Reporte de pruebas unitarias                \\
-Verificación y validación                 & 60                   & Reporte de pruebas de integración           \\
+III. Verificación y validación                 & 60                   & Reporte de pruebas de integración           \\
                                           &                      & Reporte de casos de prueba   \vspace{5px}   \\
                                           & \multicolumn{1}{l}{} &                                             \\ 
-\multirow{2}{*}{Proceso de cierre}        & \multirow{2}{*}{100} & Memoria Técnica                             \\
+\multirow{2}{*}{IV. Proceso de cierre}        & \multirow{2}{*}{100} & Memoria Técnica                             \\
                                           &                      & Presentación de Trabajo Final               \\ \bottomrule
 \end{tabular}
 \end{table}
@@ -107,20 +107,22 @@ Verificación y validación                 & 60                   & Reporte de 
 
 Para cada una de las etapas del proyecto, se realizó un desglose de tareas procurando que la duración de cada una no supere las 40 horas, para mejorar el proceso de control y seguimiento.
 
-Las tareas identificadas se arreglaron esquemáticamente en el diagrama de \textit{Activity on Node} que se ilustra en la figura \ref{fig:AoN}. Se utiliza un mismo color para identificar las distintas tareas que componen una misma etapa del proyecto según la tabla \ref{tab:planificacion}. En color amarillo se detacan las tareas de la etapa de documentación y análisis; en celeste las tareas de diseño e implementación; en verde las tareas de verificación y validación y finalmente, en color rojo, las tareas que componen el proceso de cierre. 
+Las tareas identificadas se organizan esquemáticamente en el diagrama de \textit{Activity on Node} que se ilustra en la figura \ref{fig:AoN}. Se utiliza un mismo color para identificar las distintas tareas que componen una misma etapa del proyecto según la tabla \ref{tab:planificacion}. En color amarillo se detacan las tareas de la etapa de documentación y análisis; en celeste las tareas de diseño e implementación; en verde las tareas de verificación y validación y finalmente, en color rojo, las tareas que componen el proceso de cierre. 
 
 En el diagrama, los tiempos de duración de las tareas están representados con la variable $t$ y expresados en horas. Asimismo, las tareas poseen un código numérico único que fue usado para realizar la trazabilidad de los requerimientos en las distintas etapas del proyecto.
 
-Cabe destacar que dentro de las tareas de planificación, se incluyó la definición de casos de prueba.  Se considera que fue una decisión acertada por el mejor entendimiento que se logró sobre las características de diseño que debía contener el sistema. Asimismo, esto permitió descartar características que se pensaban implementar pero que no respondían al cumplimiento de ningún requerimiento. 
+Cabe destacar que dentro de las tareas de planificación, se incluyó la definición de casos de prueba que recopilan el uso normal esperable del sistema.  Estos casos serán retomados en el capítulo \ref{Chapter4} para validar el correcto funcionamiento del sistema.  Se considera que fue una decisión acertada definirlos en una etapa temprana del proyecto por el mejor entendimiento que se logró sobre las características de diseño que debía contener el sistema. Asimismo, esto permitió descartar algunas características que se pensaban implementar en principio, pero que al responder al no cumplimiento estricto de ningún requerimiento, se consideraron innecesarias. 
+
+\vspace{35px}
 
 \begin{figure}[htpb]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/AoN.pdf}
-	\caption[Diagrama \textit{Activity on Node}.]{Diagrama \textit{Activity on Node}.  En colores puede distinguirse: en amarillo la etapa de documentación y análisis preliminar; en azul la etapa de diseño e implementación; en verde la etapa de verificación y validación y en rojo el proceso de cierre. El tiempo t está expresado en horas.}
+	\caption[Diagrama \textit{Activity on Node}.]{Diagrama \textit{Activity on Node}. Cada etapa en distinto color: (amarillo) la etapa de documentación y análisis preliminar; (azul) la etapa de diseño e implementación; (verde) la etapa de verificación y validación y (rojo) el proceso de cierre. El tiempo ``t'' de duración de cada tarea se indica en horas.}
 	\label{fig:AoN}
 \end{figure}
 
-%\clearpage
+\clearpage
 
 
 
@@ -188,9 +190,9 @@ Si bien no se adoptó el modelo de desarrollo TDD en forma íntegra, sí se inco
 	\item Principio de inversión de la dependencia (\textit{Dependency inversion principle}). Depender de abstracciones, no depender de implementaciones.  Esto significa que un módulo A no debe depender de otro módulo B, sino a través de una abstracción de B.
 \end{itemize}
 
-Asimismo, se tomó de TDD la filosofía de pensar primero cómo se va a probar que el código cumple los requerimientos para lograr un mejor entendimiento del sistema y aumentar la calidad del diseño.
+Asimismo, se tomó de TDD la filosofía de pensar primero cómo se va a probar que el código cumple los requerimientos para lograr así un mejor entendimiento del sistema e incrementar la calidad del diseño.
 
-En el capítulo \ref{Chapter4} se recopila la documentación de casos de prueba que se usaron como entrada al diseño del \textit{firmware} previo de su implementación.
+En el capítulo \ref{Chapter4} se recopila la documentación de casos de prueba que se utilizaron como entrada al diseño del \textit{firmware} previo a su implementación.
 
 \subsection{Programación concurrente con Protothreads} 
 \label{subsec:protothreads}
@@ -260,7 +262,7 @@ En el presente trabajo, se hace uso de protothreads en la codificación del prot
 \section{Arquitectura multicore}
 \label{sec:arquitectura}
 
-El \textit{firmware} está desarrollado sobre la base de dos proyectos vinculados dentro IDE MCUXpresso, uno para cada \textit{core} del microcontrolador. Para el IDE, debe haber un proyecto ``maestro'' que controle la ejecución del código (o al menos la secuencia de \textit{startup}) corriendo en el otro \textit{core}, considerado ``esclavo''.  
+El \textit{firmware} está desarrollado sobre la base de dos proyectos vinculados dentro del IDE MCUXpresso, uno para cada \textit{core} del microcontrolador. Para el IDE, debe haber un proyecto ``maestro'' que controle la ejecución del código (o al menos la secuencia de \textit{startup}) corriendo en el otro \textit{core}, considerado ``esclavo''.  
 
 El proyecto maestro contiene un link al proyecto esclavo que produce que la imagen binaria del esclavo sea incluida en la imagen  binaria del maestro, cuando el proyecto maestro es compilado \citep{nxp:mcuxpresso}. De esta manera, cuando el proyecto maestro es grabado en la flash del microcontrolador, ambos proyectos son descargados a la memoria del microcontrolador.
 
@@ -310,7 +312,7 @@ Adicionalmente, se define una zona de memoria compartida, visible por ambos proc
 \subsection{Inter Processor Communications}
 \label{subsec:IPC}
 
-Para comunicar ambos procesadores se utiliza una biblioteca provista por el fabricante del microcontrolador NXP, documentada en la nota de aplicación ``AN1117: Inter Processor Communications for LPC43xx'' \citep{nxp:an1117}. En este documento se explican mecanismos posibles para que los dos procesadores intercambien información basados en interrupciones, en colas de mensajes y en ``casillas de correo''.  Este último método queda excluido de esta memoria por no haber sido utilizado en el desarrollo.
+Para comunicar ambos procesadores se utiliza una biblioteca provista por el fabricante del microcontrolador NXP, documentada en la nota de aplicación ``AN1117: Inter Processor Communications for LPC43xx'' \citep{nxp:an1117}. En este documento se explican mecanismos posibles para que los dos procesadores intercambien información basados en interrupciones, en colas de mensajes y en ``casillas de correo''.  A continuación se describen los dos primeros que fueron los utilizados para este trabajo.
 
 \subsubsection{Interrupciones cruzadas}
 \label{subsubsec:interrupcion}

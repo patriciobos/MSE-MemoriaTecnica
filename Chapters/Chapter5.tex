@@ -22,7 +22,7 @@ Se pudo desarrollar un \textit{firmware} multicore modular que sienta las bases 
 Los principales aportes de este trabajos son:
 
 \begin{itemize}
-	\item Adopción de una metodología de desarrollo basada en control de versiones sistemática y robusta.
+	\item Utilización de una metodología de desarrollo basada en control de versiones sistemática y robusta.
 	\item Desarrollo de una arquitectura modular multicore que permite el intercambio de funcionalidades entre procesadores de forma flexible.
 	\item Implementación de mecanismos de comunicación y sincronización entre procesadores, basados en interrupciones cruzadas y colas de mensajes.
 	\item Implementación de mecanismos de control y despacho de tareas y eventos.
@@ -40,8 +40,8 @@ Resultaron particularmente útiles las técnicas de gestión de proyecto emplead
 
 \begin{itemize}
 	\item el incremento de la dedicación horaria destinada al proyecto,
-	\item el empleo de funciones \textit{mock} o maquetadas para algunas características secundarias que pensaban implementarse.
-	\item y en última instancia, la priorización del requerimiento implícito de fecha de finalización por sobre la cantidad de sensores operativos.
+	\item el empleo de funciones \textit{mock} o maquetadas para algunas características planificadas que no llegaron a implementarse.
+	\item la priorización del requerimiento implícito de fecha de finalización por sobre la cantidad de sensores operativos, en última instancia.
 \end{itemize}  
 
 %Este plan de acción neutralizó parcialmente los efectos negativos sobre el resultado del proyecto al costo de no cumplir .
@@ -150,7 +150,7 @@ Se indican en esta sección las líneas de acción más inmediatas para continua
   \item Analizar la mejor forma de aprovechar las características asimétricas de los dos procesadores que posee la plataforma CIAA-NXP en cuanto a distribución de los módulos entre los procesadores.  La arquitectura desarrollada permite que el mismo código sea descargado a ambos procesadores, debiendo elegirse en un archivo de configuración qué módulo se ejecuta en qué procesador para que no ocurran colisiones a la hora de acceder a los recursos.  Esto permite explorar alternativas que aumenten la seguridad del sistema ante eventuales fallas de un procesador, existiendo redundancia de otro procesador que pueda retomar la ejecución de las tareas caídas.  Asimismo, resulta de interés evaluar el desempeño del sistema en cuanto a consumo eléctrico, disipación térmica y tiempo de cómputo, entre otras características, en diferentes configuraciones de reparto de módulos entre los procesadores.
   \item Incorporar al modelo de desarrollo un servidor de integración continua \citep{CI} para automatizar pruebas estáticas y dinámicas sobre el código.  
   \item Incorporar los subsistemas contemplados para futuras etapas en la figura \ref{fig:diagramaBloques} y que fueron considerados fuera del alcance en este proyecto, en forma de nuevos módulos de la estación, siguiendo el mismo patrón de diseño presentado en este trabajo.
-  \item Diseñar y fabricar un pocho para la CIAA-NXP que permita conectar y desconectar en forma robusta las diferentes entradas y salidas del sistema de forma de poder operar la estación en condiciones de campo.
+  \item Diseñar y fabricar un poncho para la CIAA-NXP que permita conectar y desconectar en forma robusta las diferentes entradas y salidas del sistema de forma de poder operar la estación en condiciones de campo.
   \item Realizar pruebas de campo. 
 \end{enumerate}
 

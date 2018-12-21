@@ -35,14 +35,14 @@ Se utilizó una técnica para expandir la cantidad de \textit{tests} posibles qu
 
 \subsubsection{Módulo Almacenamiento}
 
-En la figura \ref{fig:test_almacenamiento} se recopilan los casos de prueba para el módulo de almacenamiento.  En la primer columna se incluye un código de identificación único del \textit{test} que permite realizar la trazabilidad con los requerimientos.
+En la tabla \ref{tab:test_almacenamiento} se recopilan los casos de prueba para el módulo de almacenamiento.  En la primer columna se incluye un código de identificación único del \textit{test} que permite realizar la trazabilidad con los requerimientos.
 
-\begin{figure}[htpb]
+\begin{table}[htpb]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/TestSD.pdf}
 	\caption{Casos de prueba para \textit{test} unitarios del módulo de almacenamiento}
-	\label{fig:test_almacenamiento}
-\end{figure}
+	\label{tab:test_almacenamiento}
+\end{table}
 
 Los \textit{test} negativos se resolvieron con funciones \textit{mock} que simulan el comportamientos erróneo del componente bajo prueba.  No se realizaron \textit{test} de rango para este módulo.
 
@@ -50,28 +50,28 @@ Todos los \textit{test} ejecutados resultaron exitosos.
 
 \subsubsection{Módulo adquisición}
 
-Los casos de prueba para el módulo de adquisición se presentan en la figura \ref{fig:test_adquisición}. Para este módulo se definieron diez \textit{test} de rango además de los \textit{test} positivos y negativos.  Para éstos últimos se utilizaron funciones \textit{mock} para simular una falla.
+Los casos de prueba para el módulo de adquisición se presentan en la tabla \ref{tab:test_adquisición}. Para este módulo se definieron diez \textit{test} de rango además de los \textit{test} positivos y negativos.  Para éstos últimos se utilizaron funciones \textit{mock} para simular una falla.
 
-\begin{figure}[!htpb]
+\begin{table}[!htpb]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/TestADQ.pdf}
 	\caption{Casos de prueba para \textit{test} unitarios del módulo de adquisición}
-	\label{fig:test_adquisición}
-\end{figure}
+	\label{tab:test_adquisición}
+\end{table}
 
 Todos los \textit{test} ejecutados resultaron exitosos.
 
 \subsubsection{Módulo HMI}
 
 
-En la figura \ref{fig:test_interfaz} se recopilan los casos de prueba para el módulo de interfaz máquina-hombre.  En la primer columna se incluye un código de identificación único del \textit{test} que permite realizar la trazabilidad con los requerimientos. Los \textit{test} de tipo negativo se implementaron con funciones \textit{mock} para inyectar una falla.
+En la tabla \ref{tab:test_interfaz} se recopilan los casos de prueba para el módulo de interfaz máquina-hombre.  En la primer columna se incluye un código de identificación único del \textit{test} que permite realizar la trazabilidad con los requerimientos. Los \textit{test} de tipo negativo se implementaron con funciones \textit{mock} para inyectar una falla.
 
-\begin{figure}[htpb]
+\begin{table}[htpb]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/TestHMI.pdf}
 	\caption{Casos de prueba para \textit{test} unitarios del módulo de interfaz máquina-hombre}
-	\label{fig:test_interfaz}
-\end{figure}
+	\label{tab:test_interfaz}
+\end{table}
 
 Para este módulo se definieron tres \textit{test} de rango válido y tres \textit{test} de rango inválido. Éstos verifican los valores de posición X e Y en la función que desplaza el cursor por la pantalla y el valor de la variable de estado de la MEF que controla el menú de opciones contextual, respectivamente.
 
@@ -79,14 +79,14 @@ Todos los \textit{test} ejecutados resultaron exitosos.
 
 \subsubsection{Módulo Control}
 
-En la figura \ref{fig:test_control} se recopilan los casos de prueba para el módulo de control.  En la primer columna se incluye un código de identificación único del \textit{test} que permite realizar la trazabilidad con los requerimientos. %Los test de tipo negativo se implementaron con funciones \textit{mock} para inyectar una falla.
+En la tabla \ref{tab:test_control} se recopilan los casos de prueba para el módulo de control.  En la primer columna se incluye un código de identificación único del \textit{test} que permite realizar la trazabilidad con los requerimientos. %Los test de tipo negativo se implementaron con funciones \textit{mock} para inyectar una falla.
 
-\begin{figure}[!htpb]
+\begin{table}[!htpb]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/TestCON.pdf}
 	\caption{Casos de prueba para \textit{test} unitarios del módulo de control}
-	\label{fig:test_control}
-\end{figure}
+	\label{tab:test_control}
+\end{table}
 
 Para este módulo se definieron tres \textit{test} de rango válido y tres \textit{test} de rango inválido. Éstos verifican los valores pasados como parámetros a las funciones para construir y enviar mensajes, y el valor de la señal que se desea enviar a todos los módulos, respectivamente.
 

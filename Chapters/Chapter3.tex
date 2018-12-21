@@ -79,7 +79,7 @@ La tabla \ref{tab:trazabilidad} permite saber en qué módulo del firmware será
 \end{tabular}
 \end{table}
 
-Se definió un nuevo tipo de dato, \texttt{module\_t} que contiene campos de control para los módulos. Se observa su la definición el el algoritmo \ref{lst:module_t}.
+Se definió un nuevo tipo de dato, \texttt{module\_t} que contiene campos de control para los módulos. Se observa su definición en el algoritmo \ref{lst:module_t}.
 
 El primer campo de \texttt{module\_t} indica en qué procesador debe ejecutarse el módulo. Sigue un campo para identificar al módulo y un puntero a la función manejadora de eventos que será invocada cada vez que haya un mensaje para este módulo. Para temporizar en forma periódica la ejecución del módulo se utiliza el campo \texttt{period} y, finalmente, se incluye un campo para el estado del módulo que puede tomar uno de los siguientes valores: DISABLE, READY o PROCESSING.
 
@@ -97,7 +97,7 @@ typedef struct {
 
 \vspace{10px}
 
-Toda la interacción con los módulos se realiza a través de los respectivos manejadores de eventos y una cola de mensajes como la descripta en la subsección \ref{subsubsec:colas}. Para el intercambio de mensajes entre módulos que se encuentren en ejecución en un mismo procesador, se levantaron las restricciones de escritura sobre la propia cola de mensajes que se originalmente pesaban sobre cada procesador.
+Toda la interacción con los módulos se realiza a través de los respectivos manejadores de eventos y una cola de mensajes como la descripta en la subsección \ref{subsubsec:colas}. Para el intercambio de mensajes entre módulos que se encuentren en ejecución en un mismo procesador, se levantaron las restricciones de escritura sobre la propia cola de mensajes que originalmente pesaban sobre cada procesador.
 
 A continuación se listan los prototipos de los manejadores de eventos definidos:
 
@@ -116,7 +116,7 @@ Puede notarse que todos los manejadores reciben un mismo tipo de parámetro, un 
 
 Para todos los módulos se utilizó un modelo de \textit{firmware} basado en máquinas de estados finitos (MEF) jerárquicas, donde una MEF principal controla la lógica de funcionamiento con el mayor nivel de abstracción. Los diferentes estados, a su vez, pueden o no estar modelados con MEFs dependiendo de la conveniencia de esto último.
 
-Se definió una arquitectura de máquia de estados finitos principal lo más genérica posible de forma que pueda ser compartida por los distintos módulos.  En este sentido, todos los módulos poseen un estado \texttt{DISABLE}, \texttt{INIT}, \texttt{IDLE}, \texttt{CONFIG} y \texttt{CHECK}. La funcionalidad que implemente cada uno de estos estados será propia del módulo donde estén definidos.
+Se definió una arquitectura de máquina de estados finitos principal lo suficientemente genérica como para que pueda ser compartida por los distintos módulos.  En este sentido, todos los módulos poseen un estado \texttt{DISABLE}, \texttt{INIT}, \texttt{IDLE}, \texttt{CONFIG} y \texttt{CHECK}. La funcionalidad que implemente cada uno de estos estados será propia del módulo donde estén definidos.
 
 Todos los módulos inician en estado \texttt{DISABLE}. Adicionalmente, la máquina de estados finitos podrá tener otros estados que sean específicos para lograr sus propósitos funcionales.
 
@@ -157,11 +157,13 @@ Disco duro mecánico (HHD)                 & $\sim$1000 Gb                      
 
 \vspace{10px}
 
-Teniendo en cuenta criterios de costos y simplicidad de interacción con la CIAA-NXP, se decidió utilizar un lector de tarjetas microSD con comunicación sobre un puerto \textit{Synchronous Serial Port} (SSP).  Este protocolo es compatible con el protocolo SPI y utiliza un bus de 4 cables con las señales SCK, SSEL, MISO y MOSI.  Asimismo, el soporte seleccionado minimiza el consumo de energía comparado con las otras alternativas, lo cual lo hace deseable para la aplicación.
+Teniendo en cuenta criterios de costos y simplicidad de interacción con la CIAA-NXP, se decidió utilizar un lector de tarjetas microSD con comunicación sobre un puerto \textit{Synchronous Serial Port} (SSP).  Este protocolo es compatible con el protocolo SPI y utiliza un bus de 4 cables con las señales SCK, SSEL, MISO y MOSI.  Asimismo, el soporte seleccionado minimiza el consumo de energía respecto a las otras alternativas, lo cual lo hace deseable para la aplicación.
 
 El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdCard}, donde puede verse esquemáticamente el diagrama de conexionado eléctrico entre la CIAA-NXP y el lector (figura \ref{fig:lector_conexionado}) y una vista superior del módulo de hardware (figura \ref{fig:lector_hardware}). Cabe notar que al haber un único dispositivo ``escalvo'' en el bus SSP, la señal de \textit{chip select} (CS) se conecta con GND, lo que implica que el dispositivo está permanente seleccionado.
 
 \vspace{20px}
+
+\renewcommand{\thesubfigure}{\alph{subfigure}}
 
 \begin{figure}[h]
 	\centering
@@ -176,7 +178,7 @@ El lector de tarjetas utilizado se presenta en la figura \ref{fig:lector_sdCard}
 			SPI\_MISO & --\textgreater{} & MISO  \\
 			GND       & --\textgreater{} & GND  \\
 		\end{tabular}
-		\caption{ }
+		\caption{}
   		\label{fig:lector_conexionado}
 	\end{subfigure}%
 	\begin{subfigure}{.6\textwidth}
@@ -274,9 +276,9 @@ Sin pérdida de generalidad, la arquitectura de módulo adoptada puede utilizars
 
 %En la presente sección se presenta la implementación del control para el sensor de temperatura.
 
-Se evaluaron distintas opciones para el sensor de temperatura que estuvieran disponibles en el mercado local.  Se recopila en la tabla \ref{tab:temperatura} la información relevada para los sensores candidatos, donde puede verse fabricante y modelo de cada dispositivo junto con las principales características de interés para la aplicación.
+Se evaluaron distintas opciones de sensores de temperatura disponibles en el mercado local.  Se recopila en la tabla \ref{tab:temperatura} la información relevada para los sensores candidatos, donde se indican fabricante y modelo de cada dispositivo junto con las principales características de interés para la aplicación.
 
-Cabe destacar que la limitante para el rango de temperatura no es el propio sensor sino el plástico que recubre los hilos conductores que lo conectan al microcontrolador, motivo por el cual todas las alternativas evaluadas poseen rangos equivalente.  Se utiliza en la tabla un código sencillo para indicar un orden de magnitud del costo relativo del sensor con \$ para costo bajo, \$\$ para costo medio y \$\$\$ para costo alto.
+Cabe destacar que el rango de temperatura de todos los sensores analizados está limitado principalmente por el plástico que recubre los hilos conductores que lo conectan al microcontrolador, motivo por el cual todas las alternativas evaluadas poseen rangos equivalente.  Se utiliza en la tabla un código sencillo para indicar un orden de magnitud del costo relativo del sensor con \$ para costo bajo, \$\$ para costo medio y \$\$\$ para costo alto.
 
 % Please add the following required packages to your document preamble:
 % \usepackage{graphicx}
@@ -347,7 +349,7 @@ Los dos sensores operan sobre una misma línea de datos con una resistencia de \
 \end{figure}
 
 
-Para el control de los dispositivos se adaptó una implementación de controlador de bus \textit{1-wire} para microcontroladores de la familia LPC1343, desarrollada en forma de biblioteca por James Harwood \citep{harwood}.  En esta biblioteca se hace uso de las técnicas de programación concurrente descriptas en el capitulo \ref{Chapter2}, subsección \ref{subsec:protothreads}.
+Para el control de los dispositivos se adaptó una implementación de controlador de bus \textit{1-wire} para microcontroladores de la familia LPC1343, desarrollada en forma de biblioteca por James Harwood \citep{harwood}.  En esta biblioteca se hace uso de las técnicas de programación concurrente descriptas en la subsección \ref{subsec:protothreads}.
 
 \subsection{Máquina de Estados Finitos}
 
@@ -457,7 +459,7 @@ Existen emuladores de terminales serie como \textit{cutecom}, de gran difusión,
 
 El propósito de la interfaz desarrollada es servir como prueba de concepto e incluye un mínimo de funcionalidad para cumplir los requerimientos relacionados a la controlabilidad de la estación, principalmente en lo referido al período de muestreo de los sensores del módulo de adquisición.
 
-Cabe destacar que el valor de esta interfaz no está en su estética ni en su facilidad de uso, sino en la arquitectura subyacente que permite obtener información sistema y operar sobre sus distintos componentes.
+Cabe destacar que el valor de esta interfaz no está en su estética ni en su facilidad de uso, sino en la arquitectura subyacente que permite obtener información del sistema y operar sobre sus distintos componentes.
 
 Una primera versión de la interfaz operativa se presenta en la figura \ref{fig:interfaz_main}, donde pueden apreciarse cuatro zonas funcionales identificadas con recuadros de color rojo, a saber: encabezado, menú de opciones, línea de comandos y barra de estado.
 
@@ -491,7 +493,7 @@ Se contempla diferenciar a futuro las opciones de cada módulo acorde se agregue
 
 \begin{itemize}
   \item \texttt{(D)} Habilitar / Deshabilitar: permite intercambiar el estado del módulo entre \texttt{READY} y \texttt{DISABLED}.  Para tal fin, si el módulo se encuentra en estado \texttt{READY}, se le envía una señal sig\_disable.  En caso que se encuentre en estado \texttt{DISABLED} se le envía una señal sig\_init.  Antes de enviar la señal correspondiente se informa al usuario el estado actual del módulo y se pide que confirme o cancele la operación mediante el ingreso de \texttt{`s'} o \texttt{`n'}, respectivamente.
-  \item \texttt{(I)} Info del modulo: muestra el estado actual del módulo en la barra de estado.  Las respuestas posibles son \texttt{READY}, \texttt{PROCESSING} y \texttt{DISABLED}
+  \item \texttt{(I)} Info del módulo: muestra el estado actual del módulo en la barra de estado.  Las respuestas posibles son \texttt{READY}, \texttt{PROCESSING} y \texttt{DISABLED}
   \item \texttt{(C)} Configurar: permite cambiar la configuración del módulo.  En esta etapa del desarrollo se implementó únicamente la posibilidad de cambiar el tiempo con que se ejecuta la tarea periódica, si la hubiera.
   \item \texttt{(A)} Autocomprobación: permite realizar una comprobación interna de funcionamiento mediante el envío de una señal sig\_check al módulo. En esta etapa del desarrollo la funcionalidad está implementada con una función \textit{mock} que devuelve un mensaje en la barra de estado.
   \item \texttt{(X)} para volver al menú anterior: cambia el menú a la pantalla principal del modo configuración.
@@ -516,7 +518,7 @@ Asimismo, desde el menú principal se puede acceder a un modo \textit{debug} con
 Las opciones para este modo son:
 
 \begin{itemize}
-  \item \texttt{(E)} Estado de modulos: muestra el estado actual de todos los módulo del sistema en la barra de estado.
+  \item \texttt{(E)} Estado de módulos: muestra el estado actual de todos los módulo del sistema en la barra de estado.
   \item \texttt{(A)} Comprobación: permite realizar una comprobación interna de funcionamiento a todos los módulos. En esta etapa del desarrollo la funcionalidad está implementada con una función \textit{mock} que devuelve un mensaje en la barra de estado y registra los resultados en el log del sistema.
   \item \texttt{(L)} Ver log del sistema: permite realizar un \textit{dump} del log del sistema en la consola.  Esto significa que se imprime en la terminal serie todo el contenido del archivo de log ubicado en la tarjeta de memoria microSD. Presionando cualquier tecla se limpia la pantalla y se vuelve al menú principal del modo \textit{debug}.
   \item \texttt{(X)} para volver al menú anterior: cambia el menú a la plantalla principal del modo \textit{debug}.
@@ -571,7 +573,7 @@ En los módulos que tiene funciones maquetadas se reemplazó la llamada a la fun
 	\item el módulo correspondiente recibe la señal y contesta con un mensaje que se visualiza en la barra de estado de la interfaz.
 \end{itemize}
 
-Se contempla incluir en versiones futuras, además de cambios estilísticos, la implementación completa de funcionalidades que en la presente versión se encuentran maquetadas.  Si bien estás y otras características son deseable para la usabilidad de la interfaz y la operación de la estación, no formaban parte de los requerimientos enumerados en la sección \ref{sec:requerimientos}.
+Se contempla incluir en versiones futuras, además de cambios estilísticos, la implementación completa de las funcionalidades que en la presente versión se encuentran maquetadas.  Si bien estás y otras características son deseable para la usabilidad de la interfaz y la operación de la estación, no formaban parte de los requerimientos enumerados en la sección \ref{sec:requerimientos}.
 
 
 
